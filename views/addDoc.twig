@@ -1,0 +1,36 @@
+{% extends 'layout.twig' %}
+
+{% block body %}
+<div class="container">
+	<div class="d-flex justify-content-center h-100">
+		<div class="card">
+			<div class="card-header">
+				<h3>Ajout de documents</h3>	
+			</div>
+			<div class="card-body">
+                <form method="post" action="/app/AddDocs" enctype="multipart/form-data" class="add">
+                    <input type="text" name="titre" placeholder="titre de votre document">
+                    <select name="domain" id="domain-select">
+                        <option value="">--Choisissez un domaine--</option>
+                        {% if domaines %}
+                            {% for domaine in domaines %}
+                                <option value="{{ domaine.domaine }}">{{ domaine.domaine }}</option>
+                            {% endfor %}
+                        {% endif %}
+                        <option value="Autre">Autre</option>
+                    </select>
+                    <div id="otherDomaine">
+                        <input type="text" name="domaine" placeholder="Définir un domaine">
+                    </div>
+                    <textarea name="description" rows="5" cols="33" placeholder="Remplir la description du document">
+                    </textarea>
+                    <input type="file" name="fileToUpload">
+                    <input type="submit" value="Envoyer">
+                </form>
+			</div>
+			
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
