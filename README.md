@@ -4,7 +4,7 @@ Il s'agit d'une plateforme de partage documentaire
 
 fonctions achevées
 
--connexion / déconnexion</br>
+-connexion / déconnexion (utilisation des jsonwebtoken)</br>
 -Inscription utilisateur avec envoi du mot de pass généré par mail à l'utilisateur</br>
 -Ajout de document en fonction du domaine du document</br>
 -Téléchargement de fichier</br>
