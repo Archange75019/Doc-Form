@@ -3,6 +3,8 @@ var formidable = require('formidable');
 var fs = require('fs');
 const User = require('../models/User');
 const { json } = require('body-parser');
+var EventEmitter = require('events');
+var event = new EventEmitter()
 
 
 exports.getDoc = (req, res, next) => {

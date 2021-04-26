@@ -8,7 +8,7 @@
 				<h3>Ajout de documents</h3>	
 			</div>
 			<div class="card-body">
-                <form method="post" action="/app/AddDocs" enctype="multipart/form-data" class="add">
+                <form method="post" action="/app/AddDocs" enctype="multipart/form-data" id="add">
                     <input type="text" name="titre" placeholder="titre de votre document">
                     <select name="domain" id="domain-select">
                         <option value="">--Choisissez un domaine--</option>
@@ -24,7 +24,7 @@
                     </div>
                     <textarea name="description" rows="5" cols="33" placeholder="Remplir la description du document">
                     </textarea>
-                    <input type="file" name="fileToUpload">
+                    <input type="file" name="fileToUpload" id="fileUpload">
                     <input type="submit" value="Envoyer">
                 </form>
 			</div>
