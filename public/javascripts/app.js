@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var socket = io();
 
     var formAdd = document.getElementById('add');
+    var inputFile = document.getElementById('fileUpload')
     var file = document.getElementById('fileUpload');
     var select = document.getElementById('role-select');
     var other = document.getElementById('otherRole');
@@ -33,8 +34,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
         });
-        socket.on('error', (data)=>{
-            console.log(data)
+        socket.on('data', (data)=>{
+            alert(data)
         })
     }
 

@@ -32,6 +32,7 @@ router.post('/register', user.register);
 router.get('/AddDocs', (req, res, next)=>{
   
   let statut = req.cookies[process.env.cookie_name].role;
+
   Doc.find({},{ domaine: 1 } , (err, domaines)=>{
 
 

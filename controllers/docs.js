@@ -4,8 +4,12 @@ var fs = require('fs');
 const User = require('../models/User');
 const { json } = require('body-parser');
 var EventEmitter = require('events');
+const { Console } = require('console');
+
 var event = new EventEmitter()
 
+
+champs = []
 
 exports.getDoc = (req, res, next) => {
     let statut = req.cookies[process.env.cookie_name].role;
@@ -16,6 +20,12 @@ exports.getDoc = (req, res, next) => {
   
 
 };
+exports.form = (req, res, next)=>{
+  if (champs){
+    champsRemplis = champs
+
+  }
+}
 
 exports.addDoc = (req, res, next) => {
     var form = new formidable.IncomingForm();
@@ -23,13 +33,13 @@ exports.addDoc = (req, res, next) => {
     form.maxFileSize = 30 * 1024 * 1024
     form.parse(req,  (err, fields, files)=> {
       if(err) {
-        console.log('erreur')
-        res.redirect('/app/home')
+        res.redirect('/app/AddDocs')
+        
       }else{
         var oldpath = files.fileToUpload.path;
-        console.log('vieux chemin :'+oldpath)
+
         var newpath = './uploads/' + files.fileToUpload.name;
-        console.log('nouveau chemin :'+newpath)
+
         fs.rename(oldpath, newpath, function (err) {
           if (err) throw err;
           if(fields.domain == "Autre"){
@@ -56,7 +66,14 @@ exports.addDoc = (req, res, next) => {
       }
       
   
-})
+    })
+    form.on('progress', (bytesReceived, bytesExpected)=>{
+      if(bytesExpected > form.maxFileSize){
+        form.on('file',{})
+       
+      }
+     
+    })
 
 };
 exports.searchDoc = (req, res, next)=>{

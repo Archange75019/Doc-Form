@@ -6,7 +6,8 @@ var user = require('../controllers/user')
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  
+  res.render('index', { title: 'Express', req:req });
 });
 router.post('/login', user.login);
 
