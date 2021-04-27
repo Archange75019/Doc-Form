@@ -12,6 +12,6 @@ fonctions achevées
 
 fonctions à développer / mise à jour
 
--gérer les extensions des fichiers partagés</br>
+-gérer les extensions des fichiers envoyés</br>
 -Limiter la taille des fichiers en fonctions de l'espace disponible</br>
 
