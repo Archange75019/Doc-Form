@@ -19,6 +19,8 @@ exports.getDoc = (req, res, next) => {
 
 exports.addDoc = (req, res, next) => {
     var form = new formidable.IncomingForm();
+    form.multiples = false;
+    form.maxFileSize = 30 * 1024 * 1024
     form.parse(req, function (err, fields, files) {
       if(fields && files){
         var oldpath = files.fileToUpload.path;
