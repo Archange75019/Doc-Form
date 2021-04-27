@@ -21,10 +21,15 @@ exports.addDoc = (req, res, next) => {
     var form = new formidable.IncomingForm();
     form.multiples = false;
     form.maxFileSize = 30 * 1024 * 1024
-    form.parse(req, function (err, fields, files) {
-      if(fields && files){
+    form.parse(req,  (err, fields, files)=> {
+      if(err) {
+        console.log('erreur')
+        res.redirect('/app/home')
+      }else{
         var oldpath = files.fileToUpload.path;
+        console.log('vieux chemin :'+oldpath)
         var newpath = './uploads/' + files.fileToUpload.name;
+        console.log('nouveau chemin :'+newpath)
         fs.rename(oldpath, newpath, function (err) {
           if (err) throw err;
           if(fields.domain == "Autre"){

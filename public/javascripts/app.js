@@ -33,7 +33,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
         });
-        
+        socket.on('error', (data)=>{
+            console.log(data)
+        })
     }
 
 
