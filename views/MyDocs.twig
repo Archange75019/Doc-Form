@@ -1,0 +1,25 @@
+{% extends 'layout.twig' %}
+
+{% block body %}
+
+    {% for doc in docs %}
+        <div class="container">
+	        <div class="d-flex justify-content-center h-10">
+		        <div class="card">
+			        <div class="card-header">
+				        <h3>{{doc.titre}}</h3>	
+			        </div>
+                    <div class="cont">
+			            <div class="card-body">
+                            <p>{{doc.description}}</p>
+                            <p>Ajouté par {{doc.author}} le {{doc.date}}</p>
+                        </div>
+                        <div class="cell2">
+                            <a href="/app/download/{{doc._id}}"><i class="fas fa-download fa-4x"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}

@@ -14,18 +14,7 @@ var role = []
 //Affiche la page home
 router.get('/home', doc.getDoc);
 //affiche la page d'inscription utilisateur
-router.get('/register', (req, res, next)=>{
-  let statut = req.cookies[process.env.cookie_name].role;
-  User.find({},{ role: 1 } , (err, Role)=>{
-    console.log(Role[0].role)
-   
-    if(Role != statut){
-      role.push(Role[0].role)
-    }
-  })
-  console.log(role)
-  res.render('register', {title: process.env.TITLE, role: role, statut: statut})
-});
+router.get('/register', user.registerShow);
 // Traite l'inscription utilisateur
 router.post('/register', user.register);
 //Affiche la page d'ajout de documents
@@ -96,14 +85,7 @@ router.get('/download/:id', function (req, res, next)
    
  
 });
-router.get('/MyDocs', doc.MyDocs, (req, res, next)=>{
-  console.log("mydocs")
-  Doc.find({}, {'author': req.cookies[process.env.cookie_name].userName}, (err, docs)=>{
-    if(err) throw err;
-    console.log(docs)
-  })
-
-});
+router.get('/MyDocs', doc.MyDocs);
 /*router.get('/DeleteDoc/:id',doc.DeleteDoc, (req, res, next)=>{
   
   let statut = req.cookies[process.env.cookie_name].role;

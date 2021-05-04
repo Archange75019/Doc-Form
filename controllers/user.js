@@ -82,6 +82,18 @@ exports.login = (req, res, next) => {
       })
       .catch(error => res.status(500).json({ error }));
 };
+exports.registerShow = (req, res, next) =>{
+  let statut = req.cookies[process.env.cookie_name].role;
+  User.find({},{ role: 1 } , (err, Role)=>{
+    console.log(Role[0].role)
+   
+    if(Role != statut){
+      role.push(Role[0].role)
+    }
+  })
+ 
+  res.render('register', {title: process.env.TITLE, role: role, statut: statut})
+}
 //Inscription utilisateur
 exports.register = (req, res, next) => {
     

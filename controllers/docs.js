@@ -98,7 +98,11 @@ exports.searchDoc = (req, res, next)=>{
     }
 }; 
 exports.MyDocs = (req, res, next)=>{
-
+  let statut = req.cookies[process.env.cookie_name].role;
+  Doc.find({'author': req.cookies[process.env.cookie_name].userName}, (err, docs)=>{
+    if(err) throw err;
+    res.render('MyDocs',{title: process.env.TITLE, docs: docs, statut: statut    })
+  })
 }
 
 exports.updateDoc = (req, res, next) => {
