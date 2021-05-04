@@ -42,7 +42,7 @@ exports.form = (req, res, next)=>{
 
   res.render('addDoc',{title: process.env.TITLE,domaines: filteredArray, statut: statut})
   });
-}
+};
 
 exports.addDoc = (req, res, next) => {
     var form = new formidable.IncomingForm();
@@ -96,7 +96,7 @@ exports.addDoc = (req, res, next) => {
 exports.getDocs = (req, res, next) =>{
     let statut = req.cookies[process.env.cookie_name].role;
   res.render('search',{title: process.env.TITLE,statut: statut }) 
-}
+};
 exports.searchDoc = (req, res, next)=>{
   const motsOutils = [
     "mon","ma","mes","Mon","Ma","Mes",
@@ -150,14 +150,18 @@ exports.download = (req, res, next) => {
     })
   }
 };
-
 exports.updateDoc = (req, res, next) => {
 
 }
 exports.deleteDoc = (req, res, next) => {
   if(req.params.id){
+    var fs = require('fs');
     Doc.findByIdAndDelete({'_id': req.params.id}, (err, doc)=>{
       if(err) throw err;
+      var filePath = doc.link; 
+      fs.unlinkSync(filePath);
+      console.log('BBBBBBBBBBBBBBBBBbb')
+      res.redirect('/app/MyDocs');
     })
   }
 

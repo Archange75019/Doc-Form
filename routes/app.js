@@ -9,8 +9,6 @@ const Doc = require('../models/Doc');
 
 var event = new EventEmitter()
 
-
-
 //Affiche la page home
 router.get('/home', doc.getDoc);
 //affiche la page d'inscription utilisateur
@@ -29,7 +27,11 @@ router.post('/SearchDocs', doc.searchDoc);
 router.get('/SearchDocs/result=:recherche', doc.getResults);
 //Telecharger un document
 router.get('/download/:id', doc.download);
+//Supprimer un document
+router.get('/deleteDoc', doc.deleteDoc);
+//Visualiser ses propres documents
 router.get('/MyDocs', doc.MyDocs);
+//Se déconnecter
 router.get('/logout', user.logout);
 
 module.exports = router;
