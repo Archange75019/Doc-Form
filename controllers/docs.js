@@ -160,7 +160,6 @@ exports.deleteDoc = (req, res, next) => {
       if(err) throw err;
       var filePath = doc.link; 
       fs.unlinkSync(filePath);
-
       res.redirect('/app/MyDocs');
     })
   }
