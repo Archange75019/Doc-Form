@@ -154,7 +154,6 @@ exports.updateDoc = (req, res, next) => {
 
 }
 exports.deleteDoc = (req, res, next) => {
-  console.log('BBBBBBBBBBBBBBBBBbb')
   if(req.params.id){
     var fs = require('fs');
     Doc.findByIdAndDelete({'_id': req.params.id}, (err, doc)=>{
