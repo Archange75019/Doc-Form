@@ -35,8 +35,22 @@ router.get('/AddDocs', (req, res, next)=>{
 
   Doc.find({},{ domaine: 1 } , (err, domaines)=>{
 
+    var dom = [];
 
-  res.render('addDoc',{title: process.env.TITLE,domaines: domaines, statut: statut})
+    
+    for(var i=0; i<domaines.length; i++ ){
+      var element = domaines[i].domaine
+      dom.push(element)
+      
+      
+    }
+    const filteredArray = dom.filter(function(ele , pos){
+      return dom.indexOf(ele) == pos;
+  }) 
+
+
+
+  res.render('addDoc',{title: process.env.TITLE,domaines: filteredArray, statut: statut})
   });
 });
 //Traite l'ajout de documents
