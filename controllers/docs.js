@@ -21,9 +21,27 @@ exports.getDoc = (req, res, next) => {
 
 };
 exports.form = (req, res, next)=>{
-  if (champs){
-    champsRemplis = champs
-  }
+  let statut = req.cookies[process.env.cookie_name].role;
+
+  Doc.find({},{ domaine: 1 } , (err, domaines)=>{
+
+    var dom = [];
+
+    
+    for(var i=0; i<domaines.length; i++ ){
+      var element = domaines[i].domaine
+      dom.push(element)
+      
+      
+    }
+    const filteredArray = dom.filter(function(ele , pos){
+      return dom.indexOf(ele) == pos;
+  }) 
+
+
+
+  res.render('addDoc',{title: process.env.TITLE,domaines: filteredArray, statut: statut})
+  });
 }
 
 exports.addDoc = (req, res, next) => {
@@ -75,6 +93,10 @@ exports.addDoc = (req, res, next) => {
     })
 
 };
+exports.getDocs = (req, res, next) =>{
+    let statut = req.cookies[process.env.cookie_name].role;
+  res.render('search',{title: process.env.TITLE,statut: statut }) 
+}
 exports.searchDoc = (req, res, next)=>{
   const motsOutils = [
     "mon","ma","mes","Mon","Ma","Mes",
@@ -103,7 +125,31 @@ exports.MyDocs = (req, res, next)=>{
     if(err) throw err;
     res.render('MyDocs',{title: process.env.TITLE, docs: docs, statut: statut    })
   })
-}
+};
+exports.getResults = (req, res, next) => {
+  let statut = req.cookies[process.env.cookie_name].role;
+  if( req.params.recherche){
+
+    var recherche = req.params.recherche
+
+
+    Doc.find({ $text: { $search: recherche } }, {score: {$meta: "textScore"}})
+    .sort({score:{$meta:"textScore"}})
+    .exec(function (err, docs) {
+      res.render('search',{title: process.env.TITLE, docs: docs,statut: statut})
+
+    })
+  }
+};
+exports.download = (req, res, next) => {
+  if(req.params.id){
+    Doc.findOne({'_id': req.params.id}, function (error, docFile)
+    {
+      var file = docFile.link;
+    res.download(file);
+    })
+  }
+};
 
 exports.updateDoc = (req, res, next) => {
 

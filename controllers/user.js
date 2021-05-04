@@ -4,7 +4,7 @@ var User = require('../models/User');
 var nodemailer = require('nodemailer');
 
 
-
+var role = [];
 function generate(l){
     if (typeof l==='undefined'){var l=20;}
     /* c : chaîne de caractères alphanumérique */
@@ -85,7 +85,8 @@ exports.login = (req, res, next) => {
 exports.registerShow = (req, res, next) =>{
   let statut = req.cookies[process.env.cookie_name].role;
   User.find({},{ role: 1 } , (err, Role)=>{
-    console.log(Role[0].role)
+    
+    
    
     if(Role != statut){
       role.push(Role[0].role)
