@@ -7,7 +7,7 @@ var doc = require('../controllers/docs');
 const User = require('../models/User');
 const Doc = require('../models/Doc');
 
-var event = new EventEmitter()
+
 
 //Affiche la page home
 router.get('/home', doc.getDoc);
