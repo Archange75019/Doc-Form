@@ -154,13 +154,14 @@ exports.updateDoc = (req, res, next) => {
 
 }
 exports.deleteDoc = (req, res, next) => {
+  console.log('BBBBBBBBBBBBBBBBBbb')
   if(req.params.id){
     var fs = require('fs');
     Doc.findByIdAndDelete({'_id': req.params.id}, (err, doc)=>{
       if(err) throw err;
       var filePath = doc.link; 
       fs.unlinkSync(filePath);
-      console.log('BBBBBBBBBBBBBBBBBbb')
+
       res.redirect('/app/MyDocs');
     })
   }

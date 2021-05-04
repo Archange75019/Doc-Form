@@ -28,7 +28,7 @@ router.get('/SearchDocs/result=:recherche', doc.getResults);
 //Telecharger un document
 router.get('/download/:id', doc.download);
 //Supprimer un document
-router.get('/deleteDoc', doc.deleteDoc);
+router.get('/delete/:id', doc.deleteDoc);
 //Visualiser ses propres documents
 router.get('/MyDocs', doc.MyDocs);
 //Se déconnecter
