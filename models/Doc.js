@@ -15,7 +15,8 @@ var docSchema = mongoose.Schema({
       domaine:{
           type: String,
           unique: true,
-          required: true
+          required: true,
+          index: true
       },
       description: {
         type: String,
