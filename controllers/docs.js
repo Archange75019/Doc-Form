@@ -11,7 +11,7 @@ var event = new EventEmitter()
 
 
 champs = []
-
+//Afficher les documents les plus récents en page home
 exports.getDoc = (req, res, next) => {
     let statut = req.cookies[process.env.cookie_name].role;
     Doc.find({}, (err, docs)=>{
@@ -21,30 +21,22 @@ exports.getDoc = (req, res, next) => {
   
 
 };
+//Afficher le formulaire d'ajout de documents
 exports.form = (req, res, next)=>{
   let statut = req.cookies[process.env.cookie_name].role;
-
   Doc.find({},{ domaine: 1 } , (err, domaines)=>{
-
     var dom = [];
-
-    
     for(var i=0; i<domaines.length; i++ ){
       var element = domaines[i].domaine
-      dom.push(element)
-      
-      
+      dom.push(element) 
     }
     const filteredArray = dom.filter(function(ele , pos){
       return dom.indexOf(ele) == pos;
   }) 
-
-
-
   res.render('addDoc',{title: process.env.TITLE,domaines: filteredArray, statut: statut})
   });
 };
-
+//Ajouter un document à la base
 exports.addDoc = (req, res, next) => {
     var form = new formidable.IncomingForm();
     form.multiples = false;
@@ -105,10 +97,12 @@ exports.addDoc = (req, res, next) => {
     })
 
 };
+//Afficher le formulaire de recherche de documents
 exports.getDocs = (req, res, next) =>{
     let statut = req.cookies[process.env.cookie_name].role;
-  res.render('search',{title: process.env.TITLE,statut: statut }) 
+  res.render('search',{title: process.env.TITLE,statut: statut }); 
 };
+//Rechercher un document en base
 exports.searchDoc = (req, res, next)=>{
   const motsOutils = [
     "mon","ma","mes","Mon","Ma","Mes",
@@ -130,6 +124,7 @@ exports.searchDoc = (req, res, next)=>{
       res.redirect('/app/SearchDocs/result=' + rechercheDef );
     }
 }; 
+//Afficher les documents de l'utilisateur courant
 exports.MyDocs = (req, res, next)=>{
   let statut = req.cookies[process.env.cookie_name].role;
   Doc.find({'author': req.cookies[process.env.cookie_name].userName}, (err, docs)=>{
@@ -137,6 +132,7 @@ exports.MyDocs = (req, res, next)=>{
     res.render('MyDocs',{title: process.env.TITLE, docs: docs, statut: statut    })
   })
 };
+//Afficher le résultat d'une recherche de documents
 exports.getResults = (req, res, next) => {
   let statut = req.cookies[process.env.cookie_name].role;
   if( req.params.recherche){
@@ -152,6 +148,7 @@ exports.getResults = (req, res, next) => {
     })
   }
 };
+//Télécharger un document
 exports.download = (req, res, next) => {
   if(req.params.id){
     Doc.findOne({'_id': req.params.id}, function (error, docFile)
@@ -163,7 +160,8 @@ exports.download = (req, res, next) => {
 };
 exports.updateDoc = (req, res, next) => {
 
-}
+};
+//Supprimer un document
 exports.deleteDoc = (req, res, next) => {
   if(req.params.id){
     var fs = require('fs');
@@ -175,4 +173,4 @@ exports.deleteDoc = (req, res, next) => {
     })
   }
 
-}
+};
