@@ -82,29 +82,24 @@ exports.login = (req, res, next) => {
       })
       .catch(error => res.status(500).json({ error }));
 };
+//Afficher le formulaire d'inscription utilisateur
 exports.registerShow = (req, res, next) =>{
   let statut = req.cookies[process.env.cookie_name].role;
   User.find({},{ role: 1 } , (err, Role)=>{
-    
-    
-   
     if(Role != statut){
       role.push(Role[0].role)
-    }
+    };
   })
- 
   res.render('register', {title: process.env.TITLE, role: role, statut: statut})
-}
+};
 //Inscription utilisateur
 exports.register = (req, res, next) => {
-    
     User.findOne({ email: req.body.email }, ( err, user)=>{
-
         if (!user) {
             var Pass = generate()
             if(req.body.role[0] == "Autre"){
               req.body.role = req.body.role[1]
-            }
+            };
            bcrypt.hash(Pass, 10)
            .then(hash =>{
               var user = {
@@ -114,21 +109,21 @@ exports.register = (req, res, next) => {
                 role: req.body.role,
                 site: req.body.site,
                 n1: req.cookies[process.env.cookie_name]._id
-              }
+              };
               if(user.role == "administrateur"){
                 user.n1 = "none"; 
               }else{
                 user.n1 = req.cookies[process.env.cookie_name]._id;
-              }
+              };
               User.create(user, (err, userData)=>{
                 if(err) throw err;
                 sendMail(user.email, 'inscription sur '+process.env.TITLE, Pass)
                 res.redirect('/app/home')
-              })
-           })
+              });
+           });
         }else{
-          console.log('user déjà existant')
-        }
+          console.log('user déjà existant');
+        };
     })
 };
 /*exports.getUser = (req, res, next) => {
