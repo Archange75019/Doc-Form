@@ -58,14 +58,16 @@ exports.addDoc = (req, res, next) => {
 
         var newpath = './uploads/' + files.fileToUpload.name;
         
-        const mkdirSync = function (dirPath) {
-          try {
-          fs.mkdirSync(dirPath)
-          } catch (err) {
-          if (err.code !== "EEXIST") throw err
-          }
-          }
-          mkdirSync(path.resolve("./uploads"))
+        if (fs.existsSync(process.env.FOLDER)) {
+          const mkdirSync = function (dirPath) {
+            try {
+            fs.mkdirSync(dirPath)
+            } catch (err) {
+            if (err.code !== "EEXIST") throw err
+            }
+            }
+            mkdirSync(path.resolve("./uploads"))
+        }
 
         fs.rename(oldpath, newpath, function (err) {
           if (err) throw err;
