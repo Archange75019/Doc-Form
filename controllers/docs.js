@@ -118,8 +118,7 @@ exports.searchDoc = (req, res, next)=>{
     "de", "des", "du", "De", "Des","Du"
   ]
   let search = [];
-  let item = req.body.recherche;
-  let element = item.split(" ");
+  let element = req.body.recherche.split(" ");
 
   element.forEach(elem => {    
     if (motsOutils.includes(elem) == false){
