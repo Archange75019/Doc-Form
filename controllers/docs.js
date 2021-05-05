@@ -5,6 +5,7 @@ const User = require('../models/User');
 const { json } = require('body-parser');
 var EventEmitter = require('events');
 const { Console } = require('console');
+const path = require("path")
 
 var event = new EventEmitter()
 
@@ -56,6 +57,15 @@ exports.addDoc = (req, res, next) => {
         var oldpath = files.fileToUpload.path;
 
         var newpath = './uploads/' + files.fileToUpload.name;
+        
+        const mkdirSync = function (dirPath) {
+          try {
+          fs.mkdirSync(dirPath)
+          } catch (err) {
+          if (err.code !== "EEXIST") throw err
+          }
+          }
+          mkdirSync(path.resolve("./uploads"))
 
         fs.rename(oldpath, newpath, function (err) {
           if (err) throw err;
