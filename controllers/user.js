@@ -35,8 +35,8 @@ function sendMail(destinataire, objet, corp){
   smtpTrans = nodemailer.createTransport({
     service: 'gmail', 
     auth: {
-      user: "instepleo@gmail.com",
-      pass: "Panama75019"
+      user: process.env.EMAIL,
+      pass: process.env.PASS
     }
   });
   var mailOptions = {
