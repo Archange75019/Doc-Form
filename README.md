@@ -15,9 +15,10 @@ FONCTIONS ACHEVEES</br>
 -Ajout de document en fonction du domaine du document</br>
 -Téléchargement de fichier</br>
 -Rechercher un document en fonction de sa description et de son titre</br>
-- Suppression d'un document
+- Suppression d'un document</br>
 
-FONCTIONS A DEVELOPPER</br>
+
+AMELIORATIONS POSSIBLES</br>
 
 -gérer les extensions des fichiers envoyés</br>
 -Limiter la taille des fichiers en fonctions de l'espace disponible</br>
