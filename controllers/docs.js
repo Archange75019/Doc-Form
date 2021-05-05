@@ -66,7 +66,7 @@ exports.addDoc = (req, res, next) => {
             if (err.code !== "EEXIST") throw err
             }
             }
-            mkdirSync(path.resolve("./uploads"))
+            mkdirSync(path.resolve(process.env.FOLDER))
         }
 
         fs.rename(oldpath, newpath, function (err) {
