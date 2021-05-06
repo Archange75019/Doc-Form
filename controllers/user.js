@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 var bcrypt = require('bcrypt')
 var User = require('../models/User');
 var nodemailer = require('nodemailer');
+const notifier = require('node-notifier');
 
 
 var role = [];
@@ -59,6 +60,7 @@ exports.login = (req, res, next) => {
       .then(user => {
         if (!user) {
           return res.status(401).json({ error: 'Utilisateur non trouvé !' });
+          
         }
         bcrypt.compare(req.body.password, user.password)
           .then(valid => {
