@@ -6,7 +6,6 @@ flash = require('connect-flash')
 ,toastr = require('express-toastr');
 var path = require('path');
 var mongoose = require('mongoose');
-var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 require('dotenv').config()
 
@@ -29,6 +28,12 @@ app.use(flash());
 // Load express-toastr
 // You can pass an object of default options to toastr(), see example/index.coffee
 app.use(toastr());
+
+app.use(function (req, res, next)
+{
+    res.locals.toasts = req.toastr.render()
+    next()
+})
 
 
 mongoose.connect(process.env.DB_URL,
@@ -53,11 +58,7 @@ app.use('/', indexRouter);
 app.use('/app', auth, appRouter);
 app.use('/admin', auth, adminRouter);
 
-app.use(function (req, res, next)
-{
-    res.locals.toasts = req.toastr.render()
-    next()
-})
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
