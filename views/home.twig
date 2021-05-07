@@ -7,8 +7,8 @@
     {% for doc in docs %}
         <div class="doc">
             <div class="headerDoc">
-				<h3>{{ doc.titre| truncate(27 - 3 - doc.domaine|length, false, '...') }} </h3>
-                <h4>{{doc.domaine}}</h4>
+				<h3>{{ doc.titre|lower| truncate(26 - 3 - doc.domaine|length, false, '...') }} </h3>
+                <h4>{{doc.domaine|lower}}</h4>
             </div>
             <div class="corpDoc">
                 <div class="description">

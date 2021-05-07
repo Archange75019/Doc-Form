@@ -14,10 +14,13 @@ champs = []
 //Afficher les documents les plus récents en page home
 exports.getDoc = (req, res, next) => {
     let statut = req.cookies[process.env.cookie_name].role;
-    Doc.find({}, (err, docs)=>{
+    Doc.find({})
+    .sort({ date: -1 })
+    .limit(12)
+    .exec(function (err, docs){
       if(err) throw err;
       res.render('home',{title: process.env.TITLE, docs:docs, statut : statut})
-    }).sort({date: -1})
+    })
   
 
 };

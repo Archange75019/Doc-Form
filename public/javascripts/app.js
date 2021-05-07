@@ -1,7 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
 
   var socket = io();
-
+  var textarea  = document.getElementById('textarea');
+  textarea.value = "";
+  						
+  textarea.setSelectionRange(textarea, 1, 2);
     var formAdd = document.getElementById('add');
     var inputFile = document.getElementById('fileUpload')
     var file = document.getElementById('fileUpload');
