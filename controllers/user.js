@@ -59,16 +59,14 @@ exports.login = (req, res, next) => {
       .then(user => {
         if (!user) {
          
-          //return res.status(401).json({ error: 'Utilisateur non trouvé !' });
-          res.redirect('/')
+          return res.status(401).json({ error: 'Utilisateur non trouvé !' });
+
         }
         bcrypt.compare(req.body.password, user.password)
           .then(valid => {
             if (!valid) {
-              //return res.status(401).json({ error: 'Mot de passe incorrect !' });
-              
-          //return res.status(401).json({ error: 'Utilisateur non trouvé !' });
-          res.redirect('/')
+              return res.status(401).json({ error: 'Mot de passe incorrect !' });
+
             }
              const token = {
                 userId: user._id,
@@ -112,14 +110,14 @@ exports.register = (req, res, next) => {
                 email: req.body.email,
                 password: hash,
                 role: req.body.role,
-                site: req.body.site,
-                n1: req.cookies[process.env.cookie_name]._id
+                site: req.body.site
               };
-              if(user.role == "administrateur"){
+              if(req.body.role == "administrateur"){
                 user.n1 = "none"; 
               }else{
-                user.n1 = req.cookies[process.env.cookie_name]._id;
+                user.n1 = ""+req.cookies[process.env.cookie_name].userId+"";
               };
+              console.log(user)
               User.create(user, (err, userData)=>{
                 if(err) throw err;
                 sendMail(user.email, 'inscription sur '+process.env.TITLE, Pass)
