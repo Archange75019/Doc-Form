@@ -1,11 +1,12 @@
 var createError = require('http-errors');
 var userctrl = require('./controllers/user');
 var docctrl = require('./controllers/docs');
+var fs = require('fs');
 var express = require('express'),
 flash = require('connect-flash')
 ,session = require('express-session')
 ,cookieParser = require('cookie-parser')
-,toastr = require('express-toastr');
+,toastr = require('toastr');
 var path = require('path');
 var mongoose = require('mongoose');
 var logger = require('morgan');
@@ -46,6 +47,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser('secret'));
 app.use(express.static(path.join(__dirname, 'public')));
+var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
+app.use(logger('combined', { stream: accessLogStream }))
 
 app.use('/', indexRouter);
 app.use('/app', auth, appRouter);
@@ -54,13 +57,7 @@ app.use(flash());
  
 // Load express-toastr
 // You can pass an object of default options to toastr(), see example/index.coffee
-app.use(toastr());
 
-app.use(function (req, res, next)
-{
-    res.locals.toasts = req.toastr.render()
-    next()
-})
 
 
 

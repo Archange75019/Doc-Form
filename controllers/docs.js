@@ -4,8 +4,8 @@ var fs = require('fs');
 const User = require('../models/User');
 const { json } = require('body-parser');
 var EventEmitter = require('events');
-const { Console } = require('console');
-const path = require("path")
+const path = require("path");
+var htmlspecialchars = require('htmlspecialchars');
 
 var event = new EventEmitter()
 
@@ -51,7 +51,12 @@ exports.addDoc = (req, res, next) => {
         console.log(err)
         
       }else{
-        var secureChaine = [ ]
+        champs = {
+          'titre':htmlspecialchars(fields.titre) ,
+          'domain':htmlspecialchars(fields.domain) ,
+          'domaine':htmlspecialchars(fields.domaine) ,
+          'description':htmlspecialchars(fields.description)
+        }
         var oldpath = files.fileToUpload.path;
 
         var newpath = './uploads/' + files.fileToUpload.name;
@@ -70,15 +75,15 @@ exports.addDoc = (req, res, next) => {
         fs.rename(oldpath, newpath, function (err) {
           if (err) throw err;
           if(fields.domain == "Autre"){
-            domaine = fields.domaine
+            domaine = champs.domaine
           }else{
-            domaine = fields.domain
+            domaine = champs.domain
           }
           var date = new Date();
           var doc = {
-            titre: fields.titre,
+            titre: champs.titre,
             domaine: domaine,
-            description: fields.description,
+            description: champs.description,
             author: req.cookies[process.env.cookie_name].userName,
             dateFull:new Date(),
             date: date.toLocaleString(),
