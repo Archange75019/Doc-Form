@@ -51,6 +51,7 @@ exports.addDoc = (req, res, next) => {
         console.log(err)
         
       }else{
+        var secureChaine = [ ]
         var oldpath = files.fileToUpload.path;
 
         var newpath = './uploads/' + files.fileToUpload.name;
