@@ -27,7 +27,6 @@ var docSchema = mongoose.Schema({
       },
       link : {
         type: String,
-        unique: true,
         required: true
       },
       date : {

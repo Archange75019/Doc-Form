@@ -35,18 +35,20 @@ exports.form = (req, res, next)=>{
     }
     const filteredArray = dom.filter(function(ele , pos){
       return dom.indexOf(ele) == pos;
+
   }) 
-  res.render('addDoc',{title: process.env.TITLE,domaines: filteredArray, statut: statut})
+  console.log(champs)
+  res.render('addDoc',{title: process.env.TITLE,domaines: filteredArray,champs: champs, statut: statut})
   });
 };
 //Ajouter un document à la base
 exports.addDoc = (req, res, next) => {
     var form = new formidable.IncomingForm();
     form.multiples = false;
-    form.maxFileSize = 30 * 1024 * 1024
+
     form.parse(req,  (err, fields, files)=> {
       if(err) {
-        res.redirect('/app/AddDocs')
+        console.log(err)
         
       }else{
         var oldpath = files.fileToUpload.path;
@@ -91,11 +93,14 @@ exports.addDoc = (req, res, next) => {
       
   
     })
-    form.on('progress', (bytesReceived, bytesExpected)=>{
-      if(bytesExpected > form.maxFileSize){
-        form.on('file',{})
-       
-      }
+    form.on('error', (err)=>{ 
+      if (err) {
+        //Handle error
+        //champs.push(fields)
+        return res.end("Something went wrong!" + err);
+    }
+    
+      res.redirect('/app/AddDocs')
      
     })
 

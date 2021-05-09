@@ -12,6 +12,9 @@ font-family: 'Numans', sans-serif;
 nav{
     background-color: black;
 }
+#submit{
+    visibility: hidden;
+}
 nav a{
     color: white;
     padding-right: 1em;
@@ -138,9 +141,12 @@ margin-left: 4px;
     color: white;
 }
 #add, .search{
+    margin-top: 10px;
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    width:80%;
 }
 .search{
     color: black;

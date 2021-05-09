@@ -1,4 +1,6 @@
 var createError = require('http-errors');
+var userctrl = require('./controllers/user');
+var docctrl = require('./controllers/docs');
 var express = require('express'),
 flash = require('connect-flash')
 ,session = require('express-session')
@@ -14,6 +16,7 @@ var appRouter = require('./routes/app');
 var adminRouter = require('./routes/admin');
 var auth = require('./middleware/auth');
 
+
 var app = express();
 
 
@@ -23,17 +26,7 @@ app.use(session({
     saveUninitialized: true,
     resave: true
 }));
-app.use(flash());
- 
-// Load express-toastr
-// You can pass an object of default options to toastr(), see example/index.coffee
-app.use(toastr());
 
-app.use(function (req, res, next)
-{
-    res.locals.toasts = req.toastr.render()
-    next()
-})
 
 
 mongoose.connect(process.env.DB_URL,
@@ -57,6 +50,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/app', auth, appRouter);
 app.use('/admin', auth, adminRouter);
+app.use(flash());
+ 
+// Load express-toastr
+// You can pass an object of default options to toastr(), see example/index.coffee
+app.use(toastr());
+
+app.use(function (req, res, next)
+{
+    res.locals.toasts = req.toastr.render()
+    next()
+})
+
 
 
 

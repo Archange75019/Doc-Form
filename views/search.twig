@@ -1,20 +1,12 @@
 {% extends 'layout.twig' %}
 
 {% block body %}
-    <div class="container">
-        <div class="d-flex justify-content-center h-10">
-            <div class="card">
-                <div class="cont">
-                    <div class="card-body">
+
                         <form method="post" action="/app/SearchDocs" class="search">
                             <input type="text" name="recherche" placeholder="Votre recherche">
                             <input type="submit" value="Rechercher">
                         </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+
     {% if docs %}
         {% for doc in docs %}
         <div class="container">
