@@ -48,6 +48,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser('secret'));
 app.use(express.static(path.join(__dirname, 'public')));
 var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
+
 app.use(logger('combined', { stream: accessLogStream }))
 
 app.use('/', indexRouter);
