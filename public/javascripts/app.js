@@ -20,7 +20,9 @@ document.addEventListener('DOMContentLoaded', function() {
     var select = document.getElementById('role-select');
     var other = document.getElementById('otherRole');
     var select2 = document.getElementById('domain-select');
+    var formations = document.getElementById('formation-select')
     var other2 = document.getElementById('otherDomaine');
+    var otherForm = document.getElementById('otherFormation')
     if(select){
         
         select.addEventListener('change', function() {
@@ -97,6 +99,18 @@ document.addEventListener('DOMContentLoaded', function() {
         
 
         
+    }
+    if(formations){
+        formations.addEventListener('change', function() {
+
+            if(formations.value == "Autre"){
+                otherForm.style.display= 'block';
+
+            }else{
+                otherForm.style.display='none';
+            }
+
+        });
     }
 
 

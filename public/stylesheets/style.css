@@ -134,9 +134,21 @@ color: white;
 .links a{
 margin-left: 4px;
 }
-#otherRole, #otherDomaine{
+#otherRole, #otherDomaine, #otherFormation{
     display: none;
 
+}
+#date{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    color: white;
+}
+#dateDeb, #dateFin{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 40%;
 }
 #do{
     width:100%;
