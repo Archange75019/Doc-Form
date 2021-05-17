@@ -148,7 +148,7 @@ margin-left: 4px;
     justify-content: space-around;
     color: white;
 }
-#add, .search{
+#add, .search, #createClass{
     margin-top: 10px;
     margin: 0 auto;
     display: flex;
