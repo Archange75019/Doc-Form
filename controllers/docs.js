@@ -165,7 +165,7 @@ exports.getResults = (req, res, next) => {
 //Télécharger un document
 exports.download = (req, res, next) => {
   if(req.params.id){
-    Doc.findOne({'_id': req.params.id}, function (error, docFile)
+    Doc.findOne({'_id': req.params.id}, {$set:{'count':+1}}, {new: true}, function (error, docFile)
     {
       var file = docFile.link;
     res.download(file);

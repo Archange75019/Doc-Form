@@ -2,7 +2,7 @@
 
 Il s'agit d'une plateforme de partage documentaire
 
-INSTALLATION</br>
+INSTALLATIONS</br>
 
  - Assurez-vous d'avoir NodeJS installé sur votre ordinateur</br>
  - Télécharger le zip ou cloner le projet sur votre ordinateur.</br>

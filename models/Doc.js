@@ -38,6 +38,10 @@ var docSchema = mongoose.Schema({
       dateFull:{
         type: Date,
         required: true 
+      },
+      count:{
+        type: String
+
       }
 });
 
