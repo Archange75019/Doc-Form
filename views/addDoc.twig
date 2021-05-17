@@ -3,7 +3,7 @@
 {% block body %}
 
                 <form method="post" action="/app/AddDocs" id="add" enctype="multipart/form-data" id="add">
-                    <input type="text" name="titre" id="titre" placeholder="titre de votre document" required="required">
+                    <input type="text" name="titre" id="titre" placeholder="titre de votre document" required="required"></br>
                     <select name="domain" id="domain-select" required="required">
                         <option value="">--Choisissez un domaine--</option>
                         {% if domaines %}
@@ -12,13 +12,14 @@
                             {% endfor %}
                         {% endif %}
                         <option value="Autre">Autre</option>
-                    </select>
+                    </select></br>
                     <div id="otherDomaine">
-                        <input type="text" name="domaine" placeholder="Définir un domaine">
+                        <input type="text" name="domaine" id="do" placeholder="Définir un domaine"></br>
                     </div>
+
                     <textarea name="description" id="textarea" rows="5" cols="33" placeholder="Description" required="required">
-                    </textarea>
-                    <input type="file" name="fileToUpload" id="fileUpload" required="required">
+                    </textarea></br>
+                    <input type="file" name="fileToUpload" id="fileUpload" required="required"></br>
                     <input type="button" id="valider" value="valider">
                     <div id="sub">
 

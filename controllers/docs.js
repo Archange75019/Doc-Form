@@ -15,7 +15,7 @@ champs = []
 exports.getDoc = (req, res, next) => {
     let statut = req.cookies[process.env.cookie_name].role;
     Doc.find({})
-    .sort({ date: -1 })
+    .sort({ dateFull: -1 })
     .limit(12)
     .exec(function (err, docs){
       if(err) throw err;

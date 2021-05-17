@@ -39,6 +39,9 @@ nav a{
     padding: 10px;
     border-radius:10px;
 }
+#fileUpload{
+    color:white;
+}
  .corpDoc{
     width:100%;
     display: flex;
@@ -133,6 +136,11 @@ margin-left: 4px;
 }
 #otherRole, #otherDomaine{
     display: none;
+
+}
+#do{
+    width:100%;
+    margin-bottom: 1em;
 }
 .cont{
     display: flex;

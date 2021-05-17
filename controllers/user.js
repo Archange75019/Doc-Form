@@ -5,7 +5,7 @@ var nodemailer = require('nodemailer');
 const notifier = require('node-notifier');
 
 
-var role = [];
+
 function generate(l){
     if (typeof l==='undefined'){var l=20;}
     /* c : chaîne de caractères alphanumérique */
@@ -87,12 +87,17 @@ exports.login = (req, res, next) => {
 //Afficher le formulaire d'inscription utilisateur
 exports.registerShow = (req, res, next) =>{
   let statut = req.cookies[process.env.cookie_name].role;
+  var role = [];
   User.find({},{ role: 1 } , (err, Role)=>{
-    if(Role != statut){
-      role.push(Role[0].role)
-    };
+   for (var i = 0; i<Role.length; i++){
+     var element = Role[i].role
+     role.push(element)
+   }
+   
+    res.render('register', {title: process.env.TITLE, role: role, statut: statut})
   })
-  res.render('register', {title: process.env.TITLE, role: role, statut: statut})
+  
+  
 };
 //Inscription utilisateur
 exports.register = (req, res, next) => {
@@ -127,6 +132,11 @@ exports.register = (req, res, next) => {
           console.log('user déjà existant');
         };
     })
+};
+//Créer une classe
+exports.createClass = (req, res, next) => {
+  let statut = req.cookies[process.env.cookie_name].role;
+  res.render('class', {title: process.env.TITLE, statut: statut})
 };
 /*exports.getUser = (req, res, next) => {
 
