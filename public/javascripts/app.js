@@ -1,8 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
 
-  var socket = io();
-  var textarea  = document.getElementById('textarea');
-  
+    var socket = io();
+    var textarea  = document.getElementById('textarea');
     var formAdd = document.getElementById('add');
     var titre = document.getElementById('titre');
     var btnSbmit = document.createElement('input');

@@ -19,7 +19,6 @@ var userSchema = mongoose.Schema({
         type: String,
         required: true,
       },
-     
     site : {
         type: String,
         unique: true,
@@ -30,6 +29,10 @@ var userSchema = mongoose.Schema({
         type: String,
         unique: false,
         required: true
+      },
+      specialite : {
+        type: String,
+        unique: false
       },
       n1 : {
         type: String
