@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if(select2 && btnSbmit && textarea){
         textarea.value = "";
   						
-  textarea.setSelectionRange(textarea, 1, 2);
+        textarea.setSelectionRange(textarea, 1, 2);
 
         select2.addEventListener('change', function() {
 

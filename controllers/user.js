@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 var bcrypt = require('bcrypt')
 var User = require('../models/User');
-
 var nodemailer = require('nodemailer');
 const notifier = require('node-notifier');
 

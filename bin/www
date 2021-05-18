@@ -38,7 +38,7 @@ io.on('connection', (socket) => {
         }
         if(doc.length !== 0){
          
-          socket.emit('FichierPresent','Fichier déjà présent sur le serveur');
+          socket.emit('FichierPresent','Ce fichier existe déjà sur le serveur');
 
         }else{
           socket.emit('success', 'fichier ok')
