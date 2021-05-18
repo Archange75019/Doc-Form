@@ -31,8 +31,6 @@ router.get('/download/:id', doc.download);
 router.get('/delete/:id', doc.deleteDoc);
 //Visualiser ses propres documents
 router.get('/MyDocs', doc.MyDocs);
-// Créer une classe
-router.get('/createClass', user.createClass);
 //Se déconnecter
 router.get('/logout', user.logout);
 

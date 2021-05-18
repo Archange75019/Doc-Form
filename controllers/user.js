@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 var bcrypt = require('bcrypt')
 var User = require('../models/User');
-var Class = require('../models/Class');
+
 var nodemailer = require('nodemailer');
 const notifier = require('node-notifier');
 
@@ -134,20 +134,7 @@ exports.register = (req, res, next) => {
         };
     })
 };
-//Créer une classe
-exports.createClass = (req, res, next) => {
-  let statut = req.cookies[process.env.cookie_name].role;
-  let Formations = [];
-  Class.find({},{'nom':1}, (err, formations)=>{
-    if (err) throw err;
-    for(var i=0; i<formations.length; i++ ){
-      var element = formations[i].nom
-      Formations.push(element) 
-    }
 
-  })
-  res.render('class', {title: process.env.TITLE, formations:Formations,  statut: statut})
-};
 /*exports.getUser = (req, res, next) => {
 
 };
