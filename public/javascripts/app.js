@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', function() {
 
     var socket = io();
@@ -13,10 +14,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     var sub = document.getElementById('sub');
     var valider = document.getElementById('valider');
-    var inputFile = document.getElementById('fileUpload')
-    var submit = document.getElementById('submit')
+    //var inputFile = document.getElementById('fileUpload')
+    //var submit = document.getElementById('submit')
     var file = document.getElementById('fileUpload');
     var select = document.getElementById('role-select');
+    //var apercu = document.getElementsByClassName('apercu');
     var other = document.getElementById('otherRole');
     var select2 = document.getElementById('domain-select');
     var formations = document.getElementById('formation-select')
@@ -36,8 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
     }
     if(select2 && btnSbmit && textarea){
-        textarea.value = "";
-  						
+        textarea.value = "";				
         textarea.setSelectionRange(textarea, 1, 2);
 
         select2.addEventListener('change', function() {
@@ -93,11 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         socket.on('remplirChamps', (data)=>{
             toastr.error(data)
-        })
-
-        
-
-        
+        })   
     }
     if(formations){
         formations.addEventListener('change', function() {
@@ -111,6 +108,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         });
     }
+    
+    
 
 
 

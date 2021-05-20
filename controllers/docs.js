@@ -58,6 +58,7 @@ exports.addDoc = (req, res, next) => {
           'description':htmlspecialchars(fields.description)
         }
         var oldpath = files.fileToUpload.path;
+        console.log(files)
 
         var newpath = './uploads/' + files.fileToUpload.name;
         
@@ -80,16 +81,19 @@ exports.addDoc = (req, res, next) => {
             domaine = champs.domain
           }
           var date = new Date();
+          //const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
           var doc = {
             titre: champs.titre,
             domaine: domaine,
             description: champs.description,
             author: req.cookies[process.env.cookie_name].userName,
-            dateFull:new Date(),
-            date: date.toLocaleString(),
+            dateFull:files.fileToUpload.lastModifiedDate,
+            size: files.fileToUpload.size,
+            date: date.toLocaleString('fr-FR'),
             link: newpath
           }
-          Doc.create({'titre': doc.titre, 'domaine': doc.domaine,'dateFull': doc.dateFull, 'description': doc.description, 'author': doc.author, date: doc.date, 'link': doc.link }, (err, doc)=>{
+
+          Doc.create({'titre': doc.titre, 'domaine': doc.domaine,'dateFull': doc.dateFull, 'description': doc.description, 'author': doc.author, 'date': doc.date, 'link': doc.link, 'size':doc.size }, (err, doc)=>{
             if(err) throw err;
             res.redirect('/app/home')
             

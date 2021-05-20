@@ -11,14 +11,50 @@ font-family: 'Numans', sans-serif;
 }
 nav{
     background-color: black;
-}
-#submit{
-    visibility: hidden;
+    
 }
 nav a{
     color: white;
-    padding-right: 1em;
+    list-style-type: none;
 }
+nav ul {
+    margin:0;
+    padding:0;
+    list-style-type:none;
+    text-align:center;
+    }
+nav li {
+    float:left;
+    margin:auto;
+    width: auto;
+    padding:0;
+    background-color:black;
+    }
+    nav li a {
+        display:block;
+        width:200px;
+        color:white;
+        text-decoration:none;
+        padding:5px;
+        }
+    nav li a:hover {
+            color:#FFD700;
+        }
+    nav ul li ul {
+        display:none;
+        }
+    nav ul li:hover ul {
+        text-align: left;
+        display:block;
+        width: auto;
+        }
+    nav li:hover ul li {
+        float:none;
+        }
+    nav li ul {
+        position:absolute;
+        }
+
 .contain{
     display: flex;
     width: 100%;

@@ -29,6 +29,10 @@ var docSchema = mongoose.Schema({
         type: String,
         required: true
       },
+      size:{
+        type: String,
+        required: true
+      },
       date : {
         type: String,
         unique: false,
