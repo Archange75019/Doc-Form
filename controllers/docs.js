@@ -61,6 +61,47 @@ exports.addDoc = (req, res, next) => {
         console.log(files)
 
         var newpath = './uploads/' + files.fileToUpload.name;
+
+        var ext = newpath;
+        var re = /(?:\.([^.]+))?$/;
+        var extens = re.exec(ext)[1];
+        console.log('extens '+extens)
+  
+        switch(extens){
+          case 'pdf':
+            case 'PDF':
+            extens = "PDF"
+            break;
+            case 'doc':
+            case'docx':
+            extens = "Word";
+            break;
+            case 'xlsx':
+            case 'xls':
+            extens = "Excel";
+            break;
+            case 'ppt':
+            case 'pptx':
+            extens = "Powerpoint";
+            break;
+            case 'jpg':
+            case 'jpeg':  
+            case 'png':
+            case 'gif':
+            extens = "Image";
+            break;
+            case 'flv':
+            case 'mp4':
+            extens = "Video";
+            break;
+            case 'zip':
+              extens = "Archive";
+              break;
+            default:
+                extens = "document"
+                return
+        }
+
         
         if (!fs.existsSync('./uploads')) {
           const mkdirSync = function (dirPath) {
@@ -85,6 +126,7 @@ exports.addDoc = (req, res, next) => {
           var doc = {
             titre: champs.titre,
             domaine: domaine,
+            extension: extens,
             description: champs.description,
             author: req.cookies[process.env.cookie_name].userName,
             dateFull:files.fileToUpload.lastModifiedDate,
@@ -93,7 +135,7 @@ exports.addDoc = (req, res, next) => {
             link: newpath
           }
 
-          Doc.create({'titre': doc.titre, 'domaine': doc.domaine,'dateFull': doc.dateFull, 'description': doc.description, 'author': doc.author, 'date': doc.date, 'link': doc.link, 'size':doc.size }, (err, doc)=>{
+          Doc.create({'titre': doc.titre, 'domaine': doc.domaine,'extension': doc.extension,'dateFull': doc.dateFull, 'description': doc.description, 'author': doc.author, 'date': doc.date, 'link': doc.link, 'size':doc.size }, (err, doc)=>{
             if(err) throw err;
             res.redirect('/app/home')
             
@@ -169,10 +211,11 @@ exports.getResults = (req, res, next) => {
 //Télécharger un document
 exports.download = (req, res, next) => {
   if(req.params.id){
-    Doc.findOne({'_id': req.params.id}, {$set:{'count':+1}}, {new: true}, function (error, docFile)
+    Doc.findOne({'_id': req.params.id},{'link': 1}, {new: true}, function (error, docFile)
     {
       var file = docFile.link;
-    res.download(file);
+
+      res.download(file)
     })
   }
 };

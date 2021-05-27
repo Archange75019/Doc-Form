@@ -6,12 +6,22 @@ html,body{
 background-image: url('http://getwallpapers.com/wallpaper/full/a/5/d/544750.jpg');
 background-size: border-box;
 background-repeat: no-repeat;
+z-index: 1;
 
 font-family: 'Numans', sans-serif;
 }
+#dialog{
+    position: absolute;
+    z-index: 2;
+    border: 1px solid black;
+    top: 10px;
+    text-align: center;
+}
 nav{
     background-color: black;
-    
+}
+#dialog{
+    display: none;
 }
 nav a{
     color: white;

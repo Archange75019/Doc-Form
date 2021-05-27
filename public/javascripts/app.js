@@ -16,14 +16,18 @@ document.addEventListener('DOMContentLoaded', function() {
     var valider = document.getElementById('valider');
     //var inputFile = document.getElementById('fileUpload')
     //var submit = document.getElementById('submit')
+    var close = document.getElementById('closeModal')
+    var docContainer = document.getElementById('containerDoc')
     var file = document.getElementById('fileUpload');
     var select = document.getElementById('role-select');
-    //var apercu = document.getElementsByClassName('apercu');
+    var apercu = document.querySelectorAll('.apercu');
+    var conteneur = document.getElementById('document');
     var other = document.getElementById('otherRole');
     var select2 = document.getElementById('domain-select');
     var formations = document.getElementById('formation-select')
     var other2 = document.getElementById('otherDomaine');
-    var otherForm = document.getElementById('otherFormation')
+    var otherForm = document.getElementById('otherFormation');
+    var doc = document.getElementById('c-dialog__box');
     if(select){
         
         select.addEventListener('change', function() {
@@ -108,9 +112,46 @@ document.addEventListener('DOMContentLoaded', function() {
 
         });
     }
-    
-    
-
-
-
+    if(apercu && close){
+        for (let i = 0; i < apercu.length; i++) {
+            apercu[i].addEventListener('click', function(){
+                var link = apercu[i].getAttribute('name');
+                if(docContainer){
+                    close.style.display = 'none'
+                    docContainer.innerHTML = ""  
+                }
+                socket.emit('getApercu', link);
+            })
+        }
+        socket.on('link', (data)=>{
+            var modale = document.getElementById('dialog');
+            var extension = data[0];
+            close.style.display = 'block'
+            var link = '.'+data[1];
+             switch(extension){
+                    case 'PDF':
+                    var docu = document.createElement('embed');
+                    docu.type = 'application/pdf';
+                    break;
+                    case 'WORD':
+                    var docu = document.createElement('iframe')
+                    docu.type = 'application/pdf';
+                    break;
+                }
+            docu.src = link;
+            docu.id = "document";
+            docu.style.width = '800px';
+            docu.style.height = '800px';
+            docu.style.textAlign = 'center';
+            docContainer.appendChild(docu)
+            doc.style.textAlign = "center";
+            modale.style.display = 'block';
+            if(apercu && close){
+                close.addEventListener('click', function(){
+                    close.style.display = 'none'
+                    docContainer.innerHTML = ""                
+                })
+            } 
+        })
+    }
 })

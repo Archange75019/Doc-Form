@@ -17,10 +17,33 @@
                     <p> le {{doc.date}}</p>
                 </div>
                 <a href="/app/download/{{doc._id}}"><i class="fas fa-download fa-3x"></i></a>
-                <a class="apercu" href="#"  ><i class="fas fa-search fa-3x"></i></a>
+                <a class="apercu"  name="{{doc._id}}" ><i class="fas fa-search fa-3x"></i></a>
             </div>	
         </div>
     {% endfor %}
+    </div>
+    <div
+        id="dialog"
+        role="dialog"
+        aria-labelledby="dialog-title"
+        aria-describedby="dialog-desc"
+        aria-modal="true"
+        aria-hidden="true"
+        tabindex="-1"
+        class="c-dialog">
+        <div role="document" id="c-dialog__box" id="conteneur">
+            
+                <button 
+                type="button" 
+                aria-label="Fermer"
+                id="closeModal" 
+                title="Fermer cette fenêtre modale"
+                data-dismiss="dialog">X
+                </button>
+                <div id="containerDoc">
+        
+           
+        </div>
     </div>
 
 

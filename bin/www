@@ -7,6 +7,7 @@
 var app = require('../app');
 var debug = require('debug')('cmsformation:server');
 var http = require('http');
+var fs = require('fs');
 
 /**
  * Get port from environment and store in Express.
@@ -23,6 +24,7 @@ var server = http.createServer(app);
 const { Server } = require("socket.io");
 const Doc = require('../models/Doc');
 const { Console } = require('console');
+const { fstat } = require('fs');
 const io = new Server(server);
 app.set('socketio', io)
 
@@ -77,6 +79,18 @@ io.on('connection', (socket) => {
 
     }
   })
+  socket.on('getApercu', (data)=>{
+    Doc.findOne({'_id': data}, {'link':1, 'extension':1}, (err, data)=>{
+      console.log(data)
+      var link = data.link;
+      var extension = data.extension
+      var data = [extension, link];
+
+      socket.emit('link', data)
+    })
+
+  })
+
  
   
 });

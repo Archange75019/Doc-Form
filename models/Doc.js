@@ -39,13 +39,13 @@ var docSchema = mongoose.Schema({
         required: true,
         index:true
       }, 
+      extension:{
+        type: String,
+        required: true
+      },
       dateFull:{
         type: Date,
         required: true 
-      },
-      count:{
-        type: String
-
       }
 });
 
