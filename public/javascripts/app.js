@@ -148,7 +148,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 docu.id = "document";
             if(extension == 'Video'){
-                alert('video')
                 source.src = link
                 docu.appendChild(source)
                 docContainer.appendChild(docu)
