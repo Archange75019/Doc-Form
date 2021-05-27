@@ -34,11 +34,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if(select.value == "Autre"){
                 other.style.display= 'block';
-
             }else{
                 other.style.display='none';
             }
-
         })
     }
     if(select2 && btnSbmit && textarea){
@@ -133,19 +131,37 @@ document.addEventListener('DOMContentLoaded', function() {
                     var docu = document.createElement('embed');
                     docu.type = 'application/pdf';
                     break;
-                    case 'WORD':
+                    case 'Word':
                     var docu = document.createElement('iframe')
-                    docu.type = 'application/pdf';
+                    docu.type = 'application/msword';
                     break;
+                    case 'Video':
+                    var docu = document.createElement('video');
+                    docu.style.width = "500px";
+                    var source = document.createElement('source');
+                    source.type = "video/mp4"
+                    
+                    break;
+                    case 'Image':
+                    var docu = document.createElement('img');
+
                 }
-            docu.src = link;
-            docu.id = "document";
-            docu.style.width = '800px';
-            docu.style.height = '800px';
-            docu.style.textAlign = 'center';
-            docContainer.appendChild(docu)
-            doc.style.textAlign = "center";
-            modale.style.display = 'block';
+                docu.id = "document";
+            if(extension == 'Video'){
+                alert('video')
+                source.src = link
+                docu.appendChild(source)
+                docContainer.appendChild(docu)
+            }else{
+                docu.src = link;
+                docu.style.width = '100%';
+                docu.style.height = '100%';
+                docu.style.textAlign = 'center';
+                docContainer.appendChild(docu)
+                doc.style.textAlign = "center";
+                modale.style.display = 'block';
+            }
+
             if(apercu && close){
                 close.addEventListener('click', function(){
                     close.style.display = 'none'
