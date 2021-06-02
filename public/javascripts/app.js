@@ -1,9 +1,14 @@
 
 document.addEventListener('DOMContentLoaded', function() {
+    var urlcourante = document.location.href; 
+    var urlcourante = urlcourante.replace(/\/$/, "");
+// Gardons dans la variable queue_url uniquement la portion derrière le dernier slash de urlcourante
+queue_url = urlcourante.substring (urlcourante.lastIndexOf( "/" )+1 );
 
+    var formUpdate = document.getElementById('update');
     var socket = io();
     var textarea  = document.getElementById('textarea');
-    var formAdd = document.getElementById('add');
+    var form = document.getElementById('add');
     var titre = document.getElementById('titre');
     var btnSbmit = document.createElement('input');
     btnSbmit.id='envoiID'
@@ -14,11 +19,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     var sub = document.getElementById('sub');
     var valider = document.getElementById('valider');
-    //var inputFile = document.getElementById('fileUpload')
-    //var submit = document.getElementById('submit')
-    var close = document.getElementById('closeModal')
-    var docContainer = document.getElementById('containerDoc')
-    var file = document.getElementById('fileUpload');
+    var close = document.getElementById('closeModal');
+    var modif = document.querySelectorAll('.modification');
+    var docContainer = document.getElementById('containerDoc');
+    var file = document.getElementById('fileUpload');  
     var select = document.getElementById('role-select');
     var apercu = document.querySelectorAll('.apercu');
     var conteneur = document.getElementById('document');
@@ -29,7 +33,6 @@ document.addEventListener('DOMContentLoaded', function() {
     var otherForm = document.getElementById('otherFormation');
     var doc = document.getElementById('c-dialog__box');
     if(select){
-        
         select.addEventListener('change', function() {
 
             if(select.value == "Autre"){
@@ -53,6 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
         });
+    if(queue_url == "AddDocs"){
         valider.addEventListener('click', function(){
             var fichier = {
                 'title': titre.value,
@@ -62,6 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if(file.value){
                 fichier.link = file.files[0].name
                 fichier.size = file.files[0].size
+                fichier.extension = file.files[0].extension
             }else{
                 toastr.error('Veuillez choisir un fichier')
             }
@@ -72,6 +77,33 @@ document.addEventListener('DOMContentLoaded', function() {
                 toastr.error('Tous les champs doivent être renseignés')
             }
         })
+    }
+    var url2 = urlcourante.split("/")
+    console.log(url2)
+    if(url2 == "UpdateDoc"){
+        valider.addEventListener('click', ()=>{
+            var fichier = {
+                'url': 'updateDoc',
+                'title': titre.value,
+                'domaine': select2.value,
+                'description': textarea.value
+            }
+            if(file.value){
+                fichier.link = file.files[0].name
+                fichier.size = file.files[0].size
+                fichier.extension = file.files[0].extension
+            }
+
+            if(fichier.title.length != 0 && fichier.domaine.length != 0 && fichier.description.length != 0 ){
+                socket.emit('File',fichier)
+            }else{
+                toastr.error('Tous les champs doivent être renseignés')
+            }
+
+        })
+
+    }
+   
         socket.on('FichierLourd', (data)=>{
 
             toastr.error(data)
@@ -79,10 +111,9 @@ document.addEventListener('DOMContentLoaded', function() {
         socket.on('FichierPresent', (data)=>{
             toastr.error(data)
         });
-        
         socket.on('success', (data)=>{
             if(data){
-                formAdd.removeChild(valider)
+                form.removeChild(valider)
                 sub.appendChild(btnSbmit)
             } 
         });
@@ -112,7 +143,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     if(apercu && close){
         for (let i = 0; i < apercu.length; i++) {
-            apercu[i].addEventListener('click', function(){
+            apercu[i].addEventListener('click', ()=>{
                 var link = apercu[i].getAttribute('name');
                 if(docContainer){
                     close.style.display = 'none'
@@ -168,5 +199,38 @@ document.addEventListener('DOMContentLoaded', function() {
                 })
             } 
         })
+    }
+    if(modif){
+       
+        for(let i = 0; i<modif.length; i++){
+            modif[i].addEventListener('click', ()=>{
+                var link = modif[i].getAttribute('name');
+                if(docContainer){
+                    close.style.display = 'none';
+                    docContainer.innerHTML = "";
+                }
+                window.open('/app/UpdateDoc/'+link,"menubar=no, status=no, scrollbars=no, menubar=no, width=200, height=100")
+            });
+        };
+       
+
+    }
+    if(formUpdate){
+        formUpdate.addEventListener('submit', (e)=>{
+            e.preventDefault();
+            var fiche = {
+                titre: titre.value,
+                description:textarea.getAttribute('placeholder')
+            };
+            if(select2.value != "Autre"){
+                fiche.domaine = select2.value;
+            }else{
+                fiche.domaine = document.getElementById('do').value;
+            }
+
+        })
+        
+        
+
     }
 })

@@ -17,6 +17,42 @@ font-family: 'Numans', sans-serif;
     top: 10px;
     text-align: center;
 }
+table{
+    width: 90%
+}
+.divUpdate{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+
+    text-align: left;
+}
+.btn{
+    color: white;
+}
+.questionUpdate{
+    font-size: 1.2em;
+}
+#fileUpdate, .questionUpdate{
+    color: white;
+}
+.fileName{
+    background-color: white;
+}
+table, th, tr, td{
+    color: white;
+    border: 1px solid white;
+    text-align: center;
+}
+th{
+    color: #007bff;
+}
+td{
+    width: auto;
+}
+a{
+    color: white;
+}
 nav{
     background-color: black;
 }
@@ -205,6 +241,9 @@ margin-left: 4px;
     flex-direction: row;
     justify-content: space-around;
     color: white;
+}
+.download, .apercu{
+    color: blue !important;
 }
 #add, .search, #createClass{
     margin-top: 10px;

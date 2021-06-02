@@ -3,6 +3,7 @@ var userctrl = require('./controllers/user');
 var docctrl = require('./controllers/docs');
 var fs = require('fs');
 var express = require('express'),
+bodyParser = require('body-parser')
 flash = require('connect-flash')
 ,session = require('express-session')
 ,cookieParser = require('cookie-parser')
@@ -17,9 +18,7 @@ var appRouter = require('./routes/app');
 var adminRouter = require('./routes/admin');
 var auth = require('./middleware/auth');
 
-
 var app = express();
-
 
 app.use(cookieParser('secret'));
 app.use(session({
@@ -27,8 +26,6 @@ app.use(session({
     saveUninitialized: true,
     resave: true
 }));
-
-
 
 mongoose.connect(process.env.DB_URL,
   { useNewUrlParser: true,
@@ -40,11 +37,13 @@ mongoose.connect(process.env.DB_URL,
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'twig');
-
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 app.use(cookieParser());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
 app.use(cookieParser('secret'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(__dirname + '/uploads'));
@@ -56,13 +55,6 @@ app.use('/', indexRouter);
 app.use('/app', auth, appRouter);
 app.use('/admin', auth, adminRouter);
 app.use(flash());
- 
-// Load express-toastr
-// You can pass an object of default options to toastr(), see example/index.coffee
-
-
-
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,0 +1,35 @@
+{% extends 'layout.twig' %}
+
+{% block body %}
+    <form method="post"  enctype="multipart/form-data" id="add">
+        <input type="text" name="titre" id="titre" value="{{doc.titre}}"></br>
+        <select name="domain" id="domain-select">
+            <option value="">--Choisissez un domaine--</option>
+                {% if domaines %}
+                    {% for domaine in domaines %}
+                        {% if doc.domaine == domaine %}
+                            <option value="{{ doc.domaine }}" selected>{{ doc.domaine }}</option>
+                        {% else %}
+                            <option value="{{ domaine }}" selected>{{ domaine }}</option>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                <option value="Autre">Autre</option>
+        </select></br>
+        <div id="otherDomaine">
+            <input type="text" name="domaine" id="do" placeholder="Définir un domaine"></br>
+        </div>
+        <textarea name="description" id="textarea" rows="5" cols="33">{{doc.description}}</textarea></br>
+        <p class="fileName">Nom du fichier associé : {{FileName}}</p>
+        <div class="divUpdate">
+            <p class="questionUpdate">Voulez-vous associer un autre fichier à cette fiche descriptive ?</p>
+            <input type="file"  name="fileToUpload" id="fileUpdate" >
+        </div>
+        </br>
+        <input type="submit" id="valider" value="Mettre à jour">
+        <div id="sub">
+        </div>
+    </form>
+
+
+{% endblock %}

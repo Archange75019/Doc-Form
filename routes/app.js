@@ -31,6 +31,10 @@ router.get('/download/:id', doc.download);
 router.get('/delete/:id', doc.deleteDoc);
 //Visualiser ses propres documents
 router.get('/MyDocs', doc.MyDocs);
+// Obtenir le formulaire de mise à jour pour la mise à jour d'un document
+router.get('/updateDoc/:id', doc.getUpdateDoc);
+//Soumettre la mise à jour d'un document
+router.post('/updateDoc/:id', doc.postUpdateDoc);
 //Se déconnecter
 router.get('/logout', user.logout);
 

@@ -13,7 +13,7 @@ var fs = require('fs');
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(3330);
+var port = normalizePort(3333);
 app.set('port', port);
 
 /**
@@ -25,11 +25,14 @@ const { Server } = require("socket.io");
 const Doc = require('../models/Doc');
 const { Console } = require('console');
 const { fstat } = require('fs');
+var doc = require('../controllers/docs');
 const io = new Server(server);
 app.set('socketio', io)
 
 
 io.on('connection', (socket) => {
+  
+  var destination;
   function checkFile(nom, size){
 
     if(size <= 30 * 1024 *1024){
@@ -67,6 +70,7 @@ io.on('connection', (socket) => {
 
   }
   socket.on('File', (data)=>{
+    console.log(data)
     var titre = checkTitre(data.title)
     if(titre){
       socket.emit('titrePresent', 'Veuillez changer le titre')
@@ -75,6 +79,7 @@ io.on('connection', (socket) => {
   })
   socket.on('envoi', (data)=>{
     if(data){
+      doc.addDoc;
       socket.emit('notif', 'reussi')
 
     }
@@ -90,9 +95,28 @@ io.on('connection', (socket) => {
     })
 
   })
+  socket.on('doc', (data)=>{
+    if(data){
+      Doc.findById({'_id': data}, (err, doc)=>{
+        if (err) throw err;
+        Doc.find({},{'domaine': 1}, (err, domaine)=>{
+          let domaines = [];
+         
+          for( let i = 0; i< domaine.length; i++){
+            if(domaines.indexOf(domaine[i].domaine) === -1){
+              domaines.push(domaine[i].domaine )
+            }
+          }
+          var obj = {
+            domaine: domaines,
+            document: doc
+          }
 
- 
-  
+        socket.emit('docModif', obj )
+      })
+  })
+} 
+  })
 });
 
 /**

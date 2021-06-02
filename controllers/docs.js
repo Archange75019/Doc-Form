@@ -43,6 +43,7 @@ exports.form = (req, res, next)=>{
 };
 //Ajouter un document à la base
 exports.addDoc = (req, res, next) => {
+  console.log('on accede à la route ajout')
     var form = new formidable.IncomingForm();
     form.multiples = false;
 
@@ -51,6 +52,8 @@ exports.addDoc = (req, res, next) => {
         console.log(err)
         
       }else{
+        console.log('fields '+fields)
+
         champs = {
           'titre':htmlspecialchars(fields.titre) ,
           'domain':htmlspecialchars(fields.domain) ,
@@ -196,10 +199,7 @@ exports.MyDocs = (req, res, next)=>{
 exports.getResults = (req, res, next) => {
   let statut = req.cookies[process.env.cookie_name].role;
   if( req.params.recherche){
-
     var recherche = req.params.recherche
-
-
     Doc.find({ $text: { $search: recherche } }, {score: {$meta: "textScore"}})
     .sort({score:{$meta:"textScore"}})
     .exec(function (err, docs) {
@@ -219,9 +219,36 @@ exports.download = (req, res, next) => {
     })
   }
 };
-exports.updateDoc = (req, res, next) => {
-
+exports.getUpdateDoc = (req, res, next) => {
+  let statut = req.cookies[process.env.cookie_name].role;
+  if(req.params.id){
+    Doc.findById({'_id': req.params.id}, (err, doc)=>{
+      if(err) throw err;
+      var chemin = doc.link.replace(/\/$/, "");
+      // Gardons dans la variable queue_url uniquement la portion derrière le dernier slash de urlcourante
+      cheminDef = chemin.substring (chemin.lastIndexOf( "/" )+1 );
+      console.log(cheminDef)
+      Doc.find({},{'domaine': 1},(err, domaines)=>{
+        var dom = [];
+        for(var i=0; i<domaines.length; i++ ){
+          var element = domaines[i].domaine
+          dom.push(element) 
+        }
+        const filteredArray = dom.filter(function(ele , pos){
+          return dom.indexOf(ele) == pos;
+      })
+      console.log(doc)
+      res.render('updateDoc',{title: process.env.TITLE,FileName: cheminDef,doc: doc,domaines: filteredArray, statut: statut})
+      })
+    })
+  }
 };
+exports.postUpdateDoc = (req, res, next) => {
+  console.log('AAAAAA')
+
+    console.log(req.body)
+  
+}
 //Supprimer un document
 exports.deleteDoc = (req, res, next) => {
   if(req.params.id){

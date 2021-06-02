@@ -1,0 +1,32 @@
+config:
+  target: 'http://localhost:3330/'
+  tls:
+    rejectUnauthorized: false
+  phases:
+    - duration: 10
+      arrivalRate: 1
+      name: "Phase 1"
+    - duration: 10
+      arrivalRate: 40
+      rampTo: 10
+      name: "Phase 2"
+    - duration: 20
+      arrivalRate: 80
+      name: "Phase 3"
+scenarios:
+  - name :  Accueil
+    weight: 3/10
+    flow:
+    - get:
+        url: "/"
+        auth:
+          user: arnaud.escalier@gmail.com
+          pass: 4*EZdq9XXX3EftQUcahE
+  - name :  Catégorie ID 989
+    weight: 7/10
+    flow:
+    - get:
+        url: "/app/home"
+        auth:
+          user: arnaud.escalier@gmail.com
+          pass: 4*EZdq9XXX3EftQUcahE
