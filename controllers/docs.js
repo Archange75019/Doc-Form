@@ -13,7 +13,8 @@ var event = new EventEmitter()
 champs = []
 //Afficher les documents les plus récents en page home
 exports.getDoc = (req, res, next) => {
-    let statut = req.cookies[process.env.cookie_name].role;
+  let statut = req.cookies[process.env.cookie_name].role;
+  if(statut){
     Doc.find({})
     .sort({ dateFull: -1 })
     .limit(12)
@@ -21,8 +22,7 @@ exports.getDoc = (req, res, next) => {
       if(err) throw err;
       res.render('home',{title: process.env.TITLE, docs:docs, statut : statut})
     })
-  
-
+  }
 };
 //Afficher le formulaire d'ajout de documents
 exports.form = (req, res, next)=>{
@@ -214,43 +214,148 @@ exports.download = (req, res, next) => {
     Doc.findOne({'_id': req.params.id},{'link': 1}, {new: true}, function (error, docFile)
     {
       var file = docFile.link;
-
       res.download(file)
     })
   }
 };
+// Renvoyer le formulaire de modification de document avec les infos du doc
 exports.getUpdateDoc = (req, res, next) => {
   let statut = req.cookies[process.env.cookie_name].role;
   if(req.params.id){
     Doc.findById({'_id': req.params.id}, (err, doc)=>{
       if(err) throw err;
       var chemin = doc.link.replace(/\/$/, "");
-      // Gardons dans la variable queue_url uniquement la portion derrière le dernier slash de urlcourante
       cheminDef = chemin.substring (chemin.lastIndexOf( "/" )+1 );
-      console.log(cheminDef)
       Doc.find({},{'domaine': 1},(err, domaines)=>{
         var dom = [];
         for(var i=0; i<domaines.length; i++ ){
-          var element = domaines[i].domaine
-          dom.push(element) 
-        }
+          var element = domaines[i].domaine;
+          dom.push(element);
+        };
         const filteredArray = dom.filter(function(ele , pos){
           return dom.indexOf(ele) == pos;
-      })
-      console.log(doc)
-      res.render('updateDoc',{title: process.env.TITLE,FileName: cheminDef,doc: doc,domaines: filteredArray, statut: statut})
-      })
-    })
-  }
+        });
+        res.render('updateDoc',{title: process.env.TITLE,FileName: cheminDef,doc: doc,domaines: filteredArray, statut: statut});
+      });
+    });
+  };
 };
+//Mettre à jour la fiche du document
 exports.postUpdateDoc = (req, res, next) => {
-  console.log('AAAAAA')
+  let statut = req.cookies[process.env.cookie_name].role;
+  var form = new formidable.IncomingForm();
+    form.multiples = false;
+    form.parse(req,  (err, fields, files)=> {
+      if(err) {
+        console.log(err)
+        
+      }else{
+        console.log('fields '+fields)
 
-    console.log(req.body)
+        champs = {
+          'titre':htmlspecialchars(fields.titre) ,
+          'description':htmlspecialchars(fields.description)
+        }
+        var date = new Date();
+        if(fields.domain == "Autre"){
+          champs.domaine = fields.domaine
+        }else{
+          champs.domaine = fields.domain
+        }
+
+        if(files.fileToUpload.size > 0){
+          var oldpath = files.fileToUpload.path;
+          var newpath = './uploads/' + files.fileToUpload.name;
+          var ext = newpath;
+          var re = /(?:\.([^.]+))?$/;
+          var extens = re.exec(ext)[1]; 
+          switch(extens){
+            case 'pdf':
+              case 'PDF':
+              extens = "PDF"
+              break;
+              case 'doc':
+              case'docx':
+              extens = "Word";
+              break;
+              case 'xlsx':
+              case 'xls':
+              extens = "Excel";
+              break;
+              case 'ppt':
+              case 'pptx':
+              extens = "Powerpoint";
+              break;
+              case 'jpg':
+              case 'jpeg':  
+              case 'png':
+              case 'gif':
+              extens = "Image";
+              break;
+              case 'flv':
+              case 'mp4':
+              extens = "Video";
+              break;
+              case 'zip':
+                extens = "Archive";
+                break;
+              default:
+                  extens = "document"
+                  return
+          }
+          if (!fs.existsSync('./uploads')) {
+            const mkdirSync = function (dirPath) {
+              try {
+              fs.mkdirSync(dirPath)
+              } catch (err) {
+              if (err.code !== "EEXIST") throw err
+              }
+              }
+              mkdirSync(path.resolve('./uploads'))
+          }
+          fs.rename(oldpath, newpath, function (err) {
+            if (err) throw err;
+            
+            
+            //const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            var doc = {
+              titre: champs.titre,
+              domaine: domaine,
+              extension: extens,
+              description: champs.description,
+              author: req.cookies[process.env.cookie_name].userName,
+              dateFull:files.fileToUpload.lastModifiedDate,
+              size: files.fileToUpload.size,
+              date: date.toLocaleString('fr-FR'),
+              link: newpath
+            }
+            Doc.findByIdAndUpdate({'_id': req.params.id},
+            {'titre': doc.titre, 'author': doc.author, 'domaine': domaine, 'description':doc.description, 'link':doc.link, 'size': doc.size, 'date':doc.date, 'extension': doc.extension, 'dateFull': doc.dateFull}, (err, data)=>{
+              if(err) throw err
+              res.redirect('/app/home');
+            })
+          });
+
+        }else{
+          Doc.findByIdAndUpdate({'_id': req.params.id}, {'titre': champs.titre, 'description': champs.description, 'domaine': champs.domaine, 'date': date.toLocaleString('fr-FR')}, (err, data)=>{
+            if(err) throw err;
+            res.redirect('/app/home');
+          })
+        }
+
   
-}
+        
+
+        
+      }
+      
+  
+    })
+  
+};
 //Supprimer un document
 exports.deleteDoc = (req, res, next) => {
+  let statut = req.cookies[process.env.cookie_name].role;
   if(req.params.id){
     var fs = require('fs');
     Doc.findByIdAndDelete({'_id': req.params.id}, (err, doc)=>{

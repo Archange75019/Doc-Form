@@ -4,8 +4,6 @@ var User = require('../models/User');
 var nodemailer = require('nodemailer');
 const notifier = require('node-notifier');
 
-
-
 function generate(l){
     if (typeof l==='undefined'){var l=20;}
     /* c : chaîne de caractères alphanumérique */
@@ -30,6 +28,7 @@ function generate(l){
     }
     return r;
 };
+
 // fonctions d'envoi de mail
 function sendMail(destinataire, objet, corp){
   smtpTrans = nodemailer.createTransport({
@@ -51,7 +50,7 @@ function sendMail(destinataire, objet, corp){
     }
 
   });
-}
+};
 
 //Connexion à l'appli
 exports.login = (req, res, next) => {
@@ -84,6 +83,7 @@ exports.login = (req, res, next) => {
       })
       .catch(error => res.status(500).json({ error }));
 };
+
 //Afficher le formulaire d'inscription utilisateur
 exports.registerShow = (req, res, next) =>{
   let statut = req.cookies[process.env.cookie_name].role;
@@ -99,6 +99,7 @@ exports.registerShow = (req, res, next) =>{
   
   
 };
+
 //Inscription utilisateur
 exports.register = (req, res, next) => {
     User.findOne({ email: req.body.email }, ( err, user)=>{
