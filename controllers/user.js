@@ -87,6 +87,7 @@ exports.login = (req, res, next) => {
 //Afficher le formulaire d'inscription utilisateur
 exports.registerShow = (req, res, next) =>{
   let statut = req.cookies[process.env.cookie_name].role;
+  let nom = req.cookies[process.env.cookie_name].userName;
   var role = [];
   User.find({},{ role: 1 } , (err, Role)=>{
    for (var i = 0; i<Role.length; i++){
@@ -94,7 +95,7 @@ exports.registerShow = (req, res, next) =>{
      role.push(element)
    }
    
-    res.render('register', {title: process.env.TITLE, role: role, statut: statut})
+    res.render('register', {title: process.env.TITLE, role: role, statut: statut, nom: nom})
   })
   
   

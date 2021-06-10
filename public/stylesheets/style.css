@@ -76,7 +76,7 @@ nav li {
     padding:0;
     background-color:black;
     }
-    nav li a {
+    nav li a, nav li p {
         display:block;
         width:200px;
         color:white;

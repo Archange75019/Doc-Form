@@ -13,20 +13,22 @@ var event = new EventEmitter()
 champs = []
 //Afficher les documents les plus récents en page home
 exports.getDoc = (req, res, next) => {
-  let statut = req.cookies[process.env.cookie_name].role;
+  let statut = req.cookies[process.env.cookie_name].role; 
+   let nom = req.cookies[process.env.cookie_name].userName;
   if(statut){
     Doc.find({})
     .sort({ dateFull: -1 })
     .limit(12)
     .exec(function (err, docs){
       if(err) throw err;
-      res.render('home',{title: process.env.TITLE, docs:docs, statut : statut})
+      res.render('home',{title: process.env.TITLE, docs:docs, statut : statut, nom: nom})
     })
   }
 };
 //Afficher le formulaire d'ajout de documents
 exports.form = (req, res, next)=>{
   let statut = req.cookies[process.env.cookie_name].role;
+  let nom = req.cookies[process.env.cookie_name].userName;
   Doc.find({},{ domaine: 1 } , (err, domaines)=>{
     var dom = [];
     for(var i=0; i<domaines.length; i++ ){
@@ -38,7 +40,7 @@ exports.form = (req, res, next)=>{
 
   }) 
   console.log(champs)
-  res.render('addDoc',{title: process.env.TITLE,domaines: filteredArray,champs: champs, statut: statut})
+  res.render('addDoc',{title: process.env.TITLE,domaines: filteredArray,champs: champs, statut: statut, nom: nom})
   });
 };
 //Ajouter un document à la base
@@ -163,7 +165,8 @@ exports.addDoc = (req, res, next) => {
 //Afficher le formulaire de recherche de documents
 exports.getDocs = (req, res, next) =>{
     let statut = req.cookies[process.env.cookie_name].role;
-  res.render('search',{title: process.env.TITLE,statut: statut }); 
+    let nom = req.cookies[process.env.cookie_name].userName;
+  res.render('search',{title: process.env.TITLE,statut: statut, nom: nom }); 
 };
 //Rechercher un document en base
 exports.searchDoc = (req, res, next)=>{
@@ -190,20 +193,22 @@ exports.searchDoc = (req, res, next)=>{
 //Afficher les documents de l'utilisateur courant
 exports.MyDocs = (req, res, next)=>{
   let statut = req.cookies[process.env.cookie_name].role;
+  let nom = req.cookies[process.env.cookie_name].userName;
   Doc.find({'author': req.cookies[process.env.cookie_name].userName}, (err, docs)=>{
     if(err) throw err;
-    res.render('MyDocs',{title: process.env.TITLE, docs: docs, statut: statut    })
+    res.render('MyDocs',{title: process.env.TITLE, docs: docs, statut: statut, nom: nom    })
   })
 };
 //Afficher le résultat d'une recherche de documents
 exports.getResults = (req, res, next) => {
   let statut = req.cookies[process.env.cookie_name].role;
+  let nom = req.cookies[process.env.cookie_name].userName;
   if( req.params.recherche){
     var recherche = req.params.recherche
     Doc.find({ $text: { $search: recherche } }, {score: {$meta: "textScore"}})
     .sort({score:{$meta:"textScore"}})
     .exec(function (err, docs) {
-      res.render('search',{title: process.env.TITLE, docs: docs,statut: statut})
+      res.render('search',{title: process.env.TITLE, docs: docs,statut: statut, nom: nom})
 
     })
   }
@@ -221,6 +226,7 @@ exports.download = (req, res, next) => {
 // Renvoyer le formulaire de modification de document avec les infos du doc
 exports.getUpdateDoc = (req, res, next) => {
   let statut = req.cookies[process.env.cookie_name].role;
+  let nom = req.cookies[process.env.cookie_name].userName;
   if(req.params.id){
     Doc.findById({'_id': req.params.id}, (err, doc)=>{
       if(err) throw err;
@@ -235,7 +241,7 @@ exports.getUpdateDoc = (req, res, next) => {
         const filteredArray = dom.filter(function(ele , pos){
           return dom.indexOf(ele) == pos;
         });
-        res.render('updateDoc',{title: process.env.TITLE,FileName: cheminDef,doc: doc,domaines: filteredArray, statut: statut});
+        res.render('updateDoc',{title: process.env.TITLE,FileName: cheminDef,doc: doc,domaines: filteredArray, statut: statut, nom: nom});
       });
     });
   };
@@ -250,7 +256,10 @@ exports.postUpdateDoc = (req, res, next) => {
         console.log(err)
         
       }else{
-        console.log('fields '+fields)
+        console.log('fields ')
+        console.log(fields)
+        console.log('files')
+        console.log( files)
 
         champs = {
           'titre':htmlspecialchars(fields.titre) ,
@@ -264,8 +273,18 @@ exports.postUpdateDoc = (req, res, next) => {
         }
 
         if(files.fileToUpload.size > 0){
+          var fs = require('fs');
+          Doc.findById({'_id': req.params.id}, {'link':1}, (err, data)=>{
+            if(err) throw err;
+            if(data){
+              console.log('datatatata');
+              fs.unlinkSync(data.link)
+            }
+          })
           var oldpath = files.fileToUpload.path;
+          console.log('vieux chemin :'+oldpath)
           var newpath = './uploads/' + files.fileToUpload.name;
+          console.log('new chemin :' +newpath)
           var ext = newpath;
           var re = /(?:\.([^.]+))?$/;
           var extens = re.exec(ext)[1]; 
@@ -320,7 +339,7 @@ exports.postUpdateDoc = (req, res, next) => {
             //const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             var doc = {
               titre: champs.titre,
-              domaine: domaine,
+              domaine: champs.domaine,
               extension: extens,
               description: champs.description,
               author: req.cookies[process.env.cookie_name].userName,
@@ -330,28 +349,23 @@ exports.postUpdateDoc = (req, res, next) => {
               link: newpath
             }
             Doc.findByIdAndUpdate({'_id': req.params.id},
-            {'titre': doc.titre, 'author': doc.author, 'domaine': domaine, 'description':doc.description, 'link':doc.link, 'size': doc.size, 'date':doc.date, 'extension': doc.extension, 'dateFull': doc.dateFull}, (err, data)=>{
+            {'titre': doc.titre, 'author': doc.author, 'domaine': doc.domaine, 'description':doc.description, 'link':doc.link, 'size': doc.size, 'date':doc.date, 'extension': doc.extension, 'dateFull': doc.dateFull}, (err, data)=>{
               if(err) throw err
-              res.redirect('/app/home');
+              res.redirect('/app/MyDocs');
             })
           });
+  
+        
 
+        
         }else{
-          Doc.findByIdAndUpdate({'_id': req.params.id}, {'titre': champs.titre, 'description': champs.description, 'domaine': champs.domaine, 'date': date.toLocaleString('fr-FR')}, (err, data)=>{
+          Doc.findByIdAndUpdate({'_id': req.params.id}, {'titre': champs.titre, 'description': champs.description, 'domaine': champs.domaine, 'date': date.toLocaleString('fr-FR')},{new: true}, (err, data)=>{
             if(err) throw err;
-            res.redirect('/app/home');
+            res.redirect('/app/MyDocs');
           })
         }
-
-  
-        
-
-        
       }
-      
-  
     })
-  
 };
 //Supprimer un document
 exports.deleteDoc = (req, res, next) => {
