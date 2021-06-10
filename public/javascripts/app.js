@@ -8,6 +8,8 @@ queue_url = urlcourante.substring (urlcourante.lastIndexOf( "/" )+1 );
     var formUpdate = document.getElementById('update');
     var socket = io();
     var textarea  = document.getElementById('textarea');
+    var forgot = document.getElementById('for');
+    var oubli = document.getElementById('oubli')
     var form = document.getElementById('add');
     var titre = document.getElementById('titre');
     var btnSbmit = document.createElement('input');
@@ -40,6 +42,17 @@ queue_url = urlcourante.substring (urlcourante.lastIndexOf( "/" )+1 );
             }else{
                 other.style.display='none';
             }
+        })
+    }
+    if(forgot){
+        forgot.addEventListener('click', function(){
+            if(oubli.style.visibility == 'hidden'){
+                oubli.style.visibility = 'visible';
+            }else{
+                oubli.style.visibility = 'hidden';
+            }
+            
+
         })
     }
     if(select2 && btnSbmit && textarea){

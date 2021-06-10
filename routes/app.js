@@ -13,6 +13,7 @@ const Doc = require('../models/Doc');
 router.get('/home', doc.getDoc);
 //affiche la page d'inscription utilisateur
 router.get('/register', user.registerShow);
+
 // Traite l'inscription utilisateur
 router.post('/register', user.register);
 //Affiche la page d'ajout de documents

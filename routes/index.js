@@ -10,6 +10,8 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express', req:req });
 });
 router.post('/login', user.login);
+//Oubli de mot de pass
+router.post('/forgot', user.forgotPass);
 
 
 

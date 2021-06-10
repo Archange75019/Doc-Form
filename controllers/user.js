@@ -145,6 +145,25 @@ exports.updateUser = (req, res, next) =>{
 exports.deleteUser = (req, res, next) =>{
 
 };*/
+//Reenvoyer password 
+exports.forgotPass = (req, res, next) =>{
+  if(req.body.email){
+    User.findOne({'email': req.body.email}, (err, use)=>{
+      if(use){
+        var Pass = generate()
+        bcrypt.hash(Pass, 10)
+           .then(hash =>{
+            User.findByIdAndUpdate({'_id': use._id}, {'password': hash}, (err, user)=>{
+            if(err) throw err;
+              sendMail(use.email, 'mise à jour du mot de pass sur '+process.env.TITLE, Pass)
+              res.redirect('/')
+          })
+        })
+      }
+    })
+
+  }
+}
 //Déconnexion
 exports.logout = (req, res, next)=>{
   res.cookie(process.env.cookie_name, {expires: Date.now()});
