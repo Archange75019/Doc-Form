@@ -32,10 +32,16 @@ function generate(l){
 // fonctions d'envoi de mail
 function sendMail(destinataire, objet, corp){
   smtpTrans = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
     service: 'gmail', 
     auth: {
       user: process.env.EMAIL,
       pass: process.env.PASS
+    },
+    tls: {
+      rejectUnauthorized:false
     }
   });
   var mailOptions = {
@@ -45,6 +51,7 @@ function sendMail(destinataire, objet, corp){
     html: corp // html body
   };
   smtpTrans.sendMail(mailOptions, function(error, info){
+    console.log(info)
     if(error){
         return console.log(error);
     }
@@ -100,7 +107,6 @@ exports.registerShow = (req, res, next) =>{
   
   
 };
-
 //Inscription utilisateur
 exports.register = (req, res, next) => {
     User.findOne({ email: req.body.email }, ( err, user)=>{
@@ -126,7 +132,7 @@ exports.register = (req, res, next) => {
               console.log(user)
               User.create(user, (err, userData)=>{
                 if(err) throw err;
-                sendMail(user.email, 'inscription sur '+process.env.TITLE, Pass)
+                sendMail(user.email, 'inscription sur '+process.env.TITLE, 'Votre mot de pas est '+Pass)
                 res.redirect('/app/home')
               });
            });
@@ -135,16 +141,46 @@ exports.register = (req, res, next) => {
         };
     })
 };
-
-/*exports.getUser = (req, res, next) => {
-
+exports.getUsers = (req, res, next) => {
+  let statut = req.cookies[process.env.cookie_name].role;
+  let nom = req.cookies[process.env.cookie_name].userName;
+  User.find({},{'username': 1, 'email': 1, 'date': 1, 'role': 1, 'site':1 }, (err, users)=>{
+    res.render('adminUser',   {title: process.env.TITLE, statut: statut, statut: statut, nom: nom, users: users});
+  });
 };
-exports.updateUser = (req, res, next) =>{
+exports.getLogs = (req, res, next) =>{
+  console.log("azazazaz")
+  let statut = req.cookies[process.env.cookie_name].role;
+  let nom = req.cookies[process.env.cookie_name].userName;
+  var log = require('../access.log');
+
+  console.log(log)
+  res.render('getLog',{title: process.env.TITLE, statut: statut, nom: nom})
 
 };
 exports.deleteUser = (req, res, next) =>{
+  let statut = req.cookies[process.env.cookie_name].role;
+  let nom = req.cookies[process.env.cookie_name].userName;
+  if(statut && nom && req.params.id){
+    User.findByIdAndDelete({'_id': req.params.id}, (err, user)=>{
+      if(err) throw err;
+      res.redirect('/admin/getUsers')
+    })
 
-};*/
+  }
+
+};
+exports.getRoles = (req, res, next) =>{
+  let statut = req.cookies[process.env.cookie_name].role;
+  let nom = req.cookies[process.env.cookie_name].userName;
+  User.find({},{'username': 1, 'email': 1, 'site': 1, 'role': 1,'specialite': 1 },(err, user)=>{
+    if(err) throw err;
+    var role = [];
+
+    console.log(user)
+  })
+  res.render('Roles',{title: process.env.TITLE, statut: statut, nom: nom} )
+};
 //Reenvoyer password 
 exports.forgotPass = (req, res, next) =>{
   if(req.body.email){
@@ -161,7 +197,6 @@ exports.forgotPass = (req, res, next) =>{
         })
       }
     })
-
   }
 }
 //Déconnexion

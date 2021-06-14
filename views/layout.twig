@@ -20,7 +20,7 @@
     <div class="navbar-header">
       <a class="navbar-brand" href="/app/home">Doc-Form</a>
     </div>
-    <ul class="nav navbar-nav d-flex flex-row .w-80" >
+    <ul>
       <li><a href="/app/home">Accueil</a></li>
       <li><a href="#">Accès aux documents</a>
         <ul>
@@ -29,10 +29,18 @@
             <li><a href="/app/MyDocs">Visualiser vos documents</a></li>
         </ul>
       </li>
+      {% if statut == "administrateur" %}
+        <li><a href="#">Administration</a>
+          <ul>
+              <li><a href="/admin/getUsers">Utilisateurs</a></li>
+              <li><a href="/admin/getLogs">Logs systèmes</a></li>
+              <li><a href="/app/Roles">Roles</a></li>
+          </ul>
+        </li>
+      {% endif %}
       <li><a href="/app/register">Inscrire des utilisateurs</a></li>
       
-    </ul>
-    <ul class="nav navbar-nav navbar-right d-flex flex-row">
+   
       <li><p>Bonjour {{ nom }}</p>
       <li><a href="/app/logout"><i class="fas fa-sign-out-alt"></i>Déconnexion</a></li>
     </ul>

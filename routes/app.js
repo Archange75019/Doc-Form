@@ -36,6 +36,10 @@ router.get('/MyDocs', doc.MyDocs);
 router.get('/updateDoc/:id', doc.getUpdateDoc);
 //Soumettre la mise à jour d'un document
 router.post('/updateDoc/:id', doc.postUpdateDoc);
+//Définir les roles
+router.get('/Roles', user.getRoles);
+//Supprimer un utilisateur
+router.get('/deleteUser/:id', user.deleteUser);
 //Se déconnecter
 router.get('/logout', user.logout);
 

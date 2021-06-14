@@ -1,0 +1,36 @@
+{% extends 'layout.twig' %}
+
+{% block body %}
+     <div class="contain">
+    <table>
+    <thead>
+        <tr>
+            <th>Utilisateur</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th class="date">Date de création</th>
+            <th>Site</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{user.username}}</td>
+                <td>{{user.email}}</td>
+                <td>{{user.role }}</td>
+                <td>{{user.date}}</td>
+                <td>{{user.site}}</td>
+                <td>
+                    <a title="Modifier l'utilisateur" class="modification" name="{{user._id}}"><i class="fas fa-pencil-alt"></i></a>
+                    <a title="Supprimer l'utilisateur" href="/app/deleteUser/{{user._id}}"><i class="fas fa-trash"></i></a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+
+
+
+    </table>
+    </div>
+{% endblock %}
