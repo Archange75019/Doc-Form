@@ -25,6 +25,7 @@ var userSchema = mongoose.Schema({
         unique: false,
         required: true
       },
+
       specialite : {
         type: String,
         unique: false

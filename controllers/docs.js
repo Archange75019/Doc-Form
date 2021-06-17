@@ -2,9 +2,10 @@ var Doc = require('../models/Doc');
 var formidable = require('formidable');
 var fs = require('fs');
 const User = require('../models/User');
-const { json } = require('body-parser');
+var querystring = require("querystring"); 
 var EventEmitter = require('events');
 const path = require("path");
+var url = require("url"); 
 var htmlspecialchars = require('htmlspecialchars');
 
 var event = new EventEmitter()
@@ -208,11 +209,38 @@ exports.getResults = (req, res, next) => {
     Doc.find({ $text: { $search: recherche } }, {score: {$meta: "textScore"}})
     .sort({score:{$meta:"textScore"}})
     .exec(function (err, docs) {
-      res.render('search',{title: process.env.TITLE, docs: docs,statut: statut, nom: nom})
+      res.render('search',{title: process.env.TITLE, recherche: req.params.recherche, docs: docs,statut: statut, nom: nom})
 
     })
   }
 };
+//Réinitialiser les terme de la recherche
+exports.resetSearch = (req, res, next) => {
+  res.redirect('/app/SearchDocs');
+};
+//recherche par type
+exports.searchDocByType = (req, res, next) =>{
+  var params = req.params.recherche
+  console.log('params :'+params)
+
+   res.redirect('/app/SearchDocs/result='+req.params.recherche+'/type='+req.body.type);
+  
+};
+//Afficher les documents rechercher par type 
+exports.getByType = (res, req, next) =>{
+  console.log('&&&&&&')
+ //const search = req.params.result
+
+ 
+  console.log('type :'+req.params.type)
+    Doc.find({'extension': req.params.type}, (err, docs)=>{
+      if(err) throw err;
+      console.log('docs')
+      console.log(docs)
+      res.render('search',{title: process.env.TITLE, recherche: req.params.recherche, docs: docs,statut: statut, nom: nom})
+    })
+  
+}
 //Télécharger un document
 exports.download = (req, res, next) => {
   if(req.params.id){

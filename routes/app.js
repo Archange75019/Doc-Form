@@ -26,6 +26,12 @@ router.get('/SearchDocs/', doc.getDocs);
 router.post('/SearchDocs', doc.searchDoc);
 //Recherche dans la base
 router.get('/SearchDocs/result=:recherche', doc.getResults);
+//Tri par type
+router.post('/SearchDocs/result=:recherche/type', doc.searchDocByType);
+//Obtenir les documents trié par type
+router.get('/SearchDocs/result=:recherche/type=:type', doc.getByType);
+//Réinitialiser les termes de la recherche
+router.get('/resetrecherche', doc.resetSearch);
 //Telecharger un document
 router.get('/download/:id', doc.download);
 //Supprimer un document

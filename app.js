@@ -2,8 +2,8 @@ var createError = require('http-errors');
 var userctrl = require('./controllers/user');
 var docctrl = require('./controllers/docs');
 var fs = require('fs');
-var express = require('express'),
-bodyParser = require('body-parser')
+var express = require('express')
+var bodyParser = require('body-parser')
 flash = require('connect-flash')
 ,session = require('express-session')
 ,cookieParser = require('cookie-parser')
@@ -19,6 +19,18 @@ var adminRouter = require('./routes/admin');
 var auth = require('./middleware/auth');
 
 var app = express();
+
+ 
+
+app.use( bodyParser.json() );       // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+  extended: true
+})); 
+app.use(express.json());
+app.use(express.urlencoded({     // to support URL-encoded bodies
+  extended: true
+}));
+
 
 app.use(cookieParser('secret'));
 app.use(session({
@@ -37,11 +49,11 @@ mongoose.connect(process.env.DB_URL,
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'twig');
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
+
 app.use(cookieParser());
 app.use(logger('dev'));
-app.use(express.json());
+
+app.use(express.json({}));
 app.use(express.urlencoded({ extended: false }));
 
 app.use(cookieParser('secret'));
