@@ -13,6 +13,41 @@
         </div>
         {% for doc in docs %}
             <div class="container">
+                
+                    <div class="filter">
+                        <div class="reset">
+                            <p>termes recherchés: {{recherche}}</p>
+                            <a href="/app/resetrecherche"  title="Annuler la requête"><i class="far fa-times-circle"></i></a>
+                        </div>
+                        <div class="filt">
+                            <span class="params">Paramètres de recherche</span>
+
+                                    <form id="types" method="POST" action="/app/SearchDocs/result={{recherche}}/type">
+                                        <SELECT name="type" size="1" title="le type de fichier rechercher">
+                                            <OPTION>Types de documents    
+                                            <OPTION>Excel
+                                            <OPTION>Word
+                                            <OPTION>PDF
+                                            <OPTION>Powerpoint
+                                            <OPTION>Image
+                                            <OPTION>Scéance clé en main
+                                            <OPTION>Archive
+                                        </SELECT>
+                                        <input type="submit">Tri par types</button>
+                                    </form>
+                                    <form method="POST" action="/period">
+                                        <div class="date">
+                                            <input type="date" name="date1" title="Veuillez saisir la date de début de recherche">
+                                            <input type="date" name="date2" title="Veuillez saisir la date de fin de recherche">
+                                            <button  type="submit">Tri par dates</button>
+                                        </div>
+                                    </form>       
+
+        
+
+                        </div>
+                    </div>
+               
 	            <div class="d-flex justify-content-center h-10">
 		            <div class="card">
 			            <div class="card-header">

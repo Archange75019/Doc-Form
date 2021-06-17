@@ -10,6 +10,21 @@ z-index: 1;
 
 font-family: 'Numans', sans-serif;
 }
+.container{
+    margin-top: 10px;
+}
+.filter, .reset, .filt, .search{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+
+}
+
+.navbar-brand{
+    font-size: 28px;
+    color: red;
+    font-weight: bold;
+}
 #dialog{
     position: absolute;
     z-index: 2;

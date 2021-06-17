@@ -196,12 +196,20 @@ queue_url = urlcourante.substring (urlcourante.lastIndexOf( "/" )+1 );
 
                 }
                 docu.id = "document";
+                /*if(extension == 'Word'){
+                    docu.src = "https://docs.google.com/gview?url="+link+"&embedded=true"
+                }*/
             if(extension == 'Video'){
                 source.src = link
                 docu.appendChild(source)
                 docContainer.appendChild(docu)
             }else{
-                docu.src = link;
+                if(extension == 'Word'){
+                    docu.src = "https://docs.google.com/gview?url="+link+"&embedded=true"
+                }else{
+                    docu.src = link;
+                }
+
                 docu.style.width = '100%';
                 docu.style.height = '100%';
                 docu.style.textAlign = 'center';

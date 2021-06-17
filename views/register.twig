@@ -7,18 +7,11 @@
 		<input type="email" name="email" class="form-control" placeholder="email"></br>
 		<select name="role" id="role-select">
     		<option value="">--Choisissez un role--</option>
-			{% if role %}
+
 				{% for role in role %}
-					{% if role != statut%}
 						<option value="{{ role }}">{{ role }}</option>
-					{% endif %}
 				{% endfor %}
-			{% endif %}
-			 <option value="Autre">Autre</option>
 		</select></br>
-		<div id="otherRole">
-			<input type="text" name="role" placeholder="Définir un role"></br>
-		</div>
 		<input type="text" name="site" class="form-control" placeholder="Site"></br>
 		<input type="submit" value="Inscription" class="btn float-right login_btn">
 	</form>
