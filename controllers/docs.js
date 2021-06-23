@@ -188,7 +188,7 @@ exports.searchDoc = (req, res, next)=>{
   })
   let rechercheDef = search.toString();
     if(rechercheDef != ""){
-      res.redirect('/app/SearchDocs/result=' + rechercheDef );
+      res.redirect('/app/SearchDocs?recherche=' + rechercheDef );
     }
 }; 
 //Afficher les documents de l'utilisateur courant
@@ -204,8 +204,10 @@ exports.MyDocs = (req, res, next)=>{
 exports.getResults = (req, res, next) => {
   let statut = req.cookies[process.env.cookie_name].role;
   let nom = req.cookies[process.env.cookie_name].userName;
+  console.log('AAAAA')
   if( req.params.recherche){
     var recherche = req.params.recherche
+    console.log('recherche :'+recherche)
     Doc.find({ $text: { $search: recherche } }, {score: {$meta: "textScore"}})
     .sort({score:{$meta:"textScore"}})
     .exec(function (err, docs) {
@@ -221,18 +223,26 @@ exports.resetSearch = (req, res, next) => {
 //recherche par type
 exports.searchDocByType = (req, res, next) =>{
   var params = req.params.recherche
-  console.log('params :'+params)
+  var type = req.body.type
 
-   res.redirect('/app/SearchDocs/result='+req.params.recherche+'/type='+req.body.type);
+   res.redirect('/app/SearchDocs?recherche='+params+'?type='+type);
   
 };
 //Afficher les documents rechercher par type 
 exports.getByType = (res, req, next) =>{
-  console.log('&&&&&&')
+
+
+  console.log('&&&&&&' + req.path)
+  console.log(req.url, req.originalUrl, req.baseUrl, req.path)
+  var url_parts = url.parse(req.url, true);
+var query = url_parts.query;
+console.log(query)
+
+  //console.log('type :'+aa)
  //const search = req.params.result
 
  
-  console.log('type :'+req.params.type)
+  console.log('type :'+type)
     Doc.find({'extension': req.params.type}, (err, docs)=>{
       if(err) throw err;
       console.log('docs')
