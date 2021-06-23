@@ -229,20 +229,8 @@ exports.searchDocByType = (req, res, next) =>{
   
 };
 //Afficher les documents rechercher par type 
-exports.getByType = (res, req, next) =>{
+exports.getByType = (req, res, next) =>{
 
-
-  console.log('&&&&&&' + req.path)
-  console.log(req.url, req.originalUrl, req.baseUrl, req.path)
-  var url_parts = url.parse(req.url, true);
-var query = url_parts.query;
-console.log(query)
-
-  //console.log('type :'+aa)
- //const search = req.params.result
-
- 
-  console.log('type :'+type)
     Doc.find({'extension': req.params.type}, (err, docs)=>{
       if(err) throw err;
       console.log('docs')
