@@ -7,13 +7,13 @@
                             <input type="submit" value="Rechercher">
                         </form>
 
-    {% if docs %}
+  
         <div class="tri">
 
         </div>
-        {% for doc in docs %}
+        
             <div class="container">
-                
+                {% if recherche %}
                     <div class="filter">
                         <div class="reset">
                             <p>termes recherchés: {{recherche}}</p>
@@ -21,54 +21,74 @@
                         </div>
                         <div class="filt">
                             <span class="params">Paramètres de recherche</span>
-
-                                    <form id="types" method="POST" action="/app/SearchDocs/result={{recherche}}/type">
-                                        <SELECT name="type" size="1" title="le type de fichier rechercher">
-                                            <OPTION>Types de documents    
-                                            <OPTION>Excel
-                                            <OPTION>Word
-                                            <OPTION>PDF
-                                            <OPTION>Powerpoint
-                                            <OPTION>Image
-                                            <OPTION>Scéance clé en main
-                                            <OPTION>Archive
-                                        </SELECT>
-                                        <input type="submit">Tri par types</button>
-                                    </form>
-                                    <form method="POST" action="/period">
-                                        <div class="date">
+                                <form id="types" method="post" action="/app/SearchDocs/{{recherche}}/filter">
+                                    <SELECT name="type" size="1" title="le type de fichier rechercher">
+                                        <OPTION value="">Types de documents
+                                        {% if types %}
+                                            {% for type in types %}
+                                                {% if typeSelect == type %}
+                                                    <OPTION value="{{typeSelect}}" selected>{{typeSelect}}
+                                                {% else %}
+                                                    <OPTION value="{{type}}">{{type}}
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endif %}
+                                    </SELECT>
+                                    <SELECT name="type" size="1" title="DOmaine">
+                                        <OPTION value="">DOmaine du document
+                                        {% if domaines %}
+                                            {% for domaine in domaines %}
+                                                {% if domaineSelect == domaine %}
+                                                    <OPTION value="{{domaineSelect}}" selected>{{domaineSelect}}
+                                                {% else %}
+                                                    <OPTION value="{{domaine}}">{{domaine}}
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endif %}
+                                    </SELECT>
+                                    <div class="date">
                                             <input type="date" name="date1" title="Veuillez saisir la date de début de recherche">
                                             <input type="date" name="date2" title="Veuillez saisir la date de fin de recherche">
                                             <button  type="submit">Tri par dates</button>
                                         </div>
-                                    </form>       
+                                <input type="submit">Tri par types</button>
+                                    </form>
+                                         
 
         
 
                         </div>
                     </div>
-               
-	            <div class="d-flex justify-content-center h-10">
-		            <div class="card">
-			            <div class="card-header">
-				            <h3>{{doc.titre}}</h3>	
-			            </div>
-                        <div class="cont">
-			                <div class="card-body">
-                                <p>{{doc.description}}</p>
-                                <p>Ajouté par {{doc.author}} le {{doc.date}}</p>
-                            </div>
-                            <div class="cell2">
-                                <a href="/app/download/{{doc._id}}"><i class="fas fa-download fa-4x"></i></a>
+                    {% endif %}
+                    {% if docs %}
+                        {% for doc in docs %}
+                            <div class="d-flex justify-content-center h-10">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>{{doc.titre}}</h3>	
+                                </div>
+                                <div class="cont">
+                                    <div class="card-body">
+                                        <p>{{doc.description}}</p>
+                                        <p>Ajouté par {{doc.author}} le {{doc.date}}</p>
+                                    </div>
+                                    <div class="cell2">
+                                        <a href="/app/download/{{doc._id}}"><i class="fas fa-download fa-4x"></i></a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
+                        {% endfor %}
+                    {% else %}
+                        {% if typeSelect %}
+                            <p> aucun document ne correspond au filtre: {{typeSelect }}</p>
+                        {% endif %}
+                    {% endif %}
             </div>
-    {% endfor %}
+    
 
 
 
-    {% endif %}
+   
         
 {% endblock %}

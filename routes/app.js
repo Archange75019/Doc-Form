@@ -25,11 +25,13 @@ router.get('/SearchDocs/', doc.getDocs);
 //Soumission des termes de la recharche
 router.post('/SearchDocs', doc.searchDoc);
 //Recherche dans la base
-router.get('/SearchDocs/result=:recherche', doc.getResults);
+router.get('/SearchDocs/:recherche', doc.getResults);
 //Tri par type
-router.post('/SearchDocs/result=:recherche/type', doc.searchDocByType);
+router.post('/SearchDocs/:recherche/filter', doc.searchDocByFilter);
 //Obtenir les documents trié par type
-router.get('/SearchDocs/result=:recherche/type=:type', doc.getByType);
+router.get('/SearchDocs/:recherche/:type', doc.getByType);
+//Obtenir les documents trié par type et domaine
+router.get('/SearchDocs/:recherche/:type /:domaine', doc.getByTypeDomaine);
 //Réinitialiser les termes de la recherche
 router.get('/resetrecherche', doc.resetSearch);
 //Telecharger un document
