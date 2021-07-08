@@ -7,7 +7,9 @@
             <option value="">--Choisissez un domaine--</option>
             {% if domaines %}
                 {% for domaine in domaines %}
-                    <option value="{{ domaine }}">{{ domaine }}</option>
+                    {% if domaine != ""%}
+                        <option value="{{ domaine| upper  }}">{{ domaine | upper }}</option>
+                    {% endif %}
                 {% endfor %}
             {% endif %}
             <option value="Autre">Autre</option>

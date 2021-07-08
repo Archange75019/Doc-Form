@@ -34,14 +34,16 @@
                                             {% endfor %}
                                         {% endif %}
                                     </SELECT>
-                                    <SELECT name="type" size="1" title="DOmaine">
-                                        <OPTION value="">DOmaine du document
+                                    <SELECT name="Domaine" size="1" title="DOmaine">
+                                        <OPTION value="">Domaine du document
                                         {% if domaines %}
                                             {% for domaine in domaines %}
-                                                {% if domaineSelect == domaine %}
-                                                    <OPTION value="{{domaineSelect}}" selected>{{domaineSelect}}
-                                                {% else %}
-                                                    <OPTION value="{{domaine}}">{{domaine}}
+                                                {% if domaine != "" %}
+                                                    {% if domaineSelect == domaine %}
+                                                        <OPTION value="{{domaineSelect}}" selected>{{domaineSelect}}
+                                                    {% else %}
+                                                        <OPTION value="{{domaine}}">{{domaine}}
+                                                    {% endif %}
                                                 {% endif %}
                                             {% endfor %}
                                         {% endif %}
@@ -49,7 +51,6 @@
                                     <div class="date">
                                             <input type="date" name="date1" title="Veuillez saisir la date de début de recherche">
                                             <input type="date" name="date2" title="Veuillez saisir la date de fin de recherche">
-                                            <button  type="submit">Tri par dates</button>
                                         </div>
                                 <input type="submit">Tri par types</button>
                                     </form>
@@ -60,25 +61,27 @@
                         </div>
                     </div>
                     {% endif %}
+                     
                     {% if docs %}
+                    <div class="contain">
                         {% for doc in docs %}
-                            <div class="d-flex justify-content-center h-10">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h3>{{doc.titre}}</h3>	
+                            <div class="doc">
+                                <div class="headerDoc">
+				                    <h3>{{ doc.titre|lower| truncate(26 - 3 - doc.domaine|length, false, '...') }} </h3>
+                                    <h4>{{doc.domaine|lower}}</h4>
                                 </div>
-                                <div class="cont">
-                                    <div class="card-body">
+                                <div class="corpDoc">
+                                    <div class="description">
                                         <p>{{doc.description}}</p>
-                                        <p>Ajouté par {{doc.author}} le {{doc.date}}</p>
+                                        <p>Ajouté par {{doc.author}}</p>
+                                        <p> le {{doc.date}}</p>
                                     </div>
-                                    <div class="cell2">
-                                        <a href="/app/download/{{doc._id}}"><i class="fas fa-download fa-4x"></i></a>
-                                    </div>
-                                </div>
+                                    <a class="download" href="/app/download/{{doc._id}}"><i class="fas fa-download fa-3x"></i></a>
+                                    <a class="apercu"  name="{{doc._id}}" ><i class="fas fa-search fa-3x"></i></a>
+                                </div>	
                             </div>
-                        </div>
                         {% endfor %}
+                        </div>
                     {% else %}
                         {% if typeSelect %}
                             <p> aucun document ne correspond au filtre: {{typeSelect }}</p>

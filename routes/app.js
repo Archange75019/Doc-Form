@@ -9,11 +9,11 @@ const Doc = require('../models/Doc');
 
 
 
+
 //Affiche la page home
 router.get('/home', doc.getDoc);
 //affiche la page d'inscription utilisateur
 router.get('/register', user.registerShow);
-
 // Traite l'inscription utilisateur
 router.post('/register', user.register);
 //Affiche la page d'ajout de documents
@@ -26,12 +26,22 @@ router.get('/SearchDocs/', doc.getDocs);
 router.post('/SearchDocs', doc.searchDoc);
 //Recherche dans la base
 router.get('/SearchDocs/:recherche', doc.getResults);
-//Tri par type
+//Tri par filtre
 router.post('/SearchDocs/:recherche/filter', doc.searchDocByFilter);
 //Obtenir les documents trié par type
 router.get('/SearchDocs/:recherche/:type', doc.getByType);
 //Obtenir les documents trié par type et domaine
 router.get('/SearchDocs/:recherche/:type /:domaine', doc.getByTypeDomaine);
+//Obtenir les documents trié par domaine
+router.get('/SearchDocs/:recherche/domaine/:domaine', doc.getByDomaine);
+//Obtenir les documents par type et period
+router.get('/SearchDocs/:recherche/:type /:date1/:date2', doc.getByTypePeriod);
+//Obtenir les documents par type, domaine, period
+router.get('/SearchDocs/:recherche/:type /:domaine/:date1/:date2', doc.getByTypeDomainePeriod);
+//Obtenir les documents par domaine et periode
+router.get('/SearchDocs/:recherche/:domaine/:date1/:date2', doc.getByDomainePeriod);
+//Obtenir les documents par periode
+router.get('/SearchDocs/:recherche/:date1/:date2', doc.getByPeriod);
 //Réinitialiser les termes de la recherche
 router.get('/resetrecherche', doc.resetSearch);
 //Telecharger un document

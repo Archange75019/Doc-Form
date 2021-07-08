@@ -7,6 +7,7 @@ var EventEmitter = require('events');
 var url = require("url"); 
 var qs = require('qs');
 var htmlspecialchars = require('htmlspecialchars');
+var data = require('./data');
 
 var event = new EventEmitter()
 
@@ -15,23 +16,7 @@ champs = [];
 var types = [
   'Excel','Word', 'PDF', 'Powerpoint', 'Image', 'Scéance clé en main', 'Archive'
 ];
-function getDomaineList(){
-  var filteredArray;
-  Doc.find({}, {'domaine': 1}, ( err, data)=>{
-    var dom = [];
-      for(var i=0; i<data.length; i++ ){
-        var element = data[i].domaine;
-        dom.push(element);
-      };
-    filteredArray = dom.filter(function(ele , pos){
-      return dom.indexOf(ele) == pos;
-  }) 
-  console.log('tata :'+filteredArray)
-  
-})
-console.log('titi :'+filteredArray)
-return filteredArray
-}
+
 //Afficher les documents les plus récents en page home
 exports.getDoc = (req, res, next) => {
   let statut = req.cookies[process.env.cookie_name].role; 
@@ -50,19 +35,13 @@ exports.getDoc = (req, res, next) => {
 exports.form = (req, res, next)=>{
   let statut = req.cookies[process.env.cookie_name].role;
   let nom = req.cookies[process.env.cookie_name].userName;
-  Doc.find({},{ domaine: 1 } , (err, domaines)=>{
-    var dom = [];
-    for(var i=0; i<domaines.length; i++ ){
-      var element = domaines[i].domaine
-      dom.push(element) 
-    }
-    const filteredArray = dom.filter(function(ele , pos){
-      return dom.indexOf(ele) == pos;
 
-  }) 
-  console.log(champs)
-  res.render('addDoc',{title: process.env.TITLE,domaines: filteredArray,champs: champs, statut: statut, nom: nom})
-  });
+
+
+var dom =  data.getDomaines()
+
+  res.render('addDoc',{title: process.env.TITLE,domaines: dom,champs: champs, statut: statut, nom: nom})
+ 
 };
 //Ajouter un document à la base
 exports.addDoc = (req, res, next) => {
@@ -144,11 +123,15 @@ exports.addDoc = (req, res, next) => {
           if (err) throw err;
           if(fields.domain == "Autre"){
             domaine = champs.domaine
+            data.putDomaine(domaine)
           }else{
             domaine = champs.domain
           }
+          
           var date = new Date();
-          //const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+          console.log('date')
+          console.log(date)
+          const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
           var doc = {
             titre: champs.titre,
             domaine: domaine,
@@ -160,11 +143,12 @@ exports.addDoc = (req, res, next) => {
             date: date.toLocaleString('fr-FR'),
             link: newpath
           }
+console.log(doc)
 
           Doc.create({'titre': doc.titre, 'domaine': doc.domaine,'extension': doc.extension,'dateFull': doc.dateFull, 'description': doc.description, 'author': doc.author, 'date': doc.date, 'link': doc.link, 'size':doc.size }, (err, doc)=>{
             if(err) throw err;
             res.redirect('/app/home')
-            
+
           })
         });
       }
@@ -231,19 +215,9 @@ exports.getResults = (req, res, next) => {
     .sort({score:{$meta:"textScore"}})
     .exec(function (err, docs) {
       
-      Doc.find({}, {'domaine': 1}, ( err, data)=>{
-        var dom = [];
-          for(var i=0; i<data.length; i++ ){
-            var element = data[i].domaine;
-            dom.push(element);
-          };
-        const filteredArray = dom.filter(function(ele , pos){
-          return dom.indexOf(ele) == pos;
-      }) ;
-      //console.log(" list de domaine :"+domaineList)
-      res.render('search',{title: process.env.TITLE,domaines: filteredArray, types: types, recherche: req.params.recherche, docs: docs,statut: statut, nom: nom})
-
-    });
+      var dom = data.getDomaines()
+      
+      res.render('search',{title: process.env.TITLE,domaines: dom, types: types, recherche: req.params.recherche, docs: docs,statut: statut, nom: nom})
     })
   }
 };
@@ -251,15 +225,21 @@ exports.getResults = (req, res, next) => {
 exports.resetSearch = (req, res, next) => {
   res.redirect('/app/SearchDocs');
 };
-//recherche par type
+//recherche par filtre
 exports.searchDocByFilter = (req, res, next) =>{
   /**/
   var paramsRecherche = req.params.recherche;
   var typeBody = req.body.type;
   var date1 = req.body.date1;
   var date2 = req.body.date2
-  var domaineBody = req.body.domaine;
+  var domaineBody = req.body.Domaine;
   var domaineParams = req.params.domaine;
+
+  console.log('parametre de recherche :'+ paramsRecherche);
+  console.log('Type de document :'+typeBody);
+  console.log('date1 :'+date1);
+  console.log('date2 :'+date2)
+  console.log('domaine : '+domaineBody)
 
 
   if( paramsRecherche && typeBody){
@@ -269,10 +249,11 @@ exports.searchDocByFilter = (req, res, next) =>{
     res.redirect('/app/SearchDocs/'+paramsRecherche+'/'+typeBody+'/'+domaineBody+'');
   }
   if( paramsRecherche && domaineBody){
-    res.redirect('/app/SearchDocs/'+paramsRecherche+'/'+domaineBody+'');
+    console.log('On entre dans la route de recherche par domaine')
+    res.redirect('/app/SearchDocs/'+paramsRecherche+'/domaine/'+domaineBody+'');
   }
   if( paramsRecherche && typeBody && date1 && date2){
-    res.redirect('/app/SearchDocs/'+paramsRecherche+'/'+typeBody+'/'+date1+'/'+date2);
+    res.redirect('/app/SearchDocs/'+paramsRecherche+'/type/'+typeBody+'/periode/'+date1+'/'+date2);
   }
   if( paramsRecherche && typeBody && domaineBody && date1 && date2){
     res.redirect('/app/SearchDocs/'+paramsRecherche+'/'+typeBody+'/'+domaineBody+'/'+date1+'/'+date2);
@@ -280,30 +261,25 @@ exports.searchDocByFilter = (req, res, next) =>{
   if( paramsRecherche && domaineBody && date1 && date2){
     res.redirect('/app/SearchDocs/'+paramsRecherche+'/'+domaineBody+'/'+date1+'/'+date2);
   }
-  
-  
+  if( paramsRecherche && date1 && date2){
+    console.log('recherche par periode res')
+    res.redirect('/app/SearchDocs/'+paramsRecherche+'/'+date1+'/'+date2+'');
+  }
 };
 //Afficher les documents rechercher par type 
 exports.getByType = (req, res, next) =>{
   let statut = req.cookies[process.env.cookie_name].role;
   let nom = req.cookies[process.env.cookie_name].userName;
+  console.log('recherche par type')
 
    Doc.find({ $text: { $search: req.params.recherche },'extension': req.params.type }, {score: {$meta: "textScore"}})
   .sort({score:{$meta:"textScore"}})
   .exec(function (err, docs) {
-    Doc.find({}, {'domaine': 1}, ( err, data)=>{
-      var dom = [];
-        for(var i=0; i<data.length; i++ ){
-          var element = data[i].domaine;
-          dom.push(element);
-        };
-      const filteredArray = dom.filter(function(ele , pos){
-        return dom.indexOf(ele) == pos;
-    }) 
-    console.log(filteredArray)
+    var dom =  data.getDomaines()
+    console.log(docs)
   
-  res.render('search',{title: process.env.TITLE,domaines: filteredArray, typeSelect:req.params.type, types: types,recherche: req.params.recherche, docs: docs,statut: statut, nom: nom})
-  })
+  res.render('search',{title: process.env.TITLE,domaines: dom, typeSelect:req.params.type, types: types,recherche: req.params.recherche, docs: docs,statut: statut, nom: nom})
+  
 })
 };
 //Afficher les documents rechercher par type et par domaine
@@ -314,21 +290,80 @@ exports.getByTypeDomaine = (req, res, next) =>{
    Doc.find({ $text: { $search: req.params.recherche },'extension': req.params.type, 'domaine': req.params.domaine }, {score: {$meta: "textScore"}})
   .sort({score:{$meta:"textScore"}})
   .exec(function (err, docs) {
-    Doc.find({}, {'domaine': 1}, ( err, data)=>{
-      var dom = [];
-        for(var i=0; i<data.length; i++ ){
-          var element = data[i].domaine;
-          dom.push(element);
-        };
-      const filteredArray = dom.filter(function(ele , pos){
-        return dom.indexOf(ele) == pos;
-    }) 
-    console.log(filteredArray)
+    console.log('recherche par type et domaine')
+    console.log(docs)
+    var dom =  data.getDomaines()
   
-  res.render('search',{title: process.env.TITLE,domaines: filteredArray, typeSelect:req.params.type, types: types,recherche: req.params.recherche, docs: docs,statut: statut, nom: nom})
-  })
+  res.render('search',{title: process.env.TITLE,domaines: dom, typeSelect:req.params.type, types: types,recherche: req.params.recherche, docs: docs,statut: statut, nom: nom})
+  
 })
 };
+//Afficher les documents par domaine
+exports.getByDomaine = (req, res, next) =>{
+  let statut = req.cookies[process.env.cookie_name].role;
+  let nom = req.cookies[process.env.cookie_name].userName;
+  console.log('RECHERCHE PAR FDOMAINE')
+
+   Doc.find({ $text: { $search: req.params.recherche }, 'domaine': req.params.domaine }, {score: {$meta: "textScore"}})
+  .sort({score:{$meta:"textScore"}})
+  .exec(function (err, docs) {
+    console.log('recherche par domaine')
+    console.log(docs)
+    var dom =  data.getDomaines()
+  
+  res.render('search',{title: process.env.TITLE,domaines: dom, domaineSelect:req.params.domaine, types: types,recherche: req.params.recherche, docs: docs,statut: statut, nom: nom})
+  
+})
+//****************************************************************************** */
+/*let statut = req.cookies[process.env.cookie_name].role;
+let nom = req.cookies[process.env.cookie_name].userName;
+
+ Doc.find({ $text: { $search: req.params.recherche },'extension': req.params.type }, {score: {$meta: "textScore"}})
+.sort({score:{$meta:"textScore"}})
+.exec(function (err, docs) {
+  var dom =  data.getDomaines()
+  console.log(docs)
+
+res.render('search',{title: process.env.TITLE,domaines: dom, typeSelect:req.params.type, types: types,recherche: req.params.recherche, docs: docs,statut: statut, nom: nom})
+
+})*/
+};
+//Afficher les documents par type et periode
+exports.getByTypePeriod = (req, res, next) => {
+
+};
+//Afficher les documents par type, domaine, periode
+exports.getByTypeDomainePeriod = (req, res, next) =>{
+
+};
+//Afficher les documents par Domaine, periode
+exports.getByDomainePeriod = (req, res, next)=>{
+
+};
+exports.getByPeriod = (req, res, next)=>{
+  let statut = req.cookies[process.env.cookie_name].role;
+  let nom = req.cookies[process.env.cookie_name].userName;
+  console.log('RECHERCHE PAR periode')
+
+  var date1 = req.params.date1.split('-')
+  var date2 = req.params.date2.split('-')
+  var dateDeb = new Date(date1[0], date1[1], date1[2]);
+  var dateFin = new Date(date2[0], date2[1], date2[2]);
+  console.log('datedeb :'+ dateDeb)
+  console.log('dateFin :'+ date2)
+
+   Doc.find({ $text: { $search: req.params.recherche }, 'dateFull':{ $gte: dateDeb, $lt: dateFin}}, {score: {$meta: "textScore"}})
+  .sort({score:{$meta:"textScore"}})
+  .exec(function (err, docs) {
+    console.log('recherche par periode')
+    console.log(docs)
+    var dom =  data.getDomaines()
+  
+  res.render('search',{title: process.env.TITLE,domaines: dom, domaineSelect:req.params.domaine, types: types,recherche: req.params.recherche, docs: docs,statut: statut, nom: nom})
+  
+})
+
+}
 //Télécharger un document
 exports.download = (req, res, next) => {
   if(req.params.id){
@@ -348,17 +383,9 @@ exports.getUpdateDoc = (req, res, next) => {
       if(err) throw err;
       var chemin = doc.link.replace(/\/$/, "");
       cheminDef = chemin.substring (chemin.lastIndexOf( "/" )+1 );
-      Doc.find({},{'domaine': 1},(err, domaines)=>{
-        var dom = [];
-        for(var i=0; i<domaines.length; i++ ){
-          var element = domaines[i].domaine;
-          dom.push(element);
-        };
-        const filteredArray = dom.filter(function(ele , pos){
-          return dom.indexOf(ele) == pos;
-        });
-        res.render('updateDoc',{title: process.env.TITLE,FileName: cheminDef,doc: doc,domaines: filteredArray, statut: statut, nom: nom});
-      });
+      var dom =  data.getDomaines()
+        res.render('updateDoc',{title: process.env.TITLE,FileName: cheminDef,doc: doc,domaines: dom, statut: statut, nom: nom});
+      
     });
   };
 };
