@@ -233,7 +233,7 @@ queue_url = urlcourante.substring (urlcourante.lastIndexOf( "/" )+1 );
                     close.style.display = 'none';
                     docContainer.innerHTML = "";
                 }*/
-                window.open('/app/UpdateDoc/'+link,"menubar=no, status=no, scrollbars=no, menubar=no, width=200, height=100")
+                window.open('/app/UpdateDoc/'+link,"menubar=no, scrollbars=no, top=100, left=100, width=300, height=200")
             });
         };
     }

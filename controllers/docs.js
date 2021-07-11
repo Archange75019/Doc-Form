@@ -138,7 +138,7 @@ exports.addDoc = (req, res, next) => {
             extension: extens,
             description: champs.description,
             author: req.cookies[process.env.cookie_name].userName,
-            dateFull:files.fileToUpload.lastModifiedDate,
+            dateFull:files.fileToUpload.lastModifiedDate.toISOString(),
             size: files.fileToUpload.size,
             date: date.toLocaleString('fr-FR'),
             link: newpath
@@ -192,8 +192,10 @@ exports.searchDoc = (req, res, next)=>{
     }
   })
   let rechercheDef = search.toString();
-    if(rechercheDef != ""){
-      res.redirect('/app/SearchDocs/' + rechercheDef );
+  let recherche = rechercheDef.replace(',', ' ')
+  console.log(rechercheDef)
+    if(recherche != ""){
+      res.redirect('/app/SearchDocs/' + recherche );
     }
 }; 
 //Afficher les documents de l'utilisateur courant
@@ -211,9 +213,12 @@ exports.getResults = (req, res, next) => {
   let nom = req.cookies[process.env.cookie_name].userName;
   if( req.params.recherche){
     var recherche = req.params.recherche
+    console.log('Recherche111  :'+recherche)
     Doc.find({ $text: { $search: recherche } }, {score: {$meta: "textScore"}})
     .sort({score:{$meta:"textScore"}})
     .exec(function (err, docs) {
+      console.log('documents :')
+      console.log(docs)
       
       var dom = data.getDomaines()
       
@@ -347,12 +352,10 @@ exports.getByPeriod = (req, res, next)=>{
 
   var date1 = req.params.date1.split('-')
   var date2 = req.params.date2.split('-')
-  var dateDeb = new Date(date1[0], date1[1], date1[2]);
-  var dateFin = new Date(date2[0], date2[1], date2[2]);
-  console.log('datedeb :'+ dateDeb)
-  console.log('dateFin :'+ date2)
+  var dateDeb = new Date(date1[0], date1[1]-1, date1[2]).toISOString();
+  var dateFin = new Date(date2[0], date2[1]-1, date2[2]).toISOString();
 
-   Doc.find({ $text: { $search: req.params.recherche }, 'dateFull':{ $gte: dateDeb, $lt: dateFin}}, {score: {$meta: "textScore"}})
+   Doc.find({ $text: { $search: req.params.recherche }, 'dateFull':{ $gte: dateDeb, $lt: dateFin}},{score: {$meta: "textScore"}})
   .sort({score:{$meta:"textScore"}})
   .exec(function (err, docs) {
     console.log('recherche par periode')
