@@ -14,9 +14,9 @@ var docSchema = mongoose.Schema({
       },
       domaine:{
           type: String,
-          unique: true,
+          index:true,
           required: true,
-          index: true
+          //index: true
       },
       description: {
         type: String,
@@ -45,11 +45,12 @@ var docSchema = mongoose.Schema({
       },
       dateFull:{
         type: Date,
-        required: true 
+        required: true,
+        index: true
       }
 });
 
-
+docSchema.index({ titre: 'text', description: 'text' });
 
 var Doc = mongoose.model("Doc", docSchema);
 module.exports = Doc;

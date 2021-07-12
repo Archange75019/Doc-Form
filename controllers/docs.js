@@ -130,6 +130,8 @@ exports.addDoc = (req, res, next) => {
           }
           
           let date = new Date();
+          //const event = new Date(Date.UTC(date.getFullYear, date.getMonth()+1, date.getDate(), 3,0,0));
+          //console.log(event)
           
           const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
           
@@ -137,7 +139,7 @@ exports.addDoc = (req, res, next) => {
             var d = new Date();
             return d.getDate()+" " (d.getMonth()+1)+" "+d.getFullYear()
           }*/
-        console.log('date ajout :'+Date)
+        //console.log('date ajout :'+event.toLocaleDateString('fr-FR', options))
           var doc = {
             titre: champs.titre,
             domaine: domaine,
@@ -362,12 +364,14 @@ console.log(req.params.date1)
   console.log(date2[0])
   console.log(date2[1])
   console.log(date2[2])
-  var dateDeb = new Date(date1[0], date1[1], date1[2], 'UTC').toISOString();
+  var dateDeb = new Date(date1[0], date1[1]-1, date1[2])//.toISOString();
   
-  var dateFin = new Date(date2[0], date2[1], date2[2], 'UTC').toISOString();
+  var dateFin = new Date(date2[0], date2[1]-1, date2[2])//.toISOString();
+  dateDeb1 = dateDeb.setDate(dateDeb.getDate()+1)
+  dateFin1 = dateFin.setDate(dateFin.getDate()+1)
   console.log('toto :'+dateFin)
-  console.log('date de debut : '+dateDeb)
-  console.log('date de fin :'+dateFin)
+  console.log('date de debut : '+dateDeb1)
+  console.log('date de fin :'+dateFin1)
 
    Doc.find({ $text: { $search: req.params.recherche }, 'dateFull':{ $gte: dateDeb, $lt: dateFin}},{score: {$meta: "textScore"}})
   .sort({score:{$meta:"textScore"}})
