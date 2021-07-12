@@ -8,6 +8,7 @@ var url = require("url");
 var qs = require('qs');
 var htmlspecialchars = require('htmlspecialchars');
 var data = require('./data');
+const { Console } = require('console');
 
 var event = new EventEmitter()
 
@@ -128,10 +129,15 @@ exports.addDoc = (req, res, next) => {
             domaine = champs.domain
           }
           
-          var date = new Date();
-          console.log('date')
-          console.log(date)
+          let date = new Date();
+          
           const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+          
+          /*let dateLocale = Date.prototype.toLocaleDateString = function () {
+            var d = new Date();
+            return d.getDate()+" " (d.getMonth()+1)+" "+d.getFullYear()
+          }*/
+        console.log('date ajout :'+Date)
           var doc = {
             titre: champs.titre,
             domaine: domaine,
@@ -140,7 +146,7 @@ exports.addDoc = (req, res, next) => {
             author: req.cookies[process.env.cookie_name].userName,
             dateFull:files.fileToUpload.lastModifiedDate.toISOString(),
             size: files.fileToUpload.size,
-            date: date.toLocaleString('fr-FR'),
+            date: date.toLocaleDateString('fr-FR', options),
             link: newpath
           }
 console.log(doc)
@@ -349,11 +355,19 @@ exports.getByPeriod = (req, res, next)=>{
   let statut = req.cookies[process.env.cookie_name].role;
   let nom = req.cookies[process.env.cookie_name].userName;
   console.log('RECHERCHE PAR periode')
-
+console.log(req.params.date1)
   var date1 = req.params.date1.split('-')
   var date2 = req.params.date2.split('-')
-  var dateDeb = new Date(date1[0], date1[1]-1, date1[2]).toISOString();
-  var dateFin = new Date(date2[0], date2[1]-1, date2[2]).toISOString();
+  
+  console.log(date2[0])
+  console.log(date2[1])
+  console.log(date2[2])
+  var dateDeb = new Date(date1[0], date1[1], date1[2], 'UTC').toISOString();
+  
+  var dateFin = new Date(date2[0], date2[1], date2[2], 'UTC').toISOString();
+  console.log('toto :'+dateFin)
+  console.log('date de debut : '+dateDeb)
+  console.log('date de fin :'+dateFin)
 
    Doc.find({ $text: { $search: req.params.recherche }, 'dateFull':{ $gte: dateDeb, $lt: dateFin}},{score: {$meta: "textScore"}})
   .sort({score:{$meta:"textScore"}})
@@ -362,7 +376,7 @@ exports.getByPeriod = (req, res, next)=>{
     console.log(docs)
     var dom =  data.getDomaines()
   
-  res.render('search',{title: process.env.TITLE,domaines: dom, domaineSelect:req.params.domaine, types: types,recherche: req.params.recherche, docs: docs,statut: statut, nom: nom})
+  res.render('search',{title: process.env.TITLE,domaines: dom, domaineSelect:req.params.domaine, types: types,recherche: req.params.recherche, docs: docs,statut: statut,date1: date1, date2: date2, nom: nom})
   
 })
 

@@ -18,6 +18,10 @@
                         <div class="reset">
                             <p>termes recherchés: {{recherche}}</p>
                             <a href="/app/resetrecherche"  title="Annuler la requête"><i class="far fa-times-circle"></i></a>
+                            {% if  date1 and date2 %}
+                                <p>Période de recherche de {{date1}} à {{date2}}</p>
+                                <a href="/app/resetrechercheByPeriod"  title="Annuler la requête"><i class="far fa-times-circle"></i></a>
+                            {% endif %}
                         </div>
                         <div class="filt">
                             <span class="params">Paramètres de recherche</span>
