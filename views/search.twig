@@ -53,8 +53,13 @@
                                         {% endif %}
                                     </SELECT>
                                     <div class="date">
-                                            <input type="date" name="date1" title="Veuillez saisir la date de début de recherche">
+                                        {% if date1 and date2%}
+                                            <input type="date" name="date1" value="{{date1}}" title="Veuillez saisir la date de début de recherche">
+                                            <input type="date" name="date2" value="{{date2}}" title="Veuillez saisir la date de fin de recherche">
+                                        {% else %}
+                                            <input type="date" name="date1"  title="Veuillez saisir la date de début de recherche">
                                             <input type="date" name="date2" title="Veuillez saisir la date de fin de recherche">
+                                        {% endif %}
                                         </div>
                                 <input type="submit">Tri par types</button>
                                     </form>

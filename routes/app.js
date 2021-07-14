@@ -29,15 +29,15 @@ router.get('/SearchDocs/:recherche', doc.getResults);
 //Tri par filtre
 router.post('/SearchDocs/:recherche/filter', doc.searchDocByFilter);
 //Obtenir les documents trié par type
-router.get('/SearchDocs/:recherche/:type', doc.getByType);
+router.get('/SearchDocs/:recherche/type/:type', doc.getByType);
 //Obtenir les documents trié par type et domaine
-router.get('/SearchDocs/:recherche/:type /:domaine', doc.getByTypeDomaine);
+router.get('/SearchDocs/:recherche/type/:type/domaine/:domaine', doc.getByTypeDomaine);
 //Obtenir les documents trié par domaine
 router.get('/SearchDocs/:recherche/domaine/:domaine', doc.getByDomaine);
 //Obtenir les documents par type et period
-router.get('/SearchDocs/:recherche/:type /:date1/:date2', doc.getByTypePeriod);
+router.get('/SearchDocs/:recherche/type/:type/periode/:date1/:date2', doc.getByTypePeriod);
 //Obtenir les documents par type, domaine, period
-router.get('/SearchDocs/:recherche/:type /:domaine/:date1/:date2', doc.getByTypeDomainePeriod);
+router.get('/SearchDocs/:recherche/type/:type /domaine/:domaine/periode/:date1/:date2', doc.getByTypeDomainePeriod);
 //Obtenir les documents par domaine et periode
 router.get('/SearchDocs/:recherche/:domaine/:date1/:date2', doc.getByDomainePeriod);
 //Obtenir les documents par periode
