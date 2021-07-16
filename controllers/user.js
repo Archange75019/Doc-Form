@@ -81,10 +81,10 @@ exports.login = (req, res, next) => {
                 token: jwt.sign(
                   { userId: user._id },
                   process.env.TOKEN,
-                  { expiresIn: '24h' }
+                  { expiresIn: '8h' }
                 )
               };
-              res.cookie(process.env.cookie_name,token,{maxAge: 900000, httpOnly: true })
+              res.cookie(process.env.cookie_name,token,{maxAge: 288*100*1000, httpOnly: true })
            res.redirect('/app/home')
           })
           .catch(error => res.status(500).json({ error }));

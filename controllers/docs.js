@@ -241,46 +241,67 @@ exports.resetSearch = (req, res, next) => {
 //recherche par filtre
 exports.searchDocByFilter = (req, res, next) =>{
   /**/
+  let statut = req.cookies[process.env.cookie_name].role;
+  let nom = req.cookies[process.env.cookie_name].userName;
   var paramsRecherche = req.params.recherche;
   var typeBody = req.body.type;
-  var date1 = req.body.date1;
-  var date2 = req.body.date2
+  var dateD = req.body.date1;
+  var dateF = req.body.date2
   var domaineBody = req.body.Domaine;
   var domaineParams = req.params.domaine;
+  var date1 = dateD.split('-')
+  var date2 = dateF.split('-')
+  
+ 
+  var dateDeb = new Date(date1[0], date1[1]-1, date1[2])//.toISOString();
+  
+  var dateFin = new Date(date2[0], date2[1]-1, date2[2])//.toISOString();
+  var dateDeb1 = dateDeb.setDate(dateDeb.getDate()+1)
+  var dateFin1 = dateFin.setDate(dateFin.getDate()+1)
 console.log('req.params')
 console.log(req.params)
 console.log('req.body')
 console.log(req.body)
 
-if( req.params.recherche && req.body.type && req.body.Domaine ){
-  console.log('recherche par type domaine')
-  return res.redirect('/app/SearchDocs/'+paramsRecherche+'/type/'+typeBody+'/domaine/'+domaineBody+'');
-}
-  if( req.params.recherche && req.body.type ){
-    console.log('recherche par type')
-    return res.redirect('/app/SearchDocs/'+paramsRecherche+'/type/'+typeBody+'');
+Doc.find({$text: { $search: req.params.recherche},$or:[{'extension': req.body.type}, {'domaine': req.body.Domaine},{'dateFull':{ $gte: dateDeb1, $lt: dateFin1}}]}, {score: {$meta: "textScore"}})
+  .sort({score:{$meta:"textScore"}})
+  .exec(function (err, docs) {
+console.log('documents :')
+console.log(docs)
+var dom =  data.getDomaines()
+res.render('search',{title: process.env.TITLE,domaines: dom, domaineSelect: req.body.Domaine,typeSelect:req.body.type, types: types,recherche: req.params.recherche,date1: dateD, date2: dateF, docs: docs,statut: statut, nom: nom})
+
     
-  }
-  console.log('doc passer')
-   
-   if( paramsRecherche && domaineBody){
-    console.log('On entre dans la route de recherche par domaine')
-    res.redirect('/app/SearchDocs/'+paramsRecherche+'/domaine/'+domaineBody+'');
-  }
-  if( paramsRecherche && typeBody && date1 && date2){
-    console.log('recherchepar type et periode')
-    res.redirect('/app/SearchDocs/'+paramsRecherche+'/type/'+typeBody+'/periode/'+date1+'/'+date2);
-  }
-   if( paramsRecherche && typeBody && domaineBody && date1 && date2){
-    res.redirect('/app/SearchDocs/'+paramsRecherche+'/type/'+typeBody+'/domaine/'+domaineBody+'/periode/'+date1+'/'+date2);
-  }
-  if( paramsRecherche && domaineBody && date1 && date2){
-    res.redirect('/app/SearchDocs/'+paramsRecherche+'/'+domaineBody+'/'+date1+'/'+date2);
-  }
-   if( paramsRecherche && date1 && date2){
-    console.log('recherche par periode res')
-    res.redirect('/app/SearchDocs/'+paramsRecherche+'/'+date1+'/'+date2+'');
-  }
+  })
+/*
+if( req.params.recherche !="" && req.body.type !="" && req.body.Domaine !="" && req.body.date1 =="" ){
+  console.log('recherche par type domaine')
+  return res.redirect('/app/SearchDocs/'+paramsRecherche+'/type/'+typeBody+'/domaine/'+domaineBody+'/');
+}
+
+if( req.params.recherche && req.body.Domaine){
+  console.log('On entre dans la route de recherche par domaine')
+  return res.redirect('/app/SearchDocs/'+paramsRecherche+'/domaine/'+domaineBody+'/');
+}
+if( paramsRecherche && typeBody && date1 && date2){
+  console.log('recherchepar type et periode')
+  return res.redirect('/app/SearchDocs/'+paramsRecherche+'/type/'+typeBody+'/periode/'+date1+'/'+date2+'/');
+}
+if( req.params.recherche && req.body.type && req.body.Domaine && req.body.date1 && req.body.date2){
+  console.log('recherche par type domaine et periode')
+  return res.redirect('/app/SearchDocs/'+req.params.recherche+'/type/'+req.body.type+'/domaine/'+req.body.Domaine+'/periode/'+req.body.date1+'/'+req.body.date2+'/');
+}
+if( paramsRecherche && domaineBody && date1 && date2){
+  return res.redirect('/app/SearchDocs/'+paramsRecherche+'/'+domaineBody+'/'+date1+'/'+date2+'/');
+}
+if( paramsRecherche && date1 && date2){
+  console.log('recherche par periode res')
+  return res.redirect('/app/SearchDocs/'+paramsRecherche+'/'+date1+'/'+date2+'/');
+};
+if( req.params.recherche && req.body.type ){
+  console.log('recherche par type')
+  return res.redirect('/app/SearchDocs/'+paramsRecherche+'/type/'+typeBody+'/');
+}*/
 };
 //Afficher les documents rechercher par type 
 exports.getByType = (req, res, next) =>{
@@ -306,7 +327,7 @@ exports.getByTypeDomaine = (req, res, next) =>{
    Doc.find({ $text: { $search: req.params.recherche },'extension': req.params.type, 'domaine': req.params.domaine }, {score: {$meta: "textScore"}})
   .sort({score:{$meta:"textScore"}})
   .exec(function (err, docs) {
-    console.log('recherche par type et domaine')
+    
     console.log(docs)
     var dom =  data.getDomaines()
   
@@ -399,6 +420,29 @@ exports.getByTypeDomainePeriod = (req, res, next) =>{
 };
 //Afficher les documents par Domaine, periode
 exports.getByDomainePeriod = (req, res, next)=>{
+  let statut = req.cookies[process.env.cookie_name].role;
+  let nom = req.cookies[process.env.cookie_name].userName;
+ 
+  var date1 = req.params.date1.split('-')
+  var date2 = req.params.date2.split('-')
+  
+ 
+  var dateDeb = new Date(date1[0], date1[1]-1, date1[2])//.toISOString();
+  
+  var dateFin = new Date(date2[0], date2[1]-1, date2[2])//.toISOString();
+  dateDeb1 = dateDeb.setDate(dateDeb.getDate()+1)
+  dateFin1 = dateFin.setDate(dateFin.getDate()+1)
+
+  Doc.find({ $text: { $search: req.params.recherche }, 'dateFull':{ $gte: dateDeb, $lt: dateFin}},{score: {$meta: "textScore"}})
+  .sort({score:{$meta:"textScore"}})
+  .exec(function (err, docs) {
+    console.log('recherche par periode')
+    console.log(docs)
+    var dom =  data.getDomaines()
+  
+  res.render('search',{title: process.env.TITLE,domaines: dom, domaineSelect:req.params.domaine, types: types,recherche: req.params.recherche, docs: docs,statut: statut,date1: req.params.date1, date2: req.params.date2, nom: nom})
+  
+})
 
 };
 exports.getByPeriod = (req, res, next)=>{

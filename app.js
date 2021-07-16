@@ -19,7 +19,7 @@ var adminRouter = require('./routes/admin');
 var auth = require('./middleware/auth');
 
 var app = express();
-
+app.set('strict routing', true)
  
 
 app.use( bodyParser.json() );       // to support JSON-encoded bodies
