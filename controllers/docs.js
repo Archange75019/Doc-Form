@@ -129,9 +129,11 @@ exports.addDoc = (req, res, next) => {
             domaine = champs.domain
           }
           
+          var dat = data.getDate()
+          console.log(dat)
           let date = new Date();
-          //const event = new Date(Date.UTC(date.getFullYear, date.getMonth()+1, date.getDate(), 3,0,0));
-          //console.log(event)
+          /*const event = new Date(Date.UTC(date.getFullYear(), date.getMonth()+1, date.getDate(), 3,0,0));
+          console.log(event)*/
           
           const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
           
@@ -139,7 +141,8 @@ exports.addDoc = (req, res, next) => {
             var d = new Date();
             return d.getDate()+" " (d.getMonth()+1)+" "+d.getFullYear()
           }*/
-        //console.log('date ajout :'+event.toLocaleDateString('fr-FR', options))
+          //console.log('date ajout')
+        //console.log(date.toLocaleDateString('fr-FR', options))
           var doc = {
             titre: champs.titre,
             domaine: domaine,
@@ -148,7 +151,7 @@ exports.addDoc = (req, res, next) => {
             author: req.cookies[process.env.cookie_name].userName,
             dateFull:files.fileToUpload.lastModifiedDate.toISOString(),
             size: files.fileToUpload.size,
-            date: date.toLocaleDateString('fr-FR', options),
+            date: dat /*event.toLocaleDateString('fr-FR', options)*/,
             link: newpath
           }
 console.log(doc)
@@ -263,7 +266,7 @@ console.log(req.params)
 console.log('req.body')
 console.log(req.body)
 
-Doc.find({$text: { $search: req.params.recherche},$or:[{'extension': req.body.type}, {'domaine': req.body.Domaine},{'dateFull':{ $gte: dateDeb1, $lt: dateFin1}}]}, {score: {$meta: "textScore"}})
+/*Doc.find({$text: { $search: req.params.recherche},$or:[{'extension': req.body.type}, {'domaine': req.body.Domaine},{'dateFull':{ $gte: dateDeb1, $lt: dateFin1}}]}, {score: {$meta: "textScore"}})
   .sort({score:{$meta:"textScore"}})
   .exec(function (err, docs) {
 console.log('documents :')
@@ -272,17 +275,25 @@ var dom =  data.getDomaines()
 res.render('search',{title: process.env.TITLE,domaines: dom, domaineSelect: req.body.Domaine,typeSelect:req.body.type, types: types,recherche: req.params.recherche,date1: dateD, date2: dateF, docs: docs,statut: statut, nom: nom})
 
     
-  })
-/*
-if( req.params.recherche !="" && req.body.type !="" && req.body.Domaine !="" && req.body.date1 =="" ){
+  })*/
+  if( req.params.recherche && req.body.type ){
+    console.log('recherche par type')
+    return res.redirect('/app/SearchDocs/'+paramsRecherche+'/type/'+typeBody+'/');
+  }
+  if( req.params.recherche && req.body.Domaine){
+    console.log('On entre dans la route de recherche par domaine')
+    return res.redirect('/app/SearchDocs/'+paramsRecherche+'/domaine/'+domaineBody+'/');
+  }
+  if( paramsRecherche && date1 && date2){
+    console.log('recherche par periode res')
+    return res.redirect('/app/SearchDocs/'+paramsRecherche+'/periode/'+date1+'/'+date2+'/');
+  };
+/*if( req.params.recherche !="" && req.body.type !="" && req.body.Domaine !="" && req.body.date1 =="" ){
   console.log('recherche par type domaine')
   return res.redirect('/app/SearchDocs/'+paramsRecherche+'/type/'+typeBody+'/domaine/'+domaineBody+'/');
 }
 
-if( req.params.recherche && req.body.Domaine){
-  console.log('On entre dans la route de recherche par domaine')
-  return res.redirect('/app/SearchDocs/'+paramsRecherche+'/domaine/'+domaineBody+'/');
-}
+
 if( paramsRecherche && typeBody && date1 && date2){
   console.log('recherchepar type et periode')
   return res.redirect('/app/SearchDocs/'+paramsRecherche+'/type/'+typeBody+'/periode/'+date1+'/'+date2+'/');
@@ -294,14 +305,8 @@ if( req.params.recherche && req.body.type && req.body.Domaine && req.body.date1 
 if( paramsRecherche && domaineBody && date1 && date2){
   return res.redirect('/app/SearchDocs/'+paramsRecherche+'/'+domaineBody+'/'+date1+'/'+date2+'/');
 }
-if( paramsRecherche && date1 && date2){
-  console.log('recherche par periode res')
-  return res.redirect('/app/SearchDocs/'+paramsRecherche+'/'+date1+'/'+date2+'/');
-};
-if( req.params.recherche && req.body.type ){
-  console.log('recherche par type')
-  return res.redirect('/app/SearchDocs/'+paramsRecherche+'/type/'+typeBody+'/');
-}*/
+*/
+
 };
 //Afficher les documents rechercher par type 
 exports.getByType = (req, res, next) =>{

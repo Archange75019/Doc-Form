@@ -24,6 +24,12 @@ exports.getDomaines = ()=>{
       return tab
 
 }
+exports.getDate = ()=>{
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    var date = new Date().toLocaleDateString()
+
+    return date
+}
 
 
  
