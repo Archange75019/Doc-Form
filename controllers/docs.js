@@ -130,19 +130,7 @@ exports.addDoc = (req, res, next) => {
           }
           
           var dat = data.getDate()
-          console.log(dat)
-          let date = new Date();
-          /*const event = new Date(Date.UTC(date.getFullYear(), date.getMonth()+1, date.getDate(), 3,0,0));
-          console.log(event)*/
-          
-          const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-          
-          /*let dateLocale = Date.prototype.toLocaleDateString = function () {
-            var d = new Date();
-            return d.getDate()+" " (d.getMonth()+1)+" "+d.getFullYear()
-          }*/
-          //console.log('date ajout')
-        //console.log(date.toLocaleDateString('fr-FR', options))
+
           var doc = {
             titre: champs.titre,
             domaine: domaine,
@@ -151,12 +139,12 @@ exports.addDoc = (req, res, next) => {
             author: req.cookies[process.env.cookie_name].userName,
             dateFull:files.fileToUpload.lastModifiedDate.toISOString(),
             size: files.fileToUpload.size,
-            date: dat /*event.toLocaleDateString('fr-FR', options)*/,
+            createdat: dat,
             link: newpath
           }
 console.log(doc)
 
-          Doc.create({'titre': doc.titre, 'domaine': doc.domaine,'extension': doc.extension,'dateFull': doc.dateFull, 'description': doc.description, 'author': doc.author, 'date': doc.date, 'link': doc.link, 'size':doc.size }, (err, doc)=>{
+          Doc.create({'titre': doc.titre, 'domaine': doc.domaine,'extension': doc.extension,'dateFull': doc.dateFull, 'description': doc.description, 'author': doc.author, 'createdat': doc.createdat, 'link': doc.link, 'size':doc.size }, (err, doc)=>{
             if(err) throw err;
             res.redirect('/app/home')
 
@@ -512,22 +500,17 @@ exports.postUpdateDoc = (req, res, next) => {
         console.log(err)
         
       }else{ 
-        console.log('fields ')
-        console.log(fields)
-        console.log('files')
-        console.log( files)
-
         champs = {
           'titre':htmlspecialchars(fields.titre) ,
           'description':htmlspecialchars(fields.description)
         }
-        var date = new Date();
+        //var date = new Date();
         if(fields.domain == "Autre"){
           champs.domaine = fields.domaine
         }else{
           champs.domaine = fields.domain
         }
-
+        var dat = data.getDate()
         if(files.fileToUpload.size > 0){
           var fs = require('fs');
           Doc.findById({'_id': req.params.id}, {'link':1}, (err, data)=>{
@@ -592,6 +575,7 @@ exports.postUpdateDoc = (req, res, next) => {
             if (err) throw err;
             
             
+            console.log('date de mise à jour :'+dat)
             //const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             var doc = {
               titre: champs.titre,
@@ -601,11 +585,11 @@ exports.postUpdateDoc = (req, res, next) => {
               author: req.cookies[process.env.cookie_name].userName,
               dateFull:files.fileToUpload.lastModifiedDate,
               size: files.fileToUpload.size,
-              date: date.toLocaleString('fr-FR'),
+              updatedat: dat,
               link: newpath
             }
             Doc.findByIdAndUpdate({'_id': req.params.id},
-            {'titre': doc.titre, 'author': doc.author, 'domaine': doc.domaine, 'description':doc.description, 'link':doc.link, 'size': doc.size, 'date':doc.date, 'extension': doc.extension, 'dateFull': doc.dateFull}, (err, data)=>{
+            {'titre': doc.titre, 'author': doc.author, 'domaine': doc.domaine, 'description':doc.description, 'link':doc.link, 'size': doc.size, 'updatedat':doc.updatedat, 'extension': doc.extension, 'dateFull': doc.dateFull}, (err, data)=>{
               if(err) throw err
               res.redirect('/app/MyDocs');
             })
@@ -615,7 +599,7 @@ exports.postUpdateDoc = (req, res, next) => {
 
         
         }else{
-          Doc.findByIdAndUpdate({'_id': req.params.id}, {'titre': champs.titre, 'description': champs.description, 'domaine': champs.domaine, 'date': date.toLocaleString('fr-FR')},{new: true}, (err, data)=>{
+          Doc.findByIdAndUpdate({'_id': req.params.id}, {'titre': champs.titre, 'description': champs.description, 'domaine': champs.domaine, 'updatedat': dat}, (err, data)=>{
             if(err) throw err;
             res.redirect('/app/MyDocs');
           })

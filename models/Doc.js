@@ -33,12 +33,16 @@ var docSchema = mongoose.Schema({
         type: String,
         required: true
       },
-      date : {
+      createdat : {
         type: String,
         unique: false,
         required: true,
         index:true
       }, 
+      updatedat:{
+        type: String,
+        unique: false,
+      },
       extension:{
         type: String,
         required: true

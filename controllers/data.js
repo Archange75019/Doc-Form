@@ -25,10 +25,18 @@ exports.getDomaines = ()=>{
 
 }
 exports.getDate = ()=>{
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    var date = new Date().toLocaleDateString()
-
+    
+    const event = new Date();
+    var jours = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+    var mois = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Aout', 'Septembre', 'Octobre', 'Novembre', 'Décembre' ]
+    var day = event.getDay()-1;
+    var month = event.getMonth();
+    var num  = event.getDate();
+    var dayDef = jours[day]
+    var moisDef = mois[month]
+    var date = dayDef + ' '+num+' '+moisDef
     return date
+
 }
 
 

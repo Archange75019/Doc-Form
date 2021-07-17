@@ -39,6 +39,11 @@ app.use(session({
     resave: true
 }));
 
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
+mongoose.set('useUnifiedTopology', true);
+
 mongoose.connect(process.env.DB_URL,
   { useNewUrlParser: true,
     useUnifiedTopology: true,
