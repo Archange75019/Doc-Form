@@ -225,10 +225,6 @@ exports.getResults = (req, res, next) => {
     })
   }
 };
-//Réinitialiser les terme de la recherche
-exports.resetSearch = (req, res, next) => {
-  res.redirect('/app/SearchDocs');
-};
 //recherche par filtre
 exports.searchDocByFilter = (req, res, next) =>{
   /**/
@@ -632,3 +628,12 @@ exports.deleteDoc = (req, res, next) => {
   }
 
 };
+//Récupérer l'ensemble des documents
+exports.getAllDocs = (req, res, next) =>{
+  let statut = req.cookies[process.env.cookie_name].role;
+  let nom = req.cookies[process.env.cookie_name].userName;
+  Doc.find({}, (err, docs) =>{
+    if(err) throw err;
+    res.render('ListDoc', {title: process.env.TITLE, docs: docs, statut: statut, nom:nom})
+  })
+}

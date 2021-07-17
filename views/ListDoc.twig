@@ -1,0 +1,63 @@
+{% extends 'layout.twig' %}
+
+{% block body %}
+
+   <div class="contain">
+    <table>
+    <thead>
+        <tr>
+            <th>Titre</th>
+            <th>Domaine</th>
+            <th>Descripteurs</th>
+            <th class="date">Crée le</th>
+            <th>Mis à jours</th>
+            <th>Auteur</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for doc in docs %}
+            <tr>
+                <td>{{doc.titre}}</td>
+                <td>{{doc.domaine}}</td>
+                <td>{{doc.description| truncate(26 - 3 - doc.domaine|length, false, '...') }}</td>
+                <td>{{doc.createdat}}</td>
+                <td>{{doc.updatedat}}</td>
+                <td>{{doc.author}}</td>
+                <td>
+                <a title="Télécharger" href="/app/download/{{doc._id}}"><i class="fas fa-download"></i></a>
+                <a title="Modifier le document" class="modification" name="{{doc._id}}"><i class="fas fa-pencil-alt"></i></a>
+                <a title="Supprimer le document" href="/app/delete/{{doc._id}}"><i class="fas fa-trash"></i></a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+
+
+
+    </table>
+    </div>
+     <div
+        id="dialog"
+        role="dialog"
+        aria-labelledby="dialog-title"
+        aria-describedby="dialog-desc"
+        aria-modal="true"
+        aria-hidden="true"
+        tabindex="-1"
+        class="c-dialog">
+        <div role="document" id="c-dialog__box" id="conteneur">
+            
+                <button 
+                type="button" 
+                aria-label="Fermer"
+                id="closeModal" 
+                title="Fermer cette fenêtre modale"
+                data-dismiss="dialog">X
+                </button>
+                <div id="containerDoc">
+        
+           
+        </div>
+    </div>
+{% endblock %}

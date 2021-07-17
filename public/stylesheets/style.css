@@ -20,7 +20,15 @@ font-family: 'Numans', sans-serif;
     color: white;
 
 }
-
+.date{
+    display: flex;
+    flex-direction: row;
+}
+#types{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
 .navbar-brand{
     font-size: 28px;
     color: red;
