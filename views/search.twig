@@ -15,16 +15,9 @@
             <div class="container">
                 {% if recherche %}
                     <div class="filter">
-                        <div class="reset">
-                            <p>termes recherchés: {{recherche}}</p>
-                            <a href="/app/resetrecherche"  title="Annuler la requête"><i class="far fa-times-circle"></i></a>
-                            {% if  date1 and date2 %}
-                                <p>Période de recherche de {{date1}} à {{date2}}</p>
-                                <a href="/app/resetrechercheByPeriod"  title="Annuler la requête"><i class="far fa-times-circle"></i></a>
-                            {% endif %}
-                        </div>
+                       
                         <div class="filt">
-                            <span class="params">Paramètres de recherche</span>
+                            
                                 <form id="types" method="post" action="/app/SearchDocs/{{recherche}}/filter">
                                     <SELECT name="type" size="1" title="le type de fichier rechercher">
                                         <OPTION value="">Types de documents
@@ -53,15 +46,21 @@
                                         {% endif %}
                                     </SELECT>
                                     <div class="date">
+                                    
                                         {% if date1 and date2%}
+                                            <p>du</p>
                                             <input type="date" name="date1" value="{{date1}}" title="Veuillez saisir la date de début de recherche">
+                                            <p>au</p>
                                             <input type="date" name="date2" value="{{date2}}" title="Veuillez saisir la date de fin de recherche">
                                         {% else %}
+                                            <p>du</p>
                                             <input type="date" name="date1"  title="Veuillez saisir la date de début de recherche">
+                                            <p>au</p>
                                             <input type="date" name="date2" title="Veuillez saisir la date de fin de recherche">
                                         {% endif %}
                                         </div>
-                                <input type="submit">Tri par types</button>
+                                        <a href="/app/SearchDocs/reinitFilter/{{recherche}}"><i class="far fa-times-circle fa-2x"></i></a>
+                                <input type="submit" value="Filtrer"></button>
                                     </form>
                                          
 
@@ -83,7 +82,7 @@
                                     <div class="description">
                                         <p>{{doc.description}}</p>
                                         <p>Ajouté par {{doc.author}}</p>
-                                        <p> le {{doc.date}}</p>
+                                        <p> le {{doc.createdat}}</p>
                                         
                                     </div>
                                     <a class="download" href="/app/download/{{doc._id}}"><i class="fas fa-download fa-3x"></i></a>

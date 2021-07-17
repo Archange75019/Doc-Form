@@ -264,32 +264,40 @@ res.render('search',{title: process.env.TITLE,domaines: dom, domaineSelect: req.
 
     
   })*/
-  if( req.params.recherche && req.body.type ){
+  if( req.params.recherche != "" && req.body.type != "" && req.body.Domaine != "" && req.body.date1 != "" && req.body.date2 != ""){
+    console.log('recherche par type domaine et periode')
+    return res.redirect('/app/SearchDocs/'+req.params.recherche+'/type/'+req.body.type+'/domaine/'+req.body.Domaine+'/periode/'+dateD+'/'+dateF);
+  }
+  else if( req.params.recherche != "" && req.body.Domaine != "" && date1 != "" && date2 != ""){
+    console.log('recherchepar type et periode')
+    return res.redirect('/app/SearchDocs/'+paramsRecherche+'/domaine/'+req.body.Domaine+'/periode/'+dateD+'/'+dateF);
+  }
+  else if( req.params.recherche != "" && req.body.type != "" && date1 != "" && date2 != ""){
+    console.log('recherchepar type et periode')
+    return res.redirect('/app/SearchDocs/'+paramsRecherche+'/type/'+typeBody+'/periode/'+dateD+'/'+dateF);
+  }
+  else if( req.params.recherche != "" && req.body.type != "" && req.body.Domaine != "" ){
     console.log('recherche par type')
-    return res.redirect('/app/SearchDocs/'+paramsRecherche+'/type/'+typeBody+'/');
+    return res.redirect('/app/SearchDocs/'+paramsRecherche+'/type/'+typeBody+'/domaine/'+req.body.Domaine);
   }
-  if( req.params.recherche && req.body.Domaine){
+  else if( req.params.recherche != "" && req.body.type != "" ){
+    console.log('recherche par type')
+    return res.redirect('/app/SearchDocs/'+paramsRecherche+'/type/'+typeBody);
+  }
+  else if( req.params.recherche && req.body.Domaine){
     console.log('On entre dans la route de recherche par domaine')
-    return res.redirect('/app/SearchDocs/'+paramsRecherche+'/domaine/'+domaineBody+'/');
+    return res.redirect('/app/SearchDocs/'+paramsRecherche+'/domaine/'+domaineBody);
   }
-  if( paramsRecherche && date1 && date2){
+  else if( paramsRecherche != "" && date1 != "" && date2 != ""){
     console.log('recherche par periode res')
-    return res.redirect('/app/SearchDocs/'+paramsRecherche+'/periode/'+date1+'/'+date2+'/');
+    return res.redirect('/app/SearchDocs/'+paramsRecherche+'/periode/'+dateD+'/'+dateF);
   };
-/*if( req.params.recherche !="" && req.body.type !="" && req.body.Domaine !="" && req.body.date1 =="" ){
-  console.log('recherche par type domaine')
-  return res.redirect('/app/SearchDocs/'+paramsRecherche+'/type/'+typeBody+'/domaine/'+domaineBody+'/');
-}
+ 
+/*
 
 
-if( paramsRecherche && typeBody && date1 && date2){
-  console.log('recherchepar type et periode')
-  return res.redirect('/app/SearchDocs/'+paramsRecherche+'/type/'+typeBody+'/periode/'+date1+'/'+date2+'/');
-}
-if( req.params.recherche && req.body.type && req.body.Domaine && req.body.date1 && req.body.date2){
-  console.log('recherche par type domaine et periode')
-  return res.redirect('/app/SearchDocs/'+req.params.recherche+'/type/'+req.body.type+'/domaine/'+req.body.Domaine+'/periode/'+req.body.date1+'/'+req.body.date2+'/');
-}
+
+
 if( paramsRecherche && domaineBody && date1 && date2){
   return res.redirect('/app/SearchDocs/'+paramsRecherche+'/'+domaineBody+'/'+date1+'/'+date2+'/');
 }
@@ -426,7 +434,7 @@ exports.getByDomainePeriod = (req, res, next)=>{
   dateDeb1 = dateDeb.setDate(dateDeb.getDate()+1)
   dateFin1 = dateFin.setDate(dateFin.getDate()+1)
 
-  Doc.find({ $text: { $search: req.params.recherche }, 'dateFull':{ $gte: dateDeb, $lt: dateFin}},{score: {$meta: "textScore"}})
+  Doc.find({ $text: { $search: req.params.recherche }, 'domaine': req.params.domaine, 'dateFull':{ $gte: dateDeb, $lt: dateFin}},{score: {$meta: "textScore"}})
   .sort({score:{$meta:"textScore"}})
   .exec(function (err, docs) {
     console.log('recherche par periode')
@@ -465,6 +473,9 @@ console.log(req.params.date1)
   
 })
 
+}
+exports.reinitFilter = (req, res, next)=>{
+  res.redirect('/app/SearchDocs/'+req.params.recherche)
 }
 //Télécharger un document
 exports.download = (req, res, next) => {
