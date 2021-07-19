@@ -250,16 +250,6 @@ console.log(req.params)
 console.log('req.body')
 console.log(req.body)
 
-/*Doc.find({$text: { $search: req.params.recherche},$or:[{'extension': req.body.type}, {'domaine': req.body.Domaine},{'dateFull':{ $gte: dateDeb1, $lt: dateFin1}}]}, {score: {$meta: "textScore"}})
-  .sort({score:{$meta:"textScore"}})
-  .exec(function (err, docs) {
-console.log('documents :')
-console.log(docs)
-var dom =  data.getDomaines()
-res.render('search',{title: process.env.TITLE,domaines: dom, domaineSelect: req.body.Domaine,typeSelect:req.body.type, types: types,recherche: req.params.recherche,date1: dateD, date2: dateF, docs: docs,statut: statut, nom: nom})
-
-    
-  })*/
   if( req.params.recherche != "" && req.body.type != "" && req.body.Domaine != "" && req.body.date1 != "" && req.body.date2 != ""){
     console.log('recherche par type domaine et periode')
     return res.redirect('/app/SearchDocs/'+req.params.recherche+'/type/'+req.body.type+'/domaine/'+req.body.Domaine+'/periode/'+dateD+'/'+dateF);
@@ -628,12 +618,3 @@ exports.deleteDoc = (req, res, next) => {
   }
 
 };
-//Récupérer l'ensemble des documents
-exports.getAllDocs = (req, res, next) =>{
-  let statut = req.cookies[process.env.cookie_name].role;
-  let nom = req.cookies[process.env.cookie_name].userName;
-  Doc.find({}, (err, docs) =>{
-    if(err) throw err;
-    res.render('ListDoc', {title: process.env.TITLE, docs: docs, statut: statut, nom:nom})
-  })
-}

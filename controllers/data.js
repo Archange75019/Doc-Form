@@ -1,4 +1,5 @@
 const { Console } = require('console');
+var Doc = require('../models/Doc')
 var fs = require('fs');
 
 //Ajout de domaine
@@ -36,6 +37,39 @@ exports.getDate = ()=>{
     var moisDef = mois[month]
     var date = dayDef + ' '+num+' '+moisDef
     return date
+
+}
+exports.getAuthors = (req, res, next)=>{
+
+    /*return new Promise(resolve => {
+
+        resolve(
+            Doc.find().distinct('author', (err, authors)=>{
+                console.log('auteur dans la fonctions')
+               return authors
+            })
+
+    )
+    })*/
+    var listAuteurs = new Promise(
+        function(resolve, reject){
+            resolve(
+                Doc.find().distinct('author', (err, authors)=>{
+
+                   return authors
+                })
+            )
+        }
+    )
+    listAuteurs.then(
+        function(val){
+            console.log('Retour dans le code')
+            console.log(val)
+            return val
+        }
+    )
+    //console.log(listAuteurs)
+    return listAuteurs
 
 }
 

@@ -1,41 +1,79 @@
 {% extends 'layout.twig' %}
 
 {% block body %}
-
-   <div class="contain">
-    <table>
-    <thead>
-        <tr>
-            <th>Titre</th>
-            <th>Domaine</th>
-            <th>Descripteurs</th>
-            <th class="date">Crée le</th>
-            <th>Mis à jours</th>
-            <th>Auteur</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for doc in docs %}
-            <tr>
-                <td>{{doc.titre}}</td>
-                <td>{{doc.domaine}}</td>
-                <td>{{doc.description| truncate(26 - 3 - doc.domaine|length, false, '...') }}</td>
-                <td>{{doc.createdat}}</td>
-                <td>{{doc.updatedat}}</td>
-                <td>{{doc.author}}</td>
-                <td>
-                <a title="Télécharger" href="/app/download/{{doc._id}}"><i class="fas fa-download"></i></a>
-                <a title="Modifier le document" class="modification" name="{{doc._id}}"><i class="fas fa-pencil-alt"></i></a>
-                <a title="Supprimer le document" href="/app/delete/{{doc._id}}"><i class="fas fa-trash"></i></a>
-                </td>
-            </tr>
-        {% endfor %}
-    </tbody>
-
-
-
-    </table>
+    <form id="filtrAdmin" method="post" action="/admin/filterDocs">
+        <SELECT name="Domaine" size="1" title="Par domaine">
+            <OPTION value="">Par domaine
+            {% if domaines %}
+                {% for domaine in domaines %}
+                    {% if domaine != "" %}
+                        {% if domaineSelect == domaine %}
+                            <OPTION value="{{domaineSelect}}" selected>{{domaineSelect}}
+                        {% else %}
+                            <OPTION value="{{domaine}}">{{domaine}}
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </SELECT>
+        <div class="date">                                    
+            {% if date1 and date2%}
+                <p>du</p>
+                <input type="date" name="date1" value="{{date1}}" title="Veuillez saisir la date de début de recherche">
+                <p>au</p>
+                <input type="date" name="date2" value="{{date2}}" title="Veuillez saisir la date de fin de recherche">
+            {% else %}
+                <p>du</p>
+                <input type="date" name="date1"  title="Veuillez saisir la date de début de recherche">
+                <p>au</p>
+                <input type="date" name="date2" title="Veuillez saisir la date de fin de recherche">
+            {% endif %}
+        </div>
+       <p>{{authors}}</p>
+        <SELECT name="author" size="1" title="Par auteur">
+            <OPTION value="">Par auteur
+            {% for author in authors %}
+                {% if authorSelect == author %}
+                    <OPTION value="{{authorSelect}}" selected>{{authorSelect}}
+                {% else %}
+                    <OPTION value="{{author}}">{{author}}
+                {% endif %}
+            {% endfor %}
+        </SELECT>
+       
+        <input type="submit" value="Filtrer"></button>
+        <a href="/app/SearchDocs/reinitFilter/{{recherche}}" title="Réinitialiser les filtres"><i class="far fa-times-circle fa-2x"></i></a>
+    </form>          
+    <div class="contain">
+        <table>
+            <thead>
+                <tr>
+                    <th>Titre</th>
+                    <th>Domaine</th>
+                    <th>Descripteurs</th>
+                    <th>Modifié le</th>
+                    <th>Auteur</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for doc in docs %}
+                    <tr>
+                        <td>{{doc.titre}}</td>
+                        <td>{{doc.domaine}}</td>
+                        <td>{{doc.description| truncate(26 - 3 - doc.domaine|length, false, '...') }}</td>
+                        <td>{{doc.createdat}}</td>
+                        
+                        <td>{{doc.author}}</td>
+                        <td>
+                        <a title="Télécharger" href="/app/download/{{doc._id}}"><i class="fas fa-download"></i></a>
+                        <a title="Modifier le document" class="modification" name="{{doc._id}}"><i class="fas fa-pencil-alt"></i></a>
+                        <a title="Supprimer le document" href="/app/delete/{{doc._id}}"><i class="fas fa-trash"></i></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
      <div
         id="dialog"

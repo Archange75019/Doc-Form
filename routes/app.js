@@ -44,8 +44,7 @@ router.get('/SearchDocs/:recherche/domaine/:domaine/periode/:date1/:date2', doc.
 router.get('/SearchDocs/:recherche/type/:type/periode/:date1/:date2', doc.getByTypePeriod);
 //reinitialiser les filtres de recherche
 router.get('/SearchDocs/reinitFilter/:recherche', doc.reinitFilter);
-//Récupérer la listes des documents
-router.get('/Documents', doc.getAllDocs)
+
 //Telecharger un document
 router.get('/download/:id', doc.download);
 //Supprimer un document
