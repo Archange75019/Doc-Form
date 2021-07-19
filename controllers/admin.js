@@ -9,6 +9,7 @@ var qs = require('qs');
 var htmlspecialchars = require('htmlspecialchars');
 var data = require('./data');
 const { ProxyAuthenticationRequired } = require('http-errors');
+const { brotliCompress } = require('zlib');
 
 var types = [
     'Excel','Word', 'PDF', 'Powerpoint', 'Image', 'Scéance clé en main', 'Archive'
@@ -29,28 +30,49 @@ exports.getAllDocs = (req, res, next) =>{
     let statut = req.cookies[process.env.cookie_name].role;
     let nom = req.cookies[process.env.cookie_name].userName;
     
-    let authors = [];
+    //let authors = [];
+////////////////////////////////////////////////
+    function b(){
+      var listAuteurs = new Promise(
+        function(resolve, reject){
+            resolve(
+                Doc.find().distinct('author', (err, authors)=>{
+
+                   //return authors
+                })
+            )
+        }
+    )
+    listAuteurs.then(
+        function(val){
+            console.log('Retour dans le code')
+            console.log(val)
+            return val
+        }
+    )
+    //console.log(listAuteurs)
+    return listAuteurs
+    }
+/////////////////////////////////////////
     async function getListAuthors(){
-      let auteurs = await data.getAuthors();
+      let auteurs = await b();
       console.log('toto')
-      for (var i =0; i< auteurs.length; i++){
+      /*for (var i =0; i< auteurs.length; i++){
         element = auteurs[i]
         authors.push(element)
-      }
+      }*/
+      console.log(auteurs)
 
-      return authors
+      return auteurs
     }
-      getListAuthors()
-    
-    
-    
-   
- 
-    
+
+       var a = getListAuthors()
+       console.log('a')
+       console.log(a)
     Doc.find({}, (err, docs)=>{
       if(err) throw err
 
-      res.render('ListDoc', {title: process.env.TITLE, types: types, docs: docs, domaines: dom, authors:authors,statut: statut, nom:nom})
+      res.render('ListDoc', {title: process.env.TITLE, types: types, docs: docs, domaines: dom, authors:b,statut: statut, nom:nom})
     })     
       
       

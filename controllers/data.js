@@ -39,7 +39,7 @@ exports.getDate = ()=>{
     return date
 
 }
-exports.getAuthors = (req, res, next)=>{
+/*exports.getAuthors = (req, res, next)=>{
 
     /*return new Promise(resolve => {
 
@@ -50,7 +50,7 @@ exports.getAuthors = (req, res, next)=>{
             })
 
     )
-    })*/
+    })
     var listAuteurs = new Promise(
         function(resolve, reject){
             resolve(
@@ -71,7 +71,7 @@ exports.getAuthors = (req, res, next)=>{
     //console.log(listAuteurs)
     return listAuteurs
 
-}
+}*/
 
 
  
