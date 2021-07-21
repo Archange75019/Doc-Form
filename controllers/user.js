@@ -85,7 +85,7 @@ exports.login = (req, res, next) => {
                 )
               };
               res.cookie(process.env.cookie_name,token,{maxAge: 288*100*1000, httpOnly: true })
-           res.redirect('/app/home')
+           res.redirect('/app/home/1')
           })
           .catch(error => res.status(500).json({ error }));
       })
@@ -144,7 +144,7 @@ exports.register = (req, res, next) => {
                 
                 '</br><p style="color: blue; font-size: 18px;"> Administrateur de la plateforme Doc-Form</p>'
                 sendMail(user.email, 'inscription sur '+process.env.TITLE, corp)
-                res.redirect('/app/home')
+                res.redirect('/app/home/1')
               });
            });
         }else{

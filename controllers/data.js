@@ -40,6 +40,10 @@ exports.getDate = ()=>{
     return date
 
 }
+exports.getPagination = (req, res, next) =>{
+    var perPage = 20;
+    var page = req.params.page || 1
+}
 
 
 

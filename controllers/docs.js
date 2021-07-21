@@ -22,13 +22,21 @@ var types = [
 exports.getDoc = (req, res, next) => {
   let statut = req.cookies[process.env.cookie_name].role; 
    let nom = req.cookies[process.env.cookie_name].userName;
+   var perPage = 21;
+   var page = req.params.page || 1
   if(statut){
     Doc.find({})
     .sort({ dateFull: -1 })
-    .limit(12)
+    .skip((perPage * page) - perPage)
+    .limit(perPage)
     .exec(function (err, docs){
       if(err) throw err;
-      res.render('home',{title: process.env.TITLE, docs:docs, statut : statut, nom: nom});
+
+      Doc.countDocuments({}).exec(function (err, count) {
+        if (err) return next(err)
+        
+      res.render('home',{title: process.env.TITLE, docs:docs,current: page,pages: Math.ceil(count / perPage), statut : statut, nom: nom});
+      })
     });
   }
 };
@@ -146,7 +154,7 @@ console.log(doc)
 
           Doc.create({'titre': doc.titre, 'domaine': doc.domaine,'extension': doc.extension,'dateFull': doc.dateFull, 'description': doc.description, 'author': doc.author, 'createdat': doc.createdat, 'link': doc.link, 'size':doc.size }, (err, doc)=>{
             if(err) throw err;
-            res.redirect('/app/home')
+            res.redirect('/app/home/1')
 
           })
         });

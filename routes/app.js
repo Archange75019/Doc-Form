@@ -11,7 +11,7 @@ const Doc = require('../models/Doc');
 
 
 //Affiche la page home
-router.get('/home', doc.getDoc);
+router.get('/home/:page', doc.getDoc);
 //affiche la page d'inscription utilisateur
 router.get('/register', user.registerShow);
 // Traite l'inscription utilisateur
