@@ -209,10 +209,21 @@ exports.searchDoc = (req, res, next)=>{
 exports.MyDocs = (req, res, next)=>{
   let statut = req.cookies[process.env.cookie_name].role;
   let nom = req.cookies[process.env.cookie_name].userName;
-  Doc.find({'author': req.cookies[process.env.cookie_name].userName}, (err, docs)=>{
+
+  var perPage = 21;
+   var page = req.params.page || 1
+
+  Doc.find({'author': req.cookies[process.env.cookie_name].userName})
+  .sort({ dateFull: -1 })
+  .skip((perPage * page) - perPage)
+  .limit(perPage)
+  .exec(function(err, docs){
     if(err) throw err;
-    res.render('MyDocs',{title: process.env.TITLE, docs: docs, statut: statut, nom: nom    })
+    Doc.countDocuments({}).exec(function (err, count) {
+      if (err) return next(err)
+    res.render('MyDocs',{title: process.env.TITLE, docs: docs,current: page,pages: Math.ceil(count / perPage), statut: statut, nom: nom    })
   })
+})
 };
 //Afficher le résultat d'une recherche de documents
 exports.getResults = (req, res, next) => {
@@ -220,17 +231,26 @@ exports.getResults = (req, res, next) => {
   let nom = req.cookies[process.env.cookie_name].userName;
   if( req.params.recherche){
     var recherche = req.params.recherche
-    console.log('Recherche111  :'+recherche)
+
+    var perPage = 21;
+   var page = req.params.page || 1;
+
+
+    
     Doc.find({ $text: { $search: recherche } }, {score: {$meta: "textScore"}})
     .sort({score:{$meta:"textScore"}})
+    .skip((perPage * page) - perPage)
+    .limit(perPage)
     .exec(function (err, docs) {
-      console.log('documents :')
-      console.log(docs)
+      if(err) throw err
+      Doc.countDocuments({}).exec(function (err, count) {
+        if (err) return next(err)
       
       var dom = data.getDomaines()
       
-      res.render('search',{title: process.env.TITLE,domaines: dom, types: types, recherche: req.params.recherche, docs: docs,statut: statut, nom: nom})
+      res.render('search',{title: process.env.TITLE,domaines: dom, types: types,current: page,pages: Math.ceil(count / perPage), recherche: req.params.recherche, docs: docs,statut: statut, nom: nom})
     })
+  })
   }
 };
 //recherche par filtre
@@ -302,16 +322,23 @@ if( paramsRecherche && domaineBody && date1 && date2){
 exports.getByType = (req, res, next) =>{
   let statut = req.cookies[process.env.cookie_name].role;
   let nom = req.cookies[process.env.cookie_name].userName;
+
+  var perPage = 21;
+   var page = req.params.page || 1;
   
 
    Doc.find({ $text: { $search: req.params.recherche },'extension': req.params.type }, {score: {$meta: "textScore"}})
   .sort({score:{$meta:"textScore"}})
+  .skip((perPage * page) - perPage)
+  .limit(perPage)
   .exec(function (err, docs) {
     var dom =  data.getDomaines()
     console.log(docs)
+    Doc.countDocuments({}).exec(function (err, count) {
+      if (err) return next(err)
   
-  res.render('search',{title: process.env.TITLE,domaines: dom, typeSelect:req.params.type, types: types,recherche: req.params.recherche, docs: docs,statut: statut, nom: nom})
-  
+  res.render('search',{title: process.env.TITLE, current: page,pages: Math.ceil(count / perPage),domaines: dom, typeSelect:req.params.type, types: types,recherche: req.params.recherche, docs: docs,statut: statut, nom: nom})
+    })
 })
 };
 //Afficher les documents rechercher par type et par domaine
@@ -319,15 +346,21 @@ exports.getByTypeDomaine = (req, res, next) =>{
   let statut = req.cookies[process.env.cookie_name].role;
   let nom = req.cookies[process.env.cookie_name].userName;
 
+  var perPage = 21;
+   var page = req.params.page || 1
+
    Doc.find({ $text: { $search: req.params.recherche },'extension': req.params.type, 'domaine': req.params.domaine }, {score: {$meta: "textScore"}})
   .sort({score:{$meta:"textScore"}})
+  .skip((perPage * page) - perPage)
+    .limit(perPage)
   .exec(function (err, docs) {
-    
+    Doc.countDocuments({}).exec(function (err, count) {
+      if (err) return next(err)
     console.log(docs)
     var dom =  data.getDomaines()
   
-  res.render('search',{title: process.env.TITLE,domaines: dom, domaineSelect: req.params.domaine,typeSelect:req.params.type, types: types,recherche: req.params.recherche, docs: docs,statut: statut, nom: nom})
-  
+  res.render('search',{title: process.env.TITLE, current: page,pages: Math.ceil(count / perPage),domaines: dom, domaineSelect: req.params.domaine,typeSelect:req.params.type, types: types,recherche: req.params.recherche, docs: docs,statut: statut, nom: nom})
+    })
 })
 };
 //Afficher les documents par domaine
@@ -336,15 +369,22 @@ exports.getByDomaine = (req, res, next) =>{
   let nom = req.cookies[process.env.cookie_name].userName;
   console.log('RECHERCHE PAR FDOMAINE')
 
+  var perPage = 21;
+   var page = req.params.page || 1
+
    Doc.find({ $text: { $search: req.params.recherche }, 'domaine': req.params.domaine }, {score: {$meta: "textScore"}})
   .sort({score:{$meta:"textScore"}})
+  .skip((perPage * page) - perPage)
+    .limit(perPage)
   .exec(function (err, docs) {
     console.log('recherche par domaine')
     console.log(docs)
     var dom =  data.getDomaines()
+    Doc.countDocuments({}).exec(function (err, count) {
+      if (err) return next(err)
   
   res.render('search',{title: process.env.TITLE,domaines: dom, domaineSelect:req.params.domaine, types: types,recherche: req.params.recherche, docs: docs,statut: statut, nom: nom})
-  
+    })
 })
 //****************************************************************************** */
 /*let statut = req.cookies[process.env.cookie_name].role;
@@ -367,6 +407,9 @@ exports.getByTypePeriod = (req, res, next) => {
  console.log('recherche par type et periode')
   var date1 = req.params.date1.split('-')
   var date2 = req.params.date2.split('-')
+
+  var perPage = 21;
+   var page = req.params.page || 1
   
  
   var dateDeb = new Date(date1[0], date1[1]-1, date1[2])//.toISOString();
@@ -376,13 +419,17 @@ exports.getByTypePeriod = (req, res, next) => {
   dateFin1 = dateFin.setDate(dateFin.getDate()+1)
   Doc.find({ $text: { $search: req.params.recherche },'extension':req.params.type, 'dateFull':{ $gte: dateDeb, $lt: dateFin}},{score: {$meta: "textScore"}})
   .sort({score:{$meta:"textScore"}})
+  .skip((perPage * page) - perPage)
+    .limit(perPage)
   .exec(function (err, docs) {
     console.log('recherche par periode')
     console.log(docs)
     var dom =  data.getDomaines()
+    Doc.countDocuments({}).exec(function (err, count) {
+      if (err) return next(err)
   
-  res.render('search',{title: process.env.TITLE,domaines: dom, domaineSelect:req.params.domaine, types: types,typeSelect: req.params.type,recherche: req.params.recherche, docs: docs,statut: statut,date1: req.params.date1, date2: req.params.date2, nom: nom})
-  
+  res.render('search',{title: process.env.TITLE,current: page,pages: Math.ceil(count / perPage),domaines: dom, domaineSelect:req.params.domaine, types: types,typeSelect: req.params.type,recherche: req.params.recherche, docs: docs,statut: statut,date1: req.params.date1, date2: req.params.date2, nom: nom})
+    })
 })
 
 };
@@ -393,6 +440,9 @@ exports.getByTypeDomainePeriod = (req, res, next) =>{
  console.log('recherche par type domaine et periode')
   var date1 = req.params.date1.split('-')
   var date2 = req.params.date2.split('-')
+
+  var perPage = 21;
+   var page = req.params.page || 1
   
  
   var dateDeb = new Date(date1[0], date1[1]-1, date1[2])//.toISOString();
@@ -403,13 +453,16 @@ exports.getByTypeDomainePeriod = (req, res, next) =>{
 
   Doc.find({ $text: { $search: req.params.recherche },'domaine':req.params.domaine,'extension':req.params.type, 'dateFull':{ $gte: dateDeb, $lt: dateFin}},{score: {$meta: "textScore"}})
   .sort({score:{$meta:"textScore"}})
+  .skip((perPage * page) - perPage)
+  .limit(perPage)
   .exec(function (err, docs) {
     console.log('recherche par periode')
     console.log(docs)
     var dom =  data.getDomaines()
-  
-  res.render('search',{title: process.env.TITLE,domaines: dom, domaineSelect:req.params.domaine, types: types,typeSelect: req.params.type,recherche: req.params.recherche, docs: docs,statut: statut,date1: req.params.date1, date2: req.params.date2, nom: nom})
-  
+    Doc.countDocuments({}).exec(function (err, count) {
+      if (err) return next(err)
+  res.render('search',{title: process.env.TITLE,domaines: dom, current: page,pages: Math.ceil(count / perPage), domaineSelect:req.params.domaine, types: types,typeSelect: req.params.type,recherche: req.params.recherche, docs: docs,statut: statut,date1: req.params.date1, date2: req.params.date2, nom: nom})
+    })
 })
 
 };
@@ -418,6 +471,10 @@ exports.getByDomainePeriod = (req, res, next)=>{
   let statut = req.cookies[process.env.cookie_name].role;
   let nom = req.cookies[process.env.cookie_name].userName;
  
+
+  var perPage = 21;
+   var page = req.params.page || 1
+
   var date1 = req.params.date1.split('-')
   var date2 = req.params.date2.split('-')
   
@@ -430,13 +487,17 @@ exports.getByDomainePeriod = (req, res, next)=>{
 
   Doc.find({ $text: { $search: req.params.recherche }, 'domaine': req.params.domaine, 'dateFull':{ $gte: dateDeb, $lt: dateFin}},{score: {$meta: "textScore"}})
   .sort({score:{$meta:"textScore"}})
+  .skip((perPage * page) - perPage)
+  .limit(perPage)
   .exec(function (err, docs) {
     console.log('recherche par periode')
     console.log(docs)
     var dom =  data.getDomaines()
+    Doc.countDocuments({}).exec(function (err, count) {
+      if (err) return next(err)
   
-  res.render('search',{title: process.env.TITLE,domaines: dom, domaineSelect:req.params.domaine, types: types,recherche: req.params.recherche, docs: docs,statut: statut,date1: req.params.date1, date2: req.params.date2, nom: nom})
-  
+  res.render('search',{title: process.env.TITLE, current: page,pages: Math.ceil(count / perPage), domaines: dom, domaineSelect:req.params.domaine, types: types,recherche: req.params.recherche, docs: docs,statut: statut,date1: req.params.date1, date2: req.params.date2, nom: nom})
+    })
 })
 
 };
@@ -447,7 +508,8 @@ exports.getByPeriod = (req, res, next)=>{
 console.log(req.params.date1)
   var date1 = req.params.date1.split('-')
   var date2 = req.params.date2.split('-')
-  
+  var perPage = 21;
+   var page = req.params.page || 1;
  
   var dateDeb = new Date(date1[0], date1[1]-1, date1[2])//.toISOString();
   
@@ -458,13 +520,17 @@ console.log(req.params.date1)
 
    Doc.find({ $text: { $search: req.params.recherche }, 'dateFull':{ $gte: dateDeb, $lt: dateFin}},{score: {$meta: "textScore"}})
   .sort({score:{$meta:"textScore"}})
+  .skip((perPage * page) - perPage)
+    .limit(perPage)
   .exec(function (err, docs) {
     console.log('recherche par periode')
     console.log(docs)
     var dom =  data.getDomaines()
+    Doc.countDocuments({}).exec(function (err, count) {
+      if (err) return next(err)
   
-  res.render('search',{title: process.env.TITLE,domaines: dom, domaineSelect:req.params.domaine, types: types,recherche: req.params.recherche, docs: docs,statut: statut,date1: req.params.date1, date2: req.params.date2, nom: nom})
-  
+  res.render('search',{title: process.env.TITLE, current: page,pages: Math.ceil(count / perPage),current: page,pages: Math.ceil(count / perPage),domaines: dom, domaineSelect:req.params.domaine, types: types,recherche: req.params.recherche, docs: docs,statut: statut,date1: req.params.date1, date2: req.params.date2, nom: nom})
+    })
 })
 
 }

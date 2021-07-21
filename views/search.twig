@@ -14,6 +14,7 @@
         
             <div class="container">
                 {% if recherche %}
+
                     <div class="filter">
                        
                         <div class="filt">
@@ -67,6 +68,41 @@
 
                         </div>
                     </div>
+                    <div class="page">
+    {% if pages > 1 %}
+
+    {# Number of page around current page+1 #}
+    {% set nearbyPagesLimit = 5 %}
+
+    <div>
+        <ul class="pagination">
+            {% if current != 1 %}
+            <li>
+                <a href="1">Début</a>
+            </li>
+            {% endif %}
+            {% for i in 1..pages %}
+                {% if 0 == (current - nearbyPagesLimit) - loop.index %} {# dot before #}
+                    <li class="disabled"><a href="#">...</a></li>
+                {% elseif 0 == (current + nearbyPagesLimit) - loop.index %} {# dot after #}
+                    <li class="disabled"><a href="#">...</a></li>
+                {% elseif 0 < (current - nearbyPagesLimit) - loop.index %} {# hide all before #}
+                {% elseif 0 > (current + nearbyPagesLimit) - loop.index %} {# hide all after #}
+                {% else %}
+                    <li {% if current == loop.index  %} class="active"{% endif %}>
+                        <a href="{{ loop.index}}" class="pageNumber"> {{ loop.index }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+            {% if current != pages %}
+            <li>
+                <a href="{{ pages}}">Fin</a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+    {% endif %}
+</div>
                     {% endif %}
                      
                     {% if docs %}
