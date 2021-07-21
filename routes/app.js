@@ -25,25 +25,25 @@ router.get('/SearchDocs/', doc.getDocs);
 //Soumission des termes de la recharche
 router.post('/SearchDocs', doc.searchDoc);
 //Recherche dans la base
-router.get('/SearchDocs/:recherche', doc.getResults);
+router.get('/SearchDocs/:recherche/:page', doc.getResults);
 //Tri par filtre
 router.post('/SearchDocs/:recherche/filter', doc.searchDocByFilter);
 //Obtenir les documents par type, domaine, period
-router.get('/SearchDocs/:recherche/type/:type/domaine/:domaine/periode/:date1/:date2', doc.getByTypeDomainePeriod);
+router.get('/SearchDocs/:recherche/type/:type/domaine/:domaine/periode/:date1/:date2/:page', doc.getByTypeDomainePeriod);
 //Obtenir les documents trié par type
-router.get('/SearchDocs/:recherche/type/:type', doc.getByType);
+router.get('/SearchDocs/:recherche/type/:type/:page', doc.getByType);
 //Obtenir les documents trié par domaine
-router.get('/SearchDocs/:recherche/domaine/:domaine', doc.getByDomaine);
+router.get('/SearchDocs/:recherche/domaine/:domaine/:page', doc.getByDomaine);
 //Obtenir les documents par periode
-router.get('/SearchDocs/:recherche/periode/:date1/:date2', doc.getByPeriod);
+router.get('/SearchDocs/:recherche/periode/:date1/:date2/:page', doc.getByPeriod);
 //Obtenir les documents trié par type et domaine
-router.get('/SearchDocs/:recherche/type/:type/domaine/:domaine', doc.getByTypeDomaine);
+router.get('/SearchDocs/:recherche/type/:type/domaine/:domaine/:page', doc.getByTypeDomaine);
 //Obtenir les documents par type et period
-router.get('/SearchDocs/:recherche/domaine/:domaine/periode/:date1/:date2', doc.getByDomainePeriod);
+router.get('/SearchDocs/:recherche/domaine/:domaine/periode/:date1/:date2/:page', doc.getByDomainePeriod);
 //Obtenir les documents par domaine et periode
-router.get('/SearchDocs/:recherche/type/:type/periode/:date1/:date2', doc.getByTypePeriod);
+router.get('/SearchDocs/:recherche/type/:type/periode/:date1/:date2/:page', doc.getByTypePeriod);
 //reinitialiser les filtres de recherche
-router.get('/SearchDocs/reinitFilter/:recherche', doc.reinitFilter);
+router.get('/SearchDocs/reinitFilter/:recherche/:page', doc.reinitFilter);
 
 //Telecharger un document
 router.get('/download/:id', doc.download);
