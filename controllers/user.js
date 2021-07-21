@@ -59,7 +59,6 @@ function sendMail(destinataire, objet, corp){
 
   });
 };
-
 //Connexion à l'appli
 exports.login = (req, res, next) => {
     User.findOne({ email: req.body.email })
@@ -91,7 +90,6 @@ exports.login = (req, res, next) => {
       })
       .catch(error => res.status(500).json({ error }));
 };
-
 //Afficher le formulaire d'inscription utilisateur
 exports.registerShow = (req, res, next) =>{
   let statut = req.cookies[process.env.cookie_name].role;

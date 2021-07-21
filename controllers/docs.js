@@ -78,45 +78,8 @@ exports.addDoc = (req, res, next) => {
 
         var ext = newpath;
         var re = /(?:\.([^.]+))?$/;
-        var extens = re.exec(ext)[1];
-        console.log('extens '+extens)
-  
-        switch(extens){
-          case 'pdf':
-            case 'PDF':
-            extens = "PDF"
-            break;
-            case 'doc':
-            case'docx':
-            extens = "Word";
-            break;
-            case 'xlsx':
-            case 'xls':
-            extens = "Excel";
-            break;
-            case 'ppt':
-            case 'pptx':
-            extens = "Powerpoint";
-            break;
-            case 'jpg':
-            case 'jpeg':  
-            case 'png':
-            case 'gif':
-            extens = "Image";
-            break;
-            case 'flv':
-            case 'mp4':
-            extens = "Video";
-            break;
-            case 'zip':
-              extens = "Archive";
-              break;
-            default:
-                extens = "document"
-                return
-        }
-
-        
+        var extens = data.getExtens(re.exec(ext)[1]);
+    
         if (!fs.existsSync('./uploads')) {
           const mkdirSync = function (dirPath) {
             try {
@@ -597,41 +560,8 @@ exports.postUpdateDoc = (req, res, next) => {
           console.log('new chemin :' +newpath)
           var ext = newpath;
           var re = /(?:\.([^.]+))?$/;
-          var extens = re.exec(ext)[1]; 
-          switch(extens){
-            case 'pdf':
-              case 'PDF':
-              extens = "PDF"
-              break;
-              case 'doc':
-              case'docx':
-              extens = "Word";
-              break;
-              case 'xlsx':
-              case 'xls':
-              extens = "Excel";
-              break;
-              case 'ppt':
-              case 'pptx':
-              extens = "Powerpoint";
-              break;
-              case 'jpg':
-              case 'jpeg':  
-              case 'png':
-              case 'gif':
-              extens = "Image";
-              break;
-              case 'flv':
-              case 'mp4':
-              extens = "Video";
-              break;
-              case 'zip':
-                extens = "Archive";
-                break;
-              default:
-                  extens = "document"
-                  return
-          }
+          var extens = data.getExtens(re.exec(ext)[1]); 
+          
           if (!fs.existsSync('./uploads')) {
             const mkdirSync = function (dirPath) {
               try {
@@ -667,10 +597,6 @@ exports.postUpdateDoc = (req, res, next) => {
               res.redirect('/app/MyDocs');
             })
           });
-  
-        
-
-        
         }else{
           Doc.findByIdAndUpdate({'_id': req.params.id}, {'titre': champs.titre, 'description': champs.description, 'domaine': champs.domaine, 'updatedat': dat}, (err, data)=>{
             if(err) throw err;

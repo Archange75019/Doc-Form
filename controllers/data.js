@@ -40,9 +40,56 @@ exports.getDate = ()=>{
     return date
 
 }
-exports.getPagination = (req, res, next) =>{
-    var perPage = 20;
-    var page = req.params.page || 1
+exports.getExtens = (req, res, next) =>{
+    switch(extens){
+        case 'pdf':
+          case 'PDF':
+          case 'pdf':
+          extens = "PDF"
+          break;
+          case 'doc':
+          case'docx':
+          extens = "Word";
+          break;
+          case 'xlsx':
+          case 'xls':
+          extens = "Excel";
+          break;
+          case 'ppt':
+          case 'pptx':
+          extens = "Powerpoint";
+          break;
+          case 'jpg':
+          case 'jpeg':  
+          case 'png':
+          case 'bmp':
+          case 'gif':
+          case 'webp':
+          extens = "Image";
+          break;
+          case 'oga':
+          case 'wav':
+          case 'weba':
+          case 'mid':
+          case 'midi':
+          case 'mp3':
+          extens = "Audio"
+          case 'flv':
+          case 'mp4':
+          case 'avi':
+          case 'mpeg':
+          case 'ogv':
+          case 'webm':
+          extens = "Video";
+          break;
+          case 'zip':
+          extens = "Archive";
+            break;
+          default:
+              extens = "document"
+              return
+      }
+      return extens
 }
 
 
