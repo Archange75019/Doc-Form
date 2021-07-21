@@ -582,11 +582,13 @@ exports.postUpdateDoc = (req, res, next) => {
               author: req.cookies[process.env.cookie_name].userName,
               dateFull:files.fileToUpload.lastModifiedDate,
               size: files.fileToUpload.size,
-              updatedat: dat,
+              createdat: dat,
               link: newpath
             }
+            console.log('Mis à jours du doc')
+            console.log(doc)
             Doc.findByIdAndUpdate({'_id': req.params.id},
-            {'titre': doc.titre, 'author': doc.author, 'domaine': doc.domaine, 'description':doc.description, 'link':doc.link, 'size': doc.size, 'updatedat':doc.updatedat, 'extension': doc.extension, 'dateFull': doc.dateFull}, (err, data)=>{
+            {'titre': doc.titre, 'author': doc.author, 'domaine': doc.domaine, 'description':doc.description, 'link':doc.link, 'size': doc.size, 'createdat':doc.createdat, 'extension': doc.extension, 'dateFull': doc.dateFull}, (err, data)=>{
               if(err) throw err
               res.redirect('/app/MyDocs');
             })

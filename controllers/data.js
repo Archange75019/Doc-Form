@@ -28,51 +28,18 @@ exports.getDomaines = ()=>{
 exports.getDate = ()=>{
     
     const event = new Date();
-    var jours = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
-    var mois = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Aout', 'Septembre', 'Octobre', 'Novembre', 'Décembre' ]
+    var jours = ['Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa', 'Di'];
+    var mois = ['Janv', 'Févr', 'Mars', 'Avri', 'Mai', 'Juin', 'Juil', 'Aout', 'Sept', 'Oct', 'Nov', 'Déc' ]
     var day = event.getDay()-1;
     var month = event.getMonth();
     var num  = event.getDate();
+    var year = event.getFullYear();
     var dayDef = jours[day]
     var moisDef = mois[month]
-    var date = dayDef + ' '+num+' '+moisDef
+    var date = dayDef + ' '+num+' '+moisDef+ ' '+year
     return date
 
 }
-/*exports.getAuthors = (req, res, next)=>{
-
-    /*return new Promise(resolve => {
-
-        resolve(
-            Doc.find().distinct('author', (err, authors)=>{
-                console.log('auteur dans la fonctions')
-               return authors
-            })
-
-    )
-    })
-    var listAuteurs = new Promise(
-        function(resolve, reject){
-            resolve(
-                Doc.find().distinct('author', (err, authors)=>{
-
-                   return authors
-                })
-            )
-        }
-    )
-    listAuteurs.then(
-        function(val){
-            console.log('Retour dans le code')
-            console.log(val)
-            return val
-        }
-    )
-    //console.log(listAuteurs)
-    return listAuteurs
-
-}*/
 
 
- 
- 
+

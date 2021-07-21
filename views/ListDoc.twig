@@ -29,7 +29,7 @@
                 <input type="date" name="date2" title="Veuillez saisir la date de fin de recherche">
             {% endif %}
         </div>
-       <p>{{authors}}</p>
+       
         <SELECT name="author" size="1" title="Par auteur">
             <OPTION value="">Par auteur
             {% for author in authors %}
@@ -42,7 +42,7 @@
         </SELECT>
        
         <input type="submit" value="Filtrer"></button>
-        <a href="/app/SearchDocs/reinitFilter/{{recherche}}" title="Réinitialiser les filtres"><i class="far fa-times-circle fa-2x"></i></a>
+        <a href="/admin/ListDoc/reinitFilter" title="Réinitialiser les filtres"><i class="far fa-times-circle fa-2x"></i></a>
     </form>          
     <div class="contain">
         <table>

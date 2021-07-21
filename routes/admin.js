@@ -17,4 +17,18 @@ router.post('/filterDocs', admin.filterDocs );
 
 router.get('/SearchDocs/author/:auteur', admin.getDocsByAuthor)
 
+router.get('/SearchDocs/domaine/:domaine', admin.getDocsByDomaine)
+
+router.get('/SearchDocs/author/:auteur/domaine/:domaine/', admin.getDocsByAuthorDomain)
+
+router.get('/SearchDocs/author/:auteur/periode/:date1/:date2', admin.getDocsByAuthorPeriod)
+
+router.get('/SearchDocs/author/:auteur/domaine/:domaine/periode/:date1/:date2', admin.getDocsByAuthorDomainePeriod)
+
+router.get('/SearchDocs/periode/:date1/:date2/', admin.getDocsByPeriod)
+
+router.get('/SearchDocs/domaine/:domaine/periode/:date1/:date2/', admin.getDocsByDomainePeriod)
+
+router.get('/ListDoc/reinitFilter', admin.reinitfilter)
+
 module.exports = router;

@@ -4,7 +4,7 @@
 
 html,body{
 background-image: url('http://getwallpapers.com/wallpaper/full/a/5/d/544750.jpg');
-background-size: border-box;
+background-size: cover;
 background-repeat: no-repeat;
 z-index: 1;
 
@@ -23,6 +23,13 @@ font-family: 'Numans', sans-serif;
 .date{
     display: flex;
     flex-direction: row;
+}
+.alignLeft{
+    text-align: left;
+}
+.espace{
+    padding-top: 0.6em;
+    padding-bottom: 0.6em;
 }
 .date p{
     color: white;

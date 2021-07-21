@@ -7,10 +7,9 @@
     <thead>
         <tr>
             <th>Titre</th>
-            <th>Domaine</th>
+            <th>Dom</th>
             <th>Descripteurs</th>
-            <th class="date">Crée le</th>
-            <th>Mis à jours</th>
+            <th>Ajouté/modifié</th>
             <th>Auteur</th>
             <th>Actions</th>
         </tr>
@@ -18,11 +17,12 @@
     <tbody>
         {% for doc in docs %}
             <tr>
-                <td>{{doc.titre}}</td>
-                <td>{{doc.domaine}}</td>
-                <td>{{doc.description| truncate(26 - 3 - doc.domaine|length, false, '...') }}</td>
-                <td>{{doc.createdat}}</td>
-                <td>{{doc.updatedat}}</td>
+                <td class="alignLeft">{{doc.titre}}</td>
+                <td>{{doc.domaine | truncate(5)}}</td>
+                <td class="alignLeft espace">{{doc.description}}</td>
+                
+                    <td>{{doc.updatedat }}</td>
+                
                 <td>{{doc.author}}</td>
                 <td>
                 <a title="Télécharger" href="/app/download/{{doc._id}}"><i class="fas fa-download"></i></a>
