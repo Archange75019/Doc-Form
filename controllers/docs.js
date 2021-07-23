@@ -8,7 +8,7 @@ var url = require("url");
 var qs = require('qs');
 var htmlspecialchars = require('htmlspecialchars');
 var data = require('./data');
-const { Console } = require('console');
+
 
 var event = new EventEmitter()
 
