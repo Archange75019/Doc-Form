@@ -2,6 +2,31 @@ const { Console } = require('console');
 var Doc = require('../models/Doc')
 var fs = require('fs');
 
+//Ajout de service
+exports.putService = (service)=>{
+    var data = service.toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    
+    fs.appendFile('services.csv', data+',', function (err) {
+        if (err) throw err;
+        console.log('Fichier créé !');
+     });
+
+}
+//Récupérer les services
+exports.getServices = ()=>{
+    const result =  fs.readFileSync('services.csv', 'utf8', function(err, data) {
+        if (err) throw err;
+      });
+      var tab = new Array()
+      //console.log(typeof result)
+      tab = result.split(',');
+      tab.sort()
+
+      console.log('tableau :'+ tab)
+      return tab
+
+}
+
 //Ajout de domaine
 exports.putDomaine = ( req, res, next ) =>{    
     var data = domaine.toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
@@ -40,7 +65,7 @@ exports.getDate = ()=>{
     return date
 
 }
-exports.getExtens = (req, res, next) =>{
+exports.getExtens = (extens) =>{
     switch(extens){
         case 'pdf':
           case 'PDF':
@@ -90,6 +115,32 @@ exports.getExtens = (req, res, next) =>{
               return
       }
       return extens
+}
+exports.putRoles = (role)=>{
+     var json = JSON.stringify(role);
+
+     fs.appendFile('personnage2.csv', json+',', 'utf8', function(err){
+
+     });
+  
+    
+}
+exports.getRoles = ()=>{
+
+    if (fs.existsSync('personnage2.csv')) {
+        const result =  fs.readFileSync('personnage2.csv', 'utf8', function(err, data) {
+            if (err) throw err;
+          });
+          var tab = new Array()
+          //console.log(typeof result)
+          tab = result.split(',');
+          tab.sort()
+    
+          console.log('tableau :'+ tab)
+          return tab
+    
+      }
+
 }
 
 

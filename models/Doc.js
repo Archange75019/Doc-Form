@@ -33,6 +33,10 @@ var docSchema = mongoose.Schema({
         type: String,
         required: true
       },
+      service:{
+        type: String,
+        required: true
+      },
       createdat : {
         type: String,
         unique: false,

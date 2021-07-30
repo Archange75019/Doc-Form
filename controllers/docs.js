@@ -8,6 +8,7 @@ var url = require("url");
 var qs = require('qs');
 var htmlspecialchars = require('htmlspecialchars');
 var data = require('./data');
+const { Console } = require('console');
 
 
 var event = new EventEmitter()
@@ -17,7 +18,6 @@ champs = [];
 var types = [
   'Excel','Word', 'PDF', 'Powerpoint', 'Image', 'Scéance clé en main', 'Archive'
 ];
-
 //Afficher les documents les plus récents en page home
 exports.getDoc = (req, res, next) => {
   let statut = req.cookies[process.env.cookie_name].role; 
@@ -55,6 +55,7 @@ var dom =  data.getDomaines()
 //Ajouter un document à la base
 exports.addDoc = (req, res, next) => {
   console.log('on accede à la route ajout')
+  let service = req.cookies[process.env.cookie_name].service;
     var form = new formidable.IncomingForm();
     form.multiples = false;
 
@@ -78,7 +79,9 @@ exports.addDoc = (req, res, next) => {
 
         var ext = newpath;
         var re = /(?:\.([^.]+))?$/;
-        var extens = data.getExtens(re.exec(ext)[1]);
+        var extens = re.exec(ext)[1];
+
+        var extension = data.getExtens(extens)
     
         if (!fs.existsSync('./uploads')) {
           const mkdirSync = function (dirPath) {
@@ -101,11 +104,12 @@ exports.addDoc = (req, res, next) => {
           }
           
           var dat = data.getDate()
-
+          console.log(req.cookies[process.env.cookie_name])
           var doc = {
             titre: champs.titre,
             domaine: domaine,
-            extension: extens,
+            service: req.cookies[process.env.cookie_name].service,
+            extension: extension,
             description: champs.description,
             author: req.cookies[process.env.cookie_name].userName,
             dateFull:files.fileToUpload.lastModifiedDate.toISOString(),
@@ -115,7 +119,7 @@ exports.addDoc = (req, res, next) => {
           }
 console.log(doc)
 
-          Doc.create({'titre': doc.titre, 'domaine': doc.domaine,'extension': doc.extension,'dateFull': doc.dateFull, 'description': doc.description, 'author': doc.author, 'createdat': doc.createdat, 'link': doc.link, 'size':doc.size }, (err, doc)=>{
+          Doc.create({'titre': doc.titre, 'domaine': doc.domaine, 'service': doc.service,'extension': doc.extension,'dateFull': doc.dateFull, 'description': doc.description, 'author': doc.author, 'createdat': doc.createdat, 'link': doc.link, 'size':doc.size }, (err, doc)=>{
             if(err) throw err;
             res.redirect('/app/home/1')
 
@@ -515,11 +519,31 @@ exports.getUpdateDoc = (req, res, next) => {
   let statut = req.cookies[process.env.cookie_name].role;
   let nom = req.cookies[process.env.cookie_name].userName;
   if(req.params.id){
+    console.log(req.params.id)
     Doc.findById({'_id': req.params.id}, (err, doc)=>{
-      if(err) throw err;      var chemin = doc.link.replace(/\/$/, "");
+      if(err) throw err;      
+      console.log(doc)
+      var chemin = doc.link.replace(/\/$/, "");
       cheminDef = chemin.substring (chemin.lastIndexOf( "/" )+1 );
       var dom =  data.getDomaines()
         res.render('updateDoc',{title: process.env.TITLE,FileName: cheminDef,doc: doc,domaines: dom, statut: statut, nom: nom});
+      
+    });
+  };
+};
+exports.getUpdateUser = (req, res, next) => {
+  let statut = req.cookies[process.env.cookie_name].role;
+  let nom = req.cookies[process.env.cookie_name].userName;
+  if(req.params.id){
+    console.log(req.params.id)
+    User.findById({'_id': req.params.id}, (err, user)=>{
+      if(err) throw err;      
+      //console.log(doc)
+      //var chemin = doc.link.replace(/\/$/, "");
+      //cheminDef = chemin.substring (chemin.lastIndexOf( "/" )+1 );
+      var dom =  data.getDomaines()
+      var services = data.getServices()
+        res.render('user',{title: process.env.TITLE, services: services,user: user,domaines: dom, statut: statut, nom: nom});
       
     });
   };

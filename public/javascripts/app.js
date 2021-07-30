@@ -2,9 +2,8 @@
 document.addEventListener('DOMContentLoaded', function() {
     var urlcourante = document.location.href; 
     var urlcourante = urlcourante.replace(/\/$/, "");
-// Gardons dans la variable queue_url uniquement la portion derrière le dernier slash de urlcourante
-queue_url = urlcourante.substring (urlcourante.lastIndexOf( "/" )+1 );
-
+        // Gardons dans la variable queue_url uniquement la portion derrière le dernier slash de urlcourante
+    var queue_url = urlcourante.substring (urlcourante.lastIndexOf( "/" )+1 );
     var formUpdate = document.getElementById('update');
     var socket = io();
     var textarea  = document.getElementById('textarea');
@@ -67,7 +66,7 @@ queue_url = urlcourante.substring (urlcourante.lastIndexOf( "/" )+1 );
                 other2.style.display='none';
             };
         });
-    if(queue_url == "AddDocs"){
+        if(queue_url == "AddDocs"){
         valider.addEventListener('click', function(){
             var fichier = {
                 'title': titre.value,
@@ -226,16 +225,28 @@ queue_url = urlcourante.substring (urlcourante.lastIndexOf( "/" )+1 );
         })
     }
     if(modif){
+        
         for(let i = 0; i<modif.length; i++){
             modif[i].addEventListener('click', ()=>{
-                var link = modif[i].getAttribute('name');
+                if(queue_url == "getUsers"){
+                    var link = modif[i].getAttribute('name');
+    
+                window.open('/app/UpdateUser/'+link,"menubar=no, scrollbars=no, top=100, left=100, width=300, height=200")
+                }else{
+                    var link = modif[i].getAttribute('name');
+                console.log('aaaaaaaaaaaa')
+                console.log(link)
                 /*if(docContainer){
                     close.style.display = 'none';
                     docContainer.innerHTML = "";
                 }*/
                 window.open('/app/UpdateDoc/'+link,"menubar=no, scrollbars=no, top=100, left=100, width=300, height=200")
+
+                }
+                
             });
         };
+    
     }
     if(formUpdate){
 
@@ -254,4 +265,5 @@ queue_url = urlcourante.substring (urlcourante.lastIndexOf( "/" )+1 );
             }
         })
     }
+
 })

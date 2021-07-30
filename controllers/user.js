@@ -3,6 +3,7 @@ var bcrypt = require('bcrypt')
 var User = require('../models/User');
 var nodemailer = require('nodemailer');
 const notifier = require('node-notifier');
+var data = require('../controllers/data')
 
 function generate(l){
     if (typeof l==='undefined'){var l=20;}
@@ -59,7 +60,7 @@ function sendMail(destinataire, objet, corp){
 
   });
 };
-//Connexion à l'appli
+//Connexion à l'appli 
 exports.login = (req, res, next) => {
     User.findOne({ email: req.body.email })
       .then(user => {
@@ -76,6 +77,7 @@ exports.login = (req, res, next) => {
              const token = {
                 userId: user._id,
                 userName: user.username,
+                service: user.service,
                 role: user.role,
                 token: jwt.sign(
                   { userId: user._id },
@@ -83,6 +85,7 @@ exports.login = (req, res, next) => {
                   { expiresIn: '8h' }
                 )
               };
+              console.log(token)
               res.cookie(process.env.cookie_name,token,{maxAge: 288*100*1000, httpOnly: true })
            res.redirect('/app/home/1')
           })
@@ -96,6 +99,7 @@ exports.registerShow = (req, res, next) =>{
   let nom = req.cookies[process.env.cookie_name].userName;
   
   var Role = role;
+  var services = data.getServices()
 
   if(statut == "DTF"){
     var Role = role.splice(0, 1) 
@@ -103,7 +107,7 @@ exports.registerShow = (req, res, next) =>{
   if(statut == "responsable pédagogique"){
     var Role = role.splice(0, 2)
   }
-  res.render('register', {title: process.env.TITLE, role: Role, statut: statut, nom: nom})
+  res.render('register', {title: process.env.TITLE, services: services, role: Role, statut: statut, nom: nom})
   
   
 };
@@ -119,6 +123,7 @@ exports.register = (req, res, next) => {
                 username: req.body.username,
                 email: req.body.email,
                 password: hash,
+                service: req.body.service,
                 role: req.body.role,
                 site: req.body.site
               };

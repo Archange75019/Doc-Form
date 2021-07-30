@@ -1,5 +1,51 @@
 {% extends 'layout.twig' %}
 
 {% block body %}
-     
+    <div id="add">
+     {% for service in services %}
+     {% if service != "" %}
+    <h2>Service {{ service }}</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Role</th>
+                    <th>Inscription utilisateur<th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    {% for role in roles %}
+                        <td>{{ role.name }}</td>
+                        <td>{{ role.inscript}}</td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    <form method="post" action="/admin/addRole/{{service}}">
+                        <td><input type="text" name="nameRole" placeholder="Nom du role"></td>
+                        <td>
+                            <input type="radio" id="oui" name="inscription" value="Oui" checked>
+                            <label for="oui">Oui</label>
+                            <input type="radio" id="non" name="inscription" value="Non">
+                            <label for="non">Non</label>
+                        </td>
+                        <td>
+                            <input type="submit" value="Sauvegarder">
+                        </td>
+
+                    
+                    </form>
+                </tr>
+            </tbody>
+        </table>
+    
+        
+
+
+
+  
+    {% endif %}
+
+     {% endfor %}
+     </div>
 {% endblock %}

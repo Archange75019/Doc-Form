@@ -1,0 +1,53 @@
+{% extends 'layout.twig' %}
+
+{% block body %}
+<form method="post" id="add">
+
+        <input type="text" value="{{user.username}}"></br>
+        <input type="email" value="{{user.email}}"></br>
+        <select name="role">
+            {% if user.role %}
+                <option value="{{ user.role }}" selected>{{user.role}}
+            {% else %}
+                <option value="Pas de role">Pas de role
+            {% endif %}
+        </select></br>
+        <select name="service">
+            {% if user.service %}
+                <option value="{{ user.service }}" selected>{{user.service}}
+            {% else %}
+                <option value="Choisissez un service" selected>Choisissez un service
+                    {% for service in services %}
+                        {% if service != "" %}
+                            <option value="{{ service }}">{{service}}
+                        {% endif %}
+
+                {% endfor %}
+            {% endif %}
+        </select></br>
+        <input type="text" value="{{user.site}}"></br>
+
+
+        
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+ 
+</form>
+
+
+
+
+
+{% endblock %}

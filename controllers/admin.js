@@ -221,3 +221,48 @@ exports.getDocsByAuthorDomainePeriod = (req, res, next)=>{
 exports.reinitfilter = (req, res, next)=>{
   res.redirect('/admin/Documents')
 }
+exports.createServices = (req, res, next) =>{
+  let statut = req.cookies[process.env.cookie_name].role;
+  let nom = req.cookies[process.env.cookie_name].userName;
+  var services = data.getServices()
+  res.render('services',{title: process.env.TITLE, services: services, statut: statut, nom:nom})
+}
+
+exports.putServices = (req, res, next) =>{
+  let statut = req.cookies[process.env.cookie_name].role;
+  let nom = req.cookies[process.env.cookie_name].userName;
+  if(req.body.service){
+    console.log('service')
+    console.log(req.body.service)
+    data.putService(req.body.service)
+    res.redirect('/admin/Services')
+  }
+}
+exports.getRoles = (req, res, next) =>{
+  let statut = req.cookies[process.env.cookie_name].role;
+  let nom = req.cookies[process.env.cookie_name].userName;
+
+  var services = data.getServices()
+  var roles = data.getRoles()
+  console.log('rolerole')
+  console.log(roles)
+
+  res.render('Roles',{title: process.env.TITLE, services: services, statut: statut, nom:nom})
+
+}
+exports.putRoles = (req, res, next)=>{
+  let statut = req.cookies[process.env.cookie_name].role;
+  let nom = req.cookies[process.env.cookie_name].userName;
+
+  var role = [{
+    service: req.params.role,
+    name: req.body.nameRole,
+    inscription: req.body.inscription
+  }]
+  console.log("ROLE")
+  console.log(role)
+data.putRoles(role)
+res.redirect('/admin/Roles')
+
+
+}

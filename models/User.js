@@ -25,7 +25,10 @@ var userSchema = mongoose.Schema({
         unique: false,
         required: true
       },
-
+      service: {
+        type: String,
+        unique: false
+      },
       specialite : {
         type: String,
         unique: false

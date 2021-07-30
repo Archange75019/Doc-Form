@@ -1,0 +1,26 @@
+{% extends 'layout.twig' %}
+
+{% block body %}
+    
+    <form method="post" id="add" action="/admin/putServices">
+    <p>Définitions des services</p></br>
+        <input type="text" name="service"></br>
+        <input type="submit" value="Envoyer"></br>
+        <p> Liste des services existants dans la base </p></br>
+        {% if services %}
+            {% for service in services %}
+                <p>{{ service }}</p>
+            {% endfor %}
+        {% else %}
+            <p>Pas de services crée</p></br>
+        {% endif %}
+
+
+
+
+
+
+    </form>
+
+
+{% endblock %}

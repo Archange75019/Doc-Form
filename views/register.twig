@@ -12,6 +12,15 @@
 						<option value="{{ role }}">{{ role }}</option>
 				{% endfor %}
 		</select></br>
+		<select name="service" id="service-select">
+    		<option value="">--Choisissez un service--</option>
+
+				{% for service in services %}
+					{% if service != "" %}
+						<option value="{{ service }}">{{ service }}</option>
+					{% endif %}
+				{% endfor %}
+		</select></br>
 		<input type="text" name="site" class="form-control" placeholder="Site"></br>
 		<input type="submit" value="Inscription" class="btn float-right login_btn">
 	</form>

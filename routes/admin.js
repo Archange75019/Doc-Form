@@ -31,4 +31,12 @@ router.get('/SearchDocs/domaine/:domaine/periode/:date1/:date2/', admin.getDocsB
 
 router.get('/ListDoc/reinitFilter', admin.reinitfilter)
 
+router.get('/Services', admin.createServices)
+
+router.post('/putServices', admin.putServices)
+
+router.get('/Roles', admin.getRoles)
+
+router.post('/addRole/:role', admin.putRoles)
+
 module.exports = router;
