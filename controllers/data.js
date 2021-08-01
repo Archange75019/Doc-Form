@@ -2,11 +2,34 @@ const { Console } = require('console');
 var Doc = require('../models/Doc')
 var fs = require('fs');
 
+function objectsToSv(a, b) {
+    var x = (b && b.columnDelimiter) ? b.columnDelimiter : ';',
+        y = (b && b.lineDelimiter) ? b.lineDelimiter : 'n',
+        k = Object.keys(a[0]),
+        l = k.length,
+        s = k.join(x) + y,
+        i = 0, j = a.length, r;
+    for (; i  < j; i++) {
+      r = a[i];
+      if (i > 0) {
+        s += y;
+      }
+      for (var c = 0; c < l; c++) {
+        if (c > 0) {
+          s += x;
+        }
+        s += r[k[c]];
+      }
+    }
+    return s;
+  }
+
 //Ajout de service
 exports.putService = (service)=>{
+  console.log(service)
     var data = service.toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
     
-    fs.appendFile('services.csv', data+',', function (err) {
+    fs.appendFile(service+'.csv', data+',', function (err) {
         if (err) throw err;
         console.log('Fichier créé !');
      });
@@ -117,9 +140,10 @@ exports.getExtens = (extens) =>{
       return extens
 }
 exports.putRoles = (role)=>{
-     var json = JSON.stringify(role);
+  
+  var data = role[1].toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
 
-     fs.appendFile('personnage2.csv', json+',', 'utf8', function(err){
+     fs.appendFile('controllers/organigramme/'+role[0]+'.csv', data+'\n', 'utf8', function(err){
 
      });
   
@@ -127,11 +151,30 @@ exports.putRoles = (role)=>{
 }
 exports.getRoles = ()=>{
 
-    if (fs.existsSync('personnage2.csv')) {
+    /*if (fs.existsSync('personnage2.csv')) {
         const result =  fs.readFileSync('personnage2.csv', 'utf8', function(err, data) {
             if (err) throw err;
+            console.log('type   /////'+typeof data)
+            
           });
-          var tab = new Array()
+          //console.log('resultat/.//     :'+result.split('\n'))
+          var services = {}
+          var a = result.split("\n")
+          for(var i = 0; i< a.length; i++){
+              if(a[i] != ""){
+                var element = a[i].split('|')
+                console.log('XXXXXXXX')
+                if(element[0] == element[0].toUpperCase()){
+                    services.element = element
+                    services.element.defineProperty(element[1])
+                }
+              }
+              
+
+          }
+         
+          return a
+          /*var tab = new Array()
           //console.log(typeof result)
           tab = result.split(',');
           tab.sort()
@@ -139,7 +182,8 @@ exports.getRoles = ()=>{
           console.log('tableau :'+ tab)
           return tab
     
-      }
+      }*/
+      
 
 }
 
