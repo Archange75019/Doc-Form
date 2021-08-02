@@ -59,6 +59,9 @@ router.post('/updateDoc/:id', doc.postUpdateDoc);
 //Mise à jour des utilisateurs
 
 router.get('/UpdateUser/:id', doc.getUpdateUser)
+
+router.post('/UpdateUser/:id', doc.postUpdateUser)
+
 //Définir les roles
 router.get('/Roles', user.getRoles);
 //Supprimer un utilisateur
