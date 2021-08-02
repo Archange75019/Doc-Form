@@ -6,22 +6,32 @@
 		<input type="text" name="username" class="form-control" placeholder="username"></br>
 		<input type="email" name="email" class="form-control" placeholder="email"></br>
 		<select name="role" id="role-select">
-    		<option value="">--Choisissez un role--</option>
+    		<option value="">Choisissez un role</option>
 
 				{% for role in role %}
 						<option value="{{ role }}">{{ role }}</option>
 				{% endfor %}
 		</select></br>
-		<select name="service" id="service-select">
-    		<option value="">--Choisissez un service--</option>
-
-				{% for service in services %}
-					{% if service != "" %}
-						<option value="{{ service }}">{{ service }}</option>
-					{% endif %}
-				{% endfor %}
-		</select></br>
+		{% if role == "administrateur" %}
+			<select name="service" id="service-select">
+    			<option value="">Choisissez un service</option>
+					{% for service in services %}
+						{% if service != "" %}
+							<option value="{{ service }}">{{ service }}</option>
+						{% endif %}
+					{% endfor %}
+			</select></br>
+		{% else %}
+			<input type="text" name="service" value="{{serv}}">
+		{% endif %}
+		
 		<input type="text" name="site" class="form-control" placeholder="Site"></br>
+		<select name="registerUser" id="registerUserauth-select">
+    		<option value="">Cliquez pour définir si cet utilisateur a le droit d'inscrire d'autre personnes sous sa responsabilité</option>
+			<option value="oui">Oui
+			<option value="non">Non
+				
+		</select></br>
 		<input type="submit" value="Inscription" class="btn float-right login_btn">
 	</form>
 {% endblock %}

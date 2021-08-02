@@ -22,6 +22,7 @@ var types = [
 exports.getDoc = (req, res, next) => {
   let statut = req.cookies[process.env.cookie_name].role; 
    let nom = req.cookies[process.env.cookie_name].userName;
+   let autorisation = req.cookies[process.env.cookie_name].autorisation;
    var perPage = 21;
    var page = req.params.page || 1
   if(statut){
@@ -35,7 +36,7 @@ exports.getDoc = (req, res, next) => {
       Doc.countDocuments({}).exec(function (err, count) {
         if (err) return next(err)
         
-      res.render('home',{title: process.env.TITLE, docs:docs,current: page,pages: Math.ceil(count / perPage), statut : statut, nom: nom});
+      res.render('home',{title: process.env.TITLE, autorisation: autorisation, docs:docs,current: page,pages: Math.ceil(count / perPage), statut : statut, nom: nom});
       })
     });
   }
@@ -548,12 +549,29 @@ exports.getUpdateUser = (req, res, next) => {
     });
   };
 };
-//Mettre à jour la fiche du document
+exports.postUpdateUser = (req, res, next) =>{
+  var user = {
+    username : req.body.name,
+    email: req.body.email,
+    role: req.body.role,
+    service: req.body.service,
+    autorisation: req.body.registerUser,
+    site: req.body.site
+  }
+  User.findByIdAndUpdate({'_id': req.params.id}, {'email': user.email, 'username': user.username, 'role': user.role, 'service': user.service, 'autorisation': user.autorisation, 'site': user.site}, (err, user)=>{
+    if(err)  throw err;
+    res.redirect('/admin/getUsers')
+  })
+
+}
+  
+  //Mettre à jour la fiche du document
 exports.postUpdateDoc = (req, res, next) => {
   let statut = req.cookies[process.env.cookie_name].role;
   var form = new formidable.IncomingForm();
     form.multiples = false;
     form.parse(req,  (err, fields, files)=> {
+      console.log('fields '+fields)
       if(err) {
         console.log(err)
         

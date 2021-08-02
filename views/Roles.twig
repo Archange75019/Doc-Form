@@ -9,26 +9,25 @@
             <thead>
                 <tr>
                     <th>Role</th>
-                    <th>Inscription utilisateur<th>
-                    
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    {% for role in roles %}
-                        <td>{{ role.name }}</td>
-                        <td>{{ role.inscript}}</td>
+            {% for key, role in roles %}
+                {% if key == service %}
+                    {% for act in role %}
+                        {% if act != "" %}
+                            <tr>
+                                 <td>{{ act}}</td>
+                                <td>AA</td>
+                            </tr>
+                        {% endif %}
                     {% endfor %}
-                </tr>
+                {% endif %}
+            {% endfor %}
                 <tr>
                     <form method="post" action="/admin/addRole/{{service}}">
                         <td><input type="text" name="nameRole" placeholder="Nom du role"></td>
-                        <td>
-                            <input type="radio" id="oui" name="inscription" value="Oui" checked>
-                            <label for="oui">Oui</label>
-                            <input type="radio" id="non" name="inscription" value="Non">
-                            <label for="non">Non</label>
-                        </td>
+                       
                         <td>
                             <input type="submit" value="Sauvegarder">
                         </td>

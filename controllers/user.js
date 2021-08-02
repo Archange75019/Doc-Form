@@ -78,6 +78,7 @@ exports.login = (req, res, next) => {
                 userId: user._id,
                 userName: user.username,
                 service: user.service,
+                autorisation: user.autorisation,
                 role: user.role,
                 token: jwt.sign(
                   { userId: user._id },
@@ -97,18 +98,24 @@ exports.login = (req, res, next) => {
 exports.registerShow = (req, res, next) =>{
   let statut = req.cookies[process.env.cookie_name].role;
   let nom = req.cookies[process.env.cookie_name].userName;
+  let autorisation = req.cookies[process.env.cookie_name].autorisation;
+  let role = req.cookies[process.env.cookie_name].role;
+  let serv = req.cookies[process.env.cookie_name].service;
+ 
+    var Role = role;
+    var services = data.getServices()
   
-  var Role = role;
-  var services = data.getServices()
+    if(statut == "DTF"){
+      var Role = role.splice(0, 1) 
+    }
+    if(statut == "responsable pédagogique"){
+      var Role = role.splice(0, 2)
+    }
+    res.render('register', {title: process.env.TITLE, serv: serv/*, service: service*/, autorisation: autorisation, services: services, role: Role, statut: statut, nom: nom})
+  
 
-  if(statut == "DTF"){
-    var Role = role.splice(0, 1) 
-  }
-  if(statut == "responsable pédagogique"){
-    var Role = role.splice(0, 2)
-  }
-  res.render('register', {title: process.env.TITLE, services: services, role: Role, statut: statut, nom: nom})
   
+
   
 };
 //Inscription utilisateur
@@ -123,6 +130,7 @@ exports.register = (req, res, next) => {
                 username: req.body.username,
                 email: req.body.email,
                 password: hash,
+                autorisation: req.body.registerUser,
                 service: req.body.service,
                 role: req.body.role,
                 site: req.body.site
@@ -213,3 +221,35 @@ exports.logout = (req, res, next)=>{
   res.cookie(process.env.cookie_name, {expires: Date.now()});
   res.redirect('/');
 };
+exports.getUpdateUser = (req, res, next) => {
+  let statut = req.cookies[process.env.cookie_name].role;
+  let nom = req.cookies[process.env.cookie_name].userName;
+  if(req.params.id){
+    console.log(req.params.id)
+    User.findById({'_id': req.params.id}, (err, user)=>{
+      if(err) throw err;      
+      //console.log(doc)
+      //var chemin = doc.link.replace(/\/$/, "");
+      //cheminDef = chemin.substring (chemin.lastIndexOf( "/" )+1 );
+      var dom =  data.getDomaines()
+      var services = data.getServices()
+        res.render('user',{title: process.env.TITLE, services: services,user: user,domaines: dom, statut: statut, nom: nom});
+      
+    });
+  };
+};
+exports.postUpdateUser = (req, res, next) =>{
+  var user = {
+    username : req.body.name,
+    email: req.body.email,
+    role: req.body.role,
+    service: req.body.service,
+    autorisation: req.body.registerUser,
+    site: req.body.site
+  }
+  User.findByIdAndUpdate({'_id': req.params.id}, {'email': user.email, 'username': user.username, 'role': user.role, 'service': user.service, 'autorisation': user.autorisation, 'site': user.site}, (err, user)=>{
+    if(err)  throw err;
+    res.redirect('/admin/getUsers')
+  })
+
+}

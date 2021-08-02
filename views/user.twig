@@ -1,10 +1,11 @@
 {% extends 'layout.twig' %}
 
 {% block body %}
+    <h2>Mise à jour du profil de {{ user.username}}</h2>
 <form method="post" id="add">
 
-        <input type="text" value="{{user.username}}"></br>
-        <input type="email" value="{{user.email}}"></br>
+        <input type="text" name="name" value="{{user.username}}"></br>
+        <input type="email" name="email" value="{{user.email}}"></br>
         <select name="role">
             {% if user.role %}
                 <option value="{{ user.role }}" selected>{{user.role}}
@@ -13,19 +14,27 @@
             {% endif %}
         </select></br>
         <select name="service">
-            {% if user.service %}
-                <option value="{{ user.service }}" selected>{{user.service}}
-            {% else %}
-                <option value="Choisissez un service" selected>Choisissez un service
                     {% for service in services %}
-                        {% if service != "" %}
-                            <option value="{{ service }}">{{service}}
+                        {% if service == user.service %}
+                            <option value="{{ service }}" selected>{{service}}
                         {% endif %}
-
+                        <option value="{{ service }}" >{{service}}
                 {% endfor %}
-            {% endif %}
+            
         </select></br>
-        <input type="text" value="{{user.site}}"></br>
+        <select name="registerUser" id="registerUserauth-select">
+    		<option value="">Cliquez pour définir si cet utilisateur a le droit d'inscrire d'autre personnes sous sa responsabilité</option>
+			{% if user.autorisation == 'oui' %}
+                <option value="oui" selected>Oui
+                <option value="non" >Non
+            {% else %}
+                <option value="oui">Oui
+			    <option value="non" selected>Non
+            {% endif %}
+				
+		</select></br>
+        <input type="text" name="site" value="{{user.site}}"></br>
+        <input type="submit" value="Mettre à jour">
 
 
         

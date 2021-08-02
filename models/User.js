@@ -20,6 +20,11 @@ var userSchema = mongoose.Schema({
         required: true,
         trim: true
       },
+      autorisation:{
+        type: String,
+        required: true,
+        trim: true
+      },
       role : {
         type: String,
         unique: false,

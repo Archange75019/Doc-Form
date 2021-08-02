@@ -238,27 +238,37 @@ exports.putServices = (req, res, next) =>{
     res.redirect('/admin/Services')
   }
 }
+
+
+
+
+
+
 exports.getRoles = (req, res, next) =>{
   let statut = req.cookies[process.env.cookie_name].role;
   let nom = req.cookies[process.env.cookie_name].userName;
 
   var services = data.getServices()
-  var roles = data.getRoles()
-  console.log('rolerole')
+
+
+
+
+  var roles = data.getRoles(services)
+  //console.log(roles)
+  console.log('Affichage des roles en fonction du service XXX')
   console.log(roles)
 
-  res.render('Roles',{title: process.env.TITLE, services: services, statut: statut, nom:nom})
+  res.render('Roles',{title: process.env.TITLE, roles: roles, services: services, statut: statut, nom:nom})
 
 }
 exports.putRoles = (req, res, next)=>{
   let statut = req.cookies[process.env.cookie_name].role;
   let nom = req.cookies[process.env.cookie_name].userName;
 
-  var role = [{
-    service: req.params.role,
-    name: req.body.nameRole,
-    inscription: req.body.inscription
-  }]
+  var role = [
+    req.params.role,
+    req.body.nameRole
+  ]
   console.log("ROLE")
   console.log(role)
 data.putRoles(role)

@@ -23,7 +23,13 @@ function objectsToSv(a, b) {
     }
     return s;
   }
-
+function getRoleByService(service){
+    const result =  fs.readFileSync('controllers/organigramme/'+service+'.csv', 'utf8', function(err, data) {
+      if (err) throw err;
+    });
+    return result
+  
+}
 //Ajout de service
 exports.putService = (service)=>{
   console.log(service)
@@ -149,10 +155,29 @@ exports.putRoles = (role)=>{
   
     
 }
-exports.getRoles = ()=>{
+exports.getRoles = (services)=>{
+  //console.log(services)
+    if (fs.existsSync('controllers/organigramme')) {
+      var roleByService = new Object()
+      for( var i = 1; i< services.length; i++){
+        var titleFile = services[i];
+        var appel = getRoleByService(services[i])
 
-    /*if (fs.existsSync('personnage2.csv')) {
-        const result =  fs.readFileSync('personnage2.csv', 'utf8', function(err, data) {
+        /*const result =  fs.readFileSync('controllers/organigramme/'+titleFile+'.csv', 'utf8', function(err, data) {
+          if (err) throw err;
+        });
+        return result*/
+        if( appel.length != 0){
+          var tableau = appel.split('\n')
+          roleByService[services[i]] = tableau
+        }
+
+      }
+      
+      return roleByService
+
+    }
+        /*const result =  fs.readFileSync('personnage2.csv', 'utf8', function(err, data) {
             if (err) throw err;
             console.log('type   /////'+typeof data)
             
@@ -183,7 +208,7 @@ exports.getRoles = ()=>{
           return tab
     
       }*/
-      
+
 
 }
 
