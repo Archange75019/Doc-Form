@@ -5,13 +5,7 @@
 	<form method="POST"  id="add" action="/app/register">
 		<input type="text" name="username" class="form-control" placeholder="username"></br>
 		<input type="email" name="email" class="form-control" placeholder="email"></br>
-		<select name="role" id="role-select">
-    		<option value="">Choisissez un role</option>
 
-				{% for role in role %}
-						<option value="{{ role }}">{{ role }}</option>
-				{% endfor %}
-		</select></br>
 		{% if role == "administrateur" %}
 			<select name="service" id="service-select">
     			<option value="">Choisissez un service</option>
@@ -24,6 +18,13 @@
 		{% else %}
 			<input type="text" name="service" value="{{serv}}">
 		{% endif %}
+				<select name="role" id="role-select">
+    		<option value="">Choisissez un role</option>
+
+				{% for role in role %}
+						<option value="{{ role }}">{{ role }}</option>
+				{% endfor %}
+		</select></br>
 		
 		<input type="text" name="site" class="form-control" placeholder="Site"></br>
 		<select name="registerUser" id="registerUserauth-select">

@@ -13,7 +13,7 @@ var fs = require('fs');
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(3030);
+var port = normalizePort(3332);
 app.set('port', port);
 
 /**
@@ -120,6 +120,14 @@ io.on('connection', (socket) => {
       })
   })
 } 
+  })
+  socket.on('selectService', (data)=>{
+   
+    const result =  fs.readFileSync('controllers/organigramme/'+data+'.csv', 'utf8', function(err, data) {
+      if (err) throw err;
+    });
+   var roles = result.split(',\n')
+    socket.emit('roles', roles)
   })
 });
 

@@ -17,6 +17,8 @@ document.addEventListener('DOMContentLoaded', function() {
     btnSbmit.style.width = '100%';
     var newContent = document.createTextNode('Ajouter un document');
     btnSbmit.appendChild(newContent);
+    var selectService = document.getElementById('service-select')
+    var selectRole = document.getElementById('role-select')
 
     var sub = document.getElementById('sub');
     var valider = document.getElementById('valider');
@@ -264,6 +266,32 @@ document.addEventListener('DOMContentLoaded', function() {
                 fiche.domaine = document.getElementById('do').value;
             }
         })
+    }
+    if(queue_url == "register"){
+        if(selectService){
+            selectService.addEventListener('change', function (){
+                //alert(selectService.value)
+                socket.emit ('selectService', selectService.value)
+            })
+        }
+        socket.on ('roles', (data)=>{
+            console.log(data)
+            selectRole.options.length = 0;
+            for( var i=0; i<data.length; i++){
+                if(data[i] != ""){
+                    console.log('AJOUT')
+                    var opt = document.createElement("option");
+                    opt.setAttribute("value", data[i]);
+                    var itmText = document.createTextNode(data[i]);
+                    opt.appendChild(itmText);
+                    selectRole.appendChild(opt);
+
+                }
+               
+             }
+        })
+
+
     }
 
 })

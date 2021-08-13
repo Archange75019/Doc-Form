@@ -224,8 +224,11 @@ exports.reinitfilter = (req, res, next)=>{
 exports.createServices = (req, res, next) =>{
   let statut = req.cookies[process.env.cookie_name].role;
   let nom = req.cookies[process.env.cookie_name].userName;
+  let autorisation = req.cookies[process.env.cookie_name].autorisation;
+  let role = req.cookies[process.env.cookie_name].role;
+  let serv = req.cookies[process.env.cookie_name].service;
   var services = data.getServices()
-  res.render('services',{title: process.env.TITLE, services: services, statut: statut, nom:nom})
+  res.render('services',{title: process.env.TITLE, role: role, services: services, autorisation: autorisation, statut: statut, nom:nom})
 }
 
 exports.putServices = (req, res, next) =>{

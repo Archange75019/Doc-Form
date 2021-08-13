@@ -89,8 +89,10 @@ exports.getDate = ()=>{
     var num  = event.getDate();
     var year = event.getFullYear();
     var dayDef = jours[day]
+    console.log('jours  :'+dayDef)
     var moisDef = mois[month]
     var date = dayDef + ' '+num+' '+moisDef+ ' '+year
+    console.log('date d\'ajout  :'+date)
     return date
 
 }
@@ -149,7 +151,7 @@ exports.putRoles = (role)=>{
   
   var data = role[1].toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
 
-     fs.appendFile('controllers/organigramme/'+role[0]+'.csv', data+'\n', 'utf8', function(err){
+     fs.appendFile('controllers/organigramme/'+role[0]+'.csv', data+',\n', 'utf8', function(err){
 
      });
   
