@@ -64,7 +64,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser('secret'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(__dirname + '/uploads'));
-var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
+var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.csv'), { flags: 'a' })
 
 app.use(logger('combined', { stream: accessLogStream }))
 

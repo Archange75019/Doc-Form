@@ -16,11 +16,20 @@ font-size: 100%;
 padding-right: 2em;
 
 }
+#log{
+    width: 80%;
+    height: 500px;
+    margin: 0 auto;
+}
 .page a{
 text-decoration:none;
 margin-right: 0;
 color: white;
 padding-left: 5px;
+}
+.loglist{
+    display: flex;
+    flex-direction: column;
 }
 
 .container{

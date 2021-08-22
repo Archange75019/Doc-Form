@@ -39,4 +39,6 @@ router.get('/Roles', admin.getRoles)
 
 router.post('/addRole/:role', admin.putRoles)
 
+router.get('/downloadLog', admin.downLoadLog)
+
 module.exports = router;

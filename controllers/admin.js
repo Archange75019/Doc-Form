@@ -31,17 +31,19 @@ Doc.find().distinct('author', (err, authors)=>{
 
 //Récupérer l'ensemble des documents
 exports.getAllDocs = (req, res, next) =>{
-    let statut = req.cookies[process.env.cookie_name].role;
-    let nom = req.cookies[process.env.cookie_name].userName;  
+  let statut = req.cookies[process.env.cookie_name].role; 
+  let nom = req.cookies[process.env.cookie_name].userName;
+  let autorisation = req.cookies[process.env.cookie_name].autorisation;  
        Doc.find({}, (err, docs)=>{
         if(err) throw err
-        res.render('ListDoc', {title: process.env.TITLE, types: types, docs: docs, domaines: dom, authors:auteurs,statut: statut, nom:nom})
+        res.render('ListDoc', {title: process.env.TITLE, autorisation: autorisation, types: types, docs: docs, domaines: dom, authors:auteurs,statut: statut, nom:nom})
       })  
 };
 
 exports.filterDocs = (req, res, next) =>{
-        let statut = req.cookies[process.env.cookie_name].role;
-        let nom = req.cookies[process.env.cookie_name].userName;
+  let statut = req.cookies[process.env.cookie_name].role; 
+  let nom = req.cookies[process.env.cookie_name].userName;
+  let autorisation = req.cookies[process.env.cookie_name].autorisation;
         var paramsRecherche = req.params.recherche;
         var typeBody = req.body.type;
         var dateD = req.body.date1;
@@ -116,31 +118,35 @@ exports.filterDocs = (req, res, next) =>{
 }
 
 exports.getDocsByAuthor = (req, res, next) =>{
-    let statut = req.cookies[process.env.cookie_name].role;
-    let nom = req.cookies[process.env.cookie_name].userName;
+  let statut = req.cookies[process.env.cookie_name].role; 
+  let nom = req.cookies[process.env.cookie_name].userName;
+  let autorisation = req.cookies[process.env.cookie_name].autorisation;
     Doc.find({ 'author': req.params.auteur}, (err, docs)=>{
-      res.render('ListDoc', {title: process.env.TITLE, types: types, docs: docs, domaines: dom, authorSelect: req.params.auteur, authors:auteurs,statut: statut, nom:nom})
+      res.render('ListDoc', {title: process.env.TITLE, autorisation: autorisation, types: types, docs: docs, domaines: dom, authorSelect: req.params.auteur, authors:auteurs,statut: statut, nom:nom})
     })
 };
 
 exports.getDocsByDomaine = (req, res, next) =>{
-  let statut = req.cookies[process.env.cookie_name].role;
-    let nom = req.cookies[process.env.cookie_name].userName;
+  let statut = req.cookies[process.env.cookie_name].role; 
+  let nom = req.cookies[process.env.cookie_name].userName;
+  let autorisation = req.cookies[process.env.cookie_name].autorisation;
     Doc.find({ 'domaine': req.params.domaine}, (err, docs)=>{
-      res.render('ListDoc', {title: process.env.TITLE, types: types, docs: docs, domaines: dom, authorSelect: req.params.auteur, authors:auteurs,statut: statut, nom:nom})
+      res.render('ListDoc', {title: process.env.TITLE, autorisation: autorisation, types: types, docs: docs, domaines: dom, authorSelect: req.params.auteur, authors:auteurs,statut: statut, nom:nom})
     })
 }
 
 exports.getDocsByAuthorDomain = (req, res, next) =>{
-  let statut = req.cookies[process.env.cookie_name].role;
+  let statut = req.cookies[process.env.cookie_name].role; 
   let nom = req.cookies[process.env.cookie_name].userName;
+  let autorisation = req.cookies[process.env.cookie_name].autorisation;
   Doc.find({ 'author': req.params.auteur, 'domaine':req.params.domaine}, (err, docs)=>{
-    res.render('ListDoc', {title: process.env.TITLE, types: types, docs: docs, domaines: dom, authorSelect: req.params.auteur, authors:auteurs,statut: statut, nom:nom})
+    res.render('ListDoc', {title: process.env.TITLE, autorisation: autorisation, types: types, docs: docs, domaines: dom, authorSelect: req.params.auteur, authors:auteurs,statut: statut, nom:nom})
   })
 }
 exports.getDocsByAuthorPeriod = (req, res, next) =>{
-  let statut = req.cookies[process.env.cookie_name].role;
+  let statut = req.cookies[process.env.cookie_name].role; 
   let nom = req.cookies[process.env.cookie_name].userName;
+  let autorisation = req.cookies[process.env.cookie_name].autorisation;
   var date1 = req.params.date1.split('-')
   var date2 = req.params.date2.split('-')
   
@@ -154,13 +160,14 @@ exports.getDocsByAuthorPeriod = (req, res, next) =>{
   //dateFin1 = dateFin.setDate(dateFin.getDate()+1)
   Doc.find({ 'author': req.params.auteur, 'dateFull':{ $gte: dateDeb, $lt: dateFin}}, (err, docs)=>{
     console.log(docs)
-    res.render('ListDoc', {title: process.env.TITLE, types: types, docs: docs, domaines: dom, authorSelect: req.params.auteur,date1: req.params.date1, date2: req.params.date2, authors:auteurs,statut: statut, nom:nom})
+    res.render('ListDoc', {title: process.env.TITLE, autorisation: autorisation, types: types, docs: docs, domaines: dom, authorSelect: req.params.auteur,date1: req.params.date1, date2: req.params.date2, authors:auteurs,statut: statut, nom:nom})
   })
 }
 
 exports.getDocsByPeriod = (req, res, next) =>{
-  let statut = req.cookies[process.env.cookie_name].role;
+  let statut = req.cookies[process.env.cookie_name].role; 
   let nom = req.cookies[process.env.cookie_name].userName;
+  let autorisation = req.cookies[process.env.cookie_name].autorisation;
   var date1 = req.params.date1.split('-')
   var date2 = req.params.date2.split('-')
   
@@ -174,13 +181,14 @@ exports.getDocsByPeriod = (req, res, next) =>{
   //dateFin1 = dateFin.setDate(dateFin.getDate()+1)
   Doc.find({ 'dateFull':{ $gte: dateDeb, $lt: dateFin}}, (err, docs)=>{
     console.log(docs)
-    res.render('ListDoc', {title: process.env.TITLE, types: types, docs: docs, domaines: dom, authorSelect: req.params.auteur,date1: req.params.date1, date2: req.params.date2, authors:auteurs,statut: statut, nom:nom})
+    res.render('ListDoc', {title: process.env.TITLE, autorisation: autorisation, types: types, docs: docs, domaines: dom, authorSelect: req.params.auteur,date1: req.params.date1, date2: req.params.date2, authors:auteurs,statut: statut, nom:nom})
   })
 
 }
 exports.getDocsByDomainePeriod = (req, res, next) =>{
-  let statut = req.cookies[process.env.cookie_name].role;
+  let statut = req.cookies[process.env.cookie_name].role; 
   let nom = req.cookies[process.env.cookie_name].userName;
+  let autorisation = req.cookies[process.env.cookie_name].autorisation;
   var date1 = req.params.date1.split('-')
   var date2 = req.params.date2.split('-')
   
@@ -194,13 +202,14 @@ exports.getDocsByDomainePeriod = (req, res, next) =>{
   //dateFin1 = dateFin.setDate(dateFin.getDate()+1)
   Doc.find({ 'domaine': req.params.domaine,'dateFull':{ $gte: dateDeb, $lt: dateFin}}, (err, docs)=>{
     console.log(docs)
-    res.render('ListDoc', {title: process.env.TITLE, types: types, docs: docs, domaines: dom, authorSelect: req.params.auteur,date1: req.params.date1, date2: req.params.date2, authors:auteurs,statut: statut, nom:nom})
+    res.render('ListDoc', {title: process.env.TITLE, autorisation: autorisation, types: types, docs: docs, domaines: dom, authorSelect: req.params.auteur,date1: req.params.date1, date2: req.params.date2, authors:auteurs,statut: statut, nom:nom})
   })
 
 }
 exports.getDocsByAuthorDomainePeriod = (req, res, next)=>{
-  let statut = req.cookies[process.env.cookie_name].role;
+  let statut = req.cookies[process.env.cookie_name].role; 
   let nom = req.cookies[process.env.cookie_name].userName;
+  let autorisation = req.cookies[process.env.cookie_name].autorisation;
   var date1 = req.params.date1.split('-')
   var date2 = req.params.date2.split('-')
   
@@ -214,7 +223,7 @@ exports.getDocsByAuthorDomainePeriod = (req, res, next)=>{
   //dateFin1 = dateFin.setDate(dateFin.getDate()+1)
   Doc.find({ 'author': req.params.auteur,'domaine': req.params.domaine,'dateFull':{ $gte: dateDeb, $lt: dateFin}}, (err, docs)=>{
     console.log(docs)
-    res.render('ListDoc', {title: process.env.TITLE, types: types, docs: docs, domaines: dom, authorSelect: req.params.auteur,date1: req.params.date1, date2: req.params.date2, authors:auteurs,statut: statut, nom:nom})
+    res.render('ListDoc', {title: process.env.TITLE, autorisation: autorisation, types: types, docs: docs, domaines: dom, authorSelect: req.params.auteur,date1: req.params.date1, date2: req.params.date2, authors:auteurs,statut: statut, nom:nom})
   })
 
 }
@@ -248,8 +257,9 @@ exports.putServices = (req, res, next) =>{
 
 
 exports.getRoles = (req, res, next) =>{
-  let statut = req.cookies[process.env.cookie_name].role;
+  let statut = req.cookies[process.env.cookie_name].role; 
   let nom = req.cookies[process.env.cookie_name].userName;
+  let autorisation = req.cookies[process.env.cookie_name].autorisation;
 
   var services = data.getServices()
 
@@ -261,7 +271,7 @@ exports.getRoles = (req, res, next) =>{
   console.log('Affichage des roles en fonction du service XXX')
   console.log(roles)
 
-  res.render('Roles',{title: process.env.TITLE, roles: roles, services: services, statut: statut, nom:nom})
+  res.render('Roles',{title: process.env.TITLE, autorisation: autorisation, roles: roles, services: services, statut: statut, nom:nom})
 
 }
 exports.putRoles = (req, res, next)=>{
@@ -278,4 +288,11 @@ data.putRoles(role)
 res.redirect('/admin/Roles')
 
 
+}
+exports.downLoadLog = (req, res, next) =>{
+  var file = '../access.csv'
+  console.log('fichier à télécharger')
+  console.log(file)
+  res.download(file)
+  res.redirect('/admin/getLogs')
 }

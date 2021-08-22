@@ -74,6 +74,7 @@ exports.login = (req, res, next) => {
               toastr.error('Information d\'identification erronnées');
               res.redirect('/')
             }
+            console.log('USER SE CONNECTE')
              const token = {
                 userId: user._id,
                 userName: user.username,
@@ -164,20 +165,24 @@ exports.register = (req, res, next) => {
     })
 };
 exports.getUsers = (req, res, next) => {
-  let statut = req.cookies[process.env.cookie_name].role;
+  let statut = req.cookies[process.env.cookie_name].role; 
   let nom = req.cookies[process.env.cookie_name].userName;
+  let autorisation = req.cookies[process.env.cookie_name].autorisation;
   User.find({},{'username': 1, 'email': 1, 'date': 1, 'role': 1, 'site':1 }, (err, users)=>{
-    res.render('adminUser',   {title: process.env.TITLE, statut: statut, statut: statut, nom: nom, users: users});
+    res.render('adminUser',   {title: process.env.TITLE, autorisation: autorisation, statut: statut, statut: statut, nom: nom, users: users});
   });
 };
 exports.getLogs = (req, res, next) =>{
   console.log("azazazaz")
   let statut = req.cookies[process.env.cookie_name].role;
   let nom = req.cookies[process.env.cookie_name].userName;
-  var log = require('../access.log');
-
-  console.log(log)
-  res.render('getLog',{title: process.env.TITLE, statut: statut, nom: nom})
+  let autorisation = req.cookies[process.env.cookie_name].autorisation;
+ var result = data.getLogs()
+ console.log('logs      :')
+ console.log(result)
+  
+  //console.log(log)
+  res.render('getLog',{title: process.env.TITLE,result: result,autorisation: autorisation, statut: statut, nom: nom})
 
 };
 exports.deleteUser = (req, res, next) =>{

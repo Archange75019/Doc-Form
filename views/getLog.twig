@@ -1,9 +1,13 @@
 {% extends 'layout.twig' %}
 
 {% block body %}
-    <textarea id="log">
-    {{fichier}}
+    <div class="loglist">
+        <textarea id="log">
+        {{result}}
 
-    </textarea>
+        </textarea>
+        <a class="download" href="/admin/downloadLog"><i class="fas fa-download fa-3x"></i></a>
+    </div>
+    
     <script src="/javascripts/admin.js"></script>
 {% endblock %}

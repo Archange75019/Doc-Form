@@ -11,6 +11,7 @@ var data = require('./data');
 const { Console } = require('console');
 
 
+
 var event = new EventEmitter()
 
 
@@ -26,12 +27,14 @@ exports.getDoc = (req, res, next) => {
    var perPage = 21;
    var page = req.params.page || 1
   if(statut){
-    Doc.find({})
+    Doc.find({ $or: [ { service: req.cookies[process.env.cookie_name].service } ] })
     .sort({ dateFull: -1 })
     .skip((perPage * page) - perPage)
     .limit(perPage)
     .exec(function (err, docs){
       if(err) throw err;
+      console.log('document page home')
+      console.log(docs)
 
       Doc.countDocuments({}).exec(function (err, count) {
         if (err) return next(err)
@@ -45,12 +48,13 @@ exports.getDoc = (req, res, next) => {
 exports.form = (req, res, next)=>{
   let statut = req.cookies[process.env.cookie_name].role;
   let nom = req.cookies[process.env.cookie_name].userName;
+  let autorisation = req.cookies[process.env.cookie_name].autorisation;
 
 
 
 var dom =  data.getDomaines()
 
-  res.render('addDoc',{title: process.env.TITLE,domaines: dom,champs: champs, statut: statut, nom: nom})
+  res.render('addDoc',{title: process.env.TITLE, autorisation: autorisation, domaines: dom,champs: champs, statut: statut, nom: nom})
  
 };
 //Ajouter un document à la base
@@ -111,6 +115,7 @@ exports.addDoc = (req, res, next) => {
             domaine: domaine,
             service: req.cookies[process.env.cookie_name].service,
             extension: extension,
+            service: req.cookies[process.env.cookie_name].service,
             description: champs.description,
             author: req.cookies[process.env.cookie_name].userName,
             dateFull:files.fileToUpload.lastModifiedDate.toISOString(),
@@ -143,9 +148,10 @@ console.log(doc)
 exports.getDocs = (req, res, next) =>{
     let statut = req.cookies[process.env.cookie_name].role;
     let nom = req.cookies[process.env.cookie_name].userName;
+    let autorisation = req.cookies[process.env.cookie_name].autorisation;
 
     
-    res.render('search',{title: process.env.TITLE, statut: statut, nom: nom }); 
+    res.render('search',{title: process.env.TITLE, autorisation: autorisation, statut: statut, nom: nom }); 
   
   
 };
@@ -177,6 +183,7 @@ exports.searchDoc = (req, res, next)=>{
 exports.MyDocs = (req, res, next)=>{
   let statut = req.cookies[process.env.cookie_name].role;
   let nom = req.cookies[process.env.cookie_name].userName;
+  let autorisation = req.cookies[process.env.cookie_name].autorisation;
 
   var perPage = 21;
    var page = req.params.page || 1
@@ -189,7 +196,7 @@ exports.MyDocs = (req, res, next)=>{
     if(err) throw err;
     Doc.countDocuments({}).exec(function (err, count) {
       if (err) return next(err)
-    res.render('MyDocs',{title: process.env.TITLE, docs: docs,current: page,pages: Math.ceil(count / perPage), statut: statut, nom: nom    })
+    res.render('MyDocs',{title: process.env.TITLE, autorisation: autorisation, docs: docs,current: page,pages: Math.ceil(count / perPage), statut: statut, nom: nom    })
   })
 })
 };
@@ -197,6 +204,8 @@ exports.MyDocs = (req, res, next)=>{
 exports.getResults = (req, res, next) => {
   let statut = req.cookies[process.env.cookie_name].role;
   let nom = req.cookies[process.env.cookie_name].userName;
+  let autorisation = req.cookies[process.env.cookie_name].autorisation;
+
   if( req.params.recherche){
     var recherche = req.params.recherche
 
@@ -216,7 +225,7 @@ exports.getResults = (req, res, next) => {
       
       var dom = data.getDomaines()
       
-      res.render('search',{title: process.env.TITLE,domaines: dom, types: types,current: page,pages: Math.ceil(count / perPage), recherche: req.params.recherche, docs: docs,statut: statut, nom: nom})
+      res.render('search',{title: process.env.TITLE, autorisation: autorisation, domaines: dom, types: types,current: page,pages: Math.ceil(count / perPage), recherche: req.params.recherche, docs: docs,statut: statut, nom: nom})
     })
   })
   }
@@ -226,6 +235,7 @@ exports.searchDocByFilter = (req, res, next) =>{
   /**/
   let statut = req.cookies[process.env.cookie_name].role;
   let nom = req.cookies[process.env.cookie_name].userName;
+  let autorisation = req.cookies[process.env.cookie_name].autorisation;
   var paramsRecherche = req.params.recherche;
   var typeBody = req.body.type;
   var dateD = req.body.date1;
@@ -290,6 +300,7 @@ if( paramsRecherche && domaineBody && date1 && date2){
 exports.getByType = (req, res, next) =>{
   let statut = req.cookies[process.env.cookie_name].role;
   let nom = req.cookies[process.env.cookie_name].userName;
+  let autorisation = req.cookies[process.env.cookie_name].autorisation;
 
   var perPage = 21;
    var page = req.params.page || 1;
@@ -305,7 +316,7 @@ exports.getByType = (req, res, next) =>{
     Doc.countDocuments({}).exec(function (err, count) {
       if (err) return next(err)
   
-  res.render('search',{title: process.env.TITLE, current: page,pages: Math.ceil(count / perPage),domaines: dom, typeSelect:req.params.type, types: types,recherche: req.params.recherche, docs: docs,statut: statut, nom: nom})
+  res.render('search',{title: process.env.TITLE, autorisation: autorisation, current: page,pages: Math.ceil(count / perPage),domaines: dom, typeSelect:req.params.type, types: types,recherche: req.params.recherche, docs: docs,statut: statut, nom: nom})
     })
 })
 };
@@ -313,6 +324,7 @@ exports.getByType = (req, res, next) =>{
 exports.getByTypeDomaine = (req, res, next) =>{
   let statut = req.cookies[process.env.cookie_name].role;
   let nom = req.cookies[process.env.cookie_name].userName;
+  let autorisation = req.cookies[process.env.cookie_name].autorisation;
 
   var perPage = 21;
    var page = req.params.page || 1
@@ -327,7 +339,7 @@ exports.getByTypeDomaine = (req, res, next) =>{
     console.log(docs)
     var dom =  data.getDomaines()
   
-  res.render('search',{title: process.env.TITLE, current: page,pages: Math.ceil(count / perPage),domaines: dom, domaineSelect: req.params.domaine,typeSelect:req.params.type, types: types,recherche: req.params.recherche, docs: docs,statut: statut, nom: nom})
+  res.render('search',{title: process.env.TITLE, autorisation: autorisation, current: page,pages: Math.ceil(count / perPage),domaines: dom, domaineSelect: req.params.domaine,typeSelect:req.params.type, types: types,recherche: req.params.recherche, docs: docs,statut: statut, nom: nom})
     })
 })
 };
@@ -335,6 +347,7 @@ exports.getByTypeDomaine = (req, res, next) =>{
 exports.getByDomaine = (req, res, next) =>{
   let statut = req.cookies[process.env.cookie_name].role;
   let nom = req.cookies[process.env.cookie_name].userName;
+  let autorisation = req.cookies[process.env.cookie_name].autorisation;
   console.log('RECHERCHE PAR FDOMAINE')
 
   var perPage = 21;
@@ -351,7 +364,7 @@ exports.getByDomaine = (req, res, next) =>{
     Doc.countDocuments({}).exec(function (err, count) {
       if (err) return next(err)
   
-  res.render('search',{title: process.env.TITLE,domaines: dom, domaineSelect:req.params.domaine, types: types,recherche: req.params.recherche, docs: docs,statut: statut, nom: nom})
+  res.render('search',{title: process.env.TITLE, autorisation: autorisation, domaines: dom, domaineSelect:req.params.domaine, types: types,recherche: req.params.recherche, docs: docs,statut: statut, nom: nom})
     })
 })
 //****************************************************************************** */
@@ -372,6 +385,7 @@ res.render('search',{title: process.env.TITLE,domaines: dom, typeSelect:req.para
 exports.getByTypePeriod = (req, res, next) => {
   let statut = req.cookies[process.env.cookie_name].role;
   let nom = req.cookies[process.env.cookie_name].userName;
+  let autorisation = req.cookies[process.env.cookie_name].autorisation;
  console.log('recherche par type et periode')
   var date1 = req.params.date1.split('-')
   var date2 = req.params.date2.split('-')
@@ -396,7 +410,7 @@ exports.getByTypePeriod = (req, res, next) => {
     Doc.countDocuments({}).exec(function (err, count) {
       if (err) return next(err)
   
-  res.render('search',{title: process.env.TITLE,current: page,pages: Math.ceil(count / perPage),domaines: dom, domaineSelect:req.params.domaine, types: types,typeSelect: req.params.type,recherche: req.params.recherche, docs: docs,statut: statut,date1: req.params.date1, date2: req.params.date2, nom: nom})
+  res.render('search',{title: process.env.TITLE,autorisation: autorisation, current: page,pages: Math.ceil(count / perPage),domaines: dom, domaineSelect:req.params.domaine, types: types,typeSelect: req.params.type,recherche: req.params.recherche, docs: docs,statut: statut,date1: req.params.date1, date2: req.params.date2, nom: nom})
     })
 })
 
@@ -405,6 +419,7 @@ exports.getByTypePeriod = (req, res, next) => {
 exports.getByTypeDomainePeriod = (req, res, next) =>{
   let statut = req.cookies[process.env.cookie_name].role;
   let nom = req.cookies[process.env.cookie_name].userName;
+  let autorisation = req.cookies[process.env.cookie_name].autorisation;
  console.log('recherche par type domaine et periode')
   var date1 = req.params.date1.split('-')
   var date2 = req.params.date2.split('-')
@@ -429,7 +444,7 @@ exports.getByTypeDomainePeriod = (req, res, next) =>{
     var dom =  data.getDomaines()
     Doc.countDocuments({}).exec(function (err, count) {
       if (err) return next(err)
-  res.render('search',{title: process.env.TITLE,domaines: dom, current: page,pages: Math.ceil(count / perPage), domaineSelect:req.params.domaine, types: types,typeSelect: req.params.type,recherche: req.params.recherche, docs: docs,statut: statut,date1: req.params.date1, date2: req.params.date2, nom: nom})
+  res.render('search',{title: process.env.TITLE, autorisation: autorisation, domaines: dom, current: page,pages: Math.ceil(count / perPage), domaineSelect:req.params.domaine, types: types,typeSelect: req.params.type,recherche: req.params.recherche, docs: docs,statut: statut,date1: req.params.date1, date2: req.params.date2, nom: nom})
     })
 })
 
@@ -438,6 +453,7 @@ exports.getByTypeDomainePeriod = (req, res, next) =>{
 exports.getByDomainePeriod = (req, res, next)=>{
   let statut = req.cookies[process.env.cookie_name].role;
   let nom = req.cookies[process.env.cookie_name].userName;
+  let autorisation = req.cookies[process.env.cookie_name].autorisation;
  
 
   var perPage = 21;
@@ -464,7 +480,7 @@ exports.getByDomainePeriod = (req, res, next)=>{
     Doc.countDocuments({}).exec(function (err, count) {
       if (err) return next(err)
   
-  res.render('search',{title: process.env.TITLE, current: page,pages: Math.ceil(count / perPage), domaines: dom, domaineSelect:req.params.domaine, types: types,recherche: req.params.recherche, docs: docs,statut: statut,date1: req.params.date1, date2: req.params.date2, nom: nom})
+  res.render('search',{title: process.env.TITLE, autorisation: autorisation, current: page,pages: Math.ceil(count / perPage), domaines: dom, domaineSelect:req.params.domaine, types: types,recherche: req.params.recherche, docs: docs,statut: statut,date1: req.params.date1, date2: req.params.date2, nom: nom})
     })
 })
 
@@ -472,6 +488,7 @@ exports.getByDomainePeriod = (req, res, next)=>{
 exports.getByPeriod = (req, res, next)=>{
   let statut = req.cookies[process.env.cookie_name].role;
   let nom = req.cookies[process.env.cookie_name].userName;
+  let autorisation = req.cookies[process.env.cookie_name].autorisation;
   console.log('RECHERCHE PAR periode')
 console.log(req.params.date1)
   var date1 = req.params.date1.split('-')
@@ -497,7 +514,7 @@ console.log(req.params.date1)
     Doc.countDocuments({}).exec(function (err, count) {
       if (err) return next(err)
   
-  res.render('search',{title: process.env.TITLE, current: page,pages: Math.ceil(count / perPage),current: page,pages: Math.ceil(count / perPage),domaines: dom, domaineSelect:req.params.domaine, types: types,recherche: req.params.recherche, docs: docs,statut: statut,date1: req.params.date1, date2: req.params.date2, nom: nom})
+  res.render('search',{title: process.env.TITLE, autorisation: autorisation, current: page,pages: Math.ceil(count / perPage),current: page,pages: Math.ceil(count / perPage),domaines: dom, domaineSelect:req.params.domaine, types: types,recherche: req.params.recherche, docs: docs,statut: statut,date1: req.params.date1, date2: req.params.date2, nom: nom})
     })
 })
 
@@ -519,6 +536,8 @@ exports.download = (req, res, next) => {
 exports.getUpdateDoc = (req, res, next) => {
   let statut = req.cookies[process.env.cookie_name].role;
   let nom = req.cookies[process.env.cookie_name].userName;
+  let autorisation = req.cookies[process.env.cookie_name].autorisation;
+  
   if(req.params.id){
     console.log(req.params.id)
     Doc.findById({'_id': req.params.id}, (err, doc)=>{
@@ -527,7 +546,7 @@ exports.getUpdateDoc = (req, res, next) => {
       var chemin = doc.link.replace(/\/$/, "");
       cheminDef = chemin.substring (chemin.lastIndexOf( "/" )+1 );
       var dom =  data.getDomaines()
-        res.render('updateDoc',{title: process.env.TITLE,FileName: cheminDef,doc: doc,domaines: dom, statut: statut, nom: nom});
+        res.render('updateDoc',{title: process.env.TITLE,FileName: cheminDef,autorisation: autorisation, doc: doc,domaines: dom, statut: statut, nom: nom});
       
     });
   };
@@ -535,6 +554,7 @@ exports.getUpdateDoc = (req, res, next) => {
 exports.getUpdateUser = (req, res, next) => {
   let statut = req.cookies[process.env.cookie_name].role;
   let nom = req.cookies[process.env.cookie_name].userName;
+  let autorisation = req.cookies[process.env.cookie_name].autorisation;
   if(req.params.id){
     console.log(req.params.id)
     User.findById({'_id': req.params.id}, (err, user)=>{
@@ -544,7 +564,7 @@ exports.getUpdateUser = (req, res, next) => {
       //cheminDef = chemin.substring (chemin.lastIndexOf( "/" )+1 );
       var dom =  data.getDomaines()
       var services = data.getServices()
-        res.render('user',{title: process.env.TITLE, services: services,user: user,domaines: dom, statut: statut, nom: nom});
+        res.render('user',{title: process.env.TITLE, autorisation: autorisation, services: services,user: user,domaines: dom, statut: statut, nom: nom});
       
     });
   };

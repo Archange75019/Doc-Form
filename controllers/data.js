@@ -35,9 +35,15 @@ exports.putService = (service)=>{
   console.log(service)
     var data = service.toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
     
-    fs.appendFile(service+'.csv', data+',', function (err) {
+    fs.appendFile('services.csv', data+',', function (err) {
         if (err) throw err;
-        console.log('Fichier créé !');
+        if (!fs.existsSync('controllers/organigramme/'+data+'.csv')) {
+          fs.open('controllers/organigramme/'+data+'.csv', 'w', function (err, file) {
+            if (err) throw err;
+            console.log('Fichier créé !');
+         });
+            }
+          
      });
 
 }
@@ -88,11 +94,16 @@ exports.getDate = ()=>{
     var month = event.getMonth();
     var num  = event.getDate();
     var year = event.getFullYear();
-    var dayDef = jours[day]
-    console.log('jours  :'+dayDef)
+    if (day != -1){
+      var dayDef = jours[day]
+    }else{
+      var dayDef = jours[6]
+    }
+    
+    //console.log('jours  :'+event.getDay())
     var moisDef = mois[month]
     var date = dayDef + ' '+num+' '+moisDef+ ' '+year
-    console.log('date d\'ajout  :'+date)
+    //console.log('date d\'ajout  :'+date)
     return date
 
 }
@@ -170,7 +181,7 @@ exports.getRoles = (services)=>{
         });
         return result*/
         if( appel.length != 0){
-          var tableau = appel.split('\n')
+          var tableau = appel.split(',\n')
           roleByService[services[i]] = tableau
         }
 
@@ -212,6 +223,14 @@ exports.getRoles = (services)=>{
       }*/
 
 
+}
+exports.getLogs = ()=>{
+  const result = fs.readFileSync('access.csv', 'utf-8', function(err, data){
+    if(err) throw err;
+    
+
+  })
+  return result
 }
 
 
