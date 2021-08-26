@@ -290,9 +290,12 @@ res.redirect('/admin/Roles')
 
 }
 exports.downLoadLog = (req, res, next) =>{
-  var file = '../access.csv'
+  var file = require('../controllers/organigramme/access.csv')
   console.log('fichier à télécharger')
-  console.log(file)
+  if (fs.existsSync(file)) { 
+    console.log('fichier téléchargé')
   res.download(file)
   res.redirect('/admin/getLogs')
+  }
+  
 }

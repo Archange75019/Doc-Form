@@ -37,7 +37,6 @@ document.addEventListener('DOMContentLoaded', function() {
     var doc = document.getElementById('c-dialog__box');
     if(select){
         select.addEventListener('change', function() {
-
             if(select.value == "Autre"){
                 other.style.display= 'block';
             }else{
@@ -52,8 +51,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }else{
                 oubli.style.visibility = 'hidden';
             }
-            
-
         })
     }
     if(select2 && btnSbmit && textarea){
@@ -115,7 +112,6 @@ document.addEventListener('DOMContentLoaded', function() {
         })
 
     }
-   
         socket.on('FichierLourd', (data)=>{
 
             toastr.error(data)
@@ -150,14 +146,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     if(formations){
         formations.addEventListener('change', function() {
-
             if(formations.value == "Autre"){
                 otherForm.style.display= 'block';
-
             }else{
                 otherForm.style.display='none';
             }
-
         });
     }
     if(apercu && close){
@@ -190,11 +183,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     docu.style.width = "500px";
                     var source = document.createElement('source');
                     source.type = "video/mp4"
-                    
                     break;
                     case 'Image':
                     var docu = document.createElement('img');
-
                 }
                 docu.id = "document";
                 /*if(extension == 'Word'){
@@ -210,7 +201,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }else{
                     docu.src = link;
                 }
-
                 docu.style.width = '100%';
                 docu.style.height = '100%';
                 docu.style.textAlign = 'center';
@@ -243,15 +233,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     docContainer.innerHTML = "";
                 }*/
                 window.open('/app/UpdateDoc/'+link,"menubar=no, scrollbars=no, top=100, left=100, width=300, height=200")
-
                 }
-                
             });
         };
     
     }
     if(formUpdate){
-
         formUpdate.addEventListener('submit', (e)=>{
             e.preventDefault();
 
@@ -287,12 +274,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     selectRole.appendChild(opt);
 
                 }
-               
-             }
+            }
         })
-
-
     }
-
-
 })

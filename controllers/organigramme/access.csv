@@ -1,0 +1,8 @@
+::1 - - [26/Aug/2021:07:05:39 +0000] "GET /admin/downloadLog HTTP/1.1" - - "http://localhost:3332/admin/getLogs" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36"
+::1 - - [26/Aug/2021:07:05:40 +0000] "GET /admin/getLogs HTTP/1.1" 200 44899 "http://localhost:3332/admin/getLogs" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36"
+::1 - - [26/Aug/2021:07:06:33 +0000] "GET /admin/getLogs HTTP/1.1" 304 - "http://localhost:3332/admin/getLogs" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36"
+::1 - - [26/Aug/2021:07:06:36 +0000] "GET /admin/downloadLog HTTP/1.1" 500 3129 "http://localhost:3332/admin/getLogs" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36"
+::1 - - [26/Aug/2021:07:27:19 +0000] "GET / HTTP/1.1" 304 - "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36"
+::1 - - [26/Aug/2021:07:27:22 +0000] "POST /login HTTP/1.1" 302 66 "http://localhost:3332/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36"
+::1 - - [26/Aug/2021:07:27:22 +0000] "GET /app/home/1 HTTP/1.1" 304 - "http://localhost:3332/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36"
+::1 - - [26/Aug/2021:07:27:24 +0000] "GET /admin/getLogs HTTP/1.1" 500 3051 "http://localhost:3332/app/home/1" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36"

@@ -7,9 +7,6 @@ var doc = require('../controllers/docs');
 const User = require('../models/User');
 const Doc = require('../models/Doc');
 
-
-
-
 //Affiche la page home
 router.get('/home/:page', doc.getDoc);
 //affiche la page d'inscription utilisateur
@@ -55,13 +52,10 @@ router.get('/MyDocs', doc.MyDocs);
 router.get('/updateDoc/:id', doc.getUpdateDoc);
 //Soumettre la mise à jour d'un document
 router.post('/updateDoc/:id', doc.postUpdateDoc);
-
-//Mise à jour des utilisateurs
-
+//Affichage de la page de mise à jour des utilisateurs
 router.get('/UpdateUser/:id', doc.getUpdateUser)
-
+//Mise à jour d'un utilisateur en base
 router.post('/UpdateUser/:id', doc.postUpdateUser)
-
 //Définir les roles
 router.get('/Roles', user.getRoles);
 //Supprimer un utilisateur
