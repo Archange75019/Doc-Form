@@ -50,8 +50,32 @@
   </div>
 </nav>
   {% endif %}
-     
-    {% block body %}{% endblock %}
+     <div id="main">
+      {% block body %}{% endblock %}
+    </div>
+    <div
+        id="dialog"
+        role="dialog"
+        aria-labelledby="dialog-title"
+        aria-describedby="dialog-desc"
+        aria-modal="true"
+        aria-hidden="true"
+        tabindex="-1"
+        class="c-dialog">
+        <div role="document" id="c-dialog__box" id="conteneur">
+            
+                <button 
+                type="button" 
+                aria-label="Fermer"
+                id="closeModal" 
+                title="Fermer cette fenêtre modale"
+                data-dismiss="dialog">X
+                </button>
+                <div id="containerDoc">
+        
+           
+        </div>
+    </div>
 
 
 <script src="http://code.jquery.com/jquery-2.0.3.min.js" ></script>

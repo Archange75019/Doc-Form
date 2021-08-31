@@ -41,7 +41,6 @@ router.get('/SearchDocs/:recherche/domaine/:domaine/periode/:date1/:date2/:page'
 router.get('/SearchDocs/:recherche/type/:type/periode/:date1/:date2/:page', doc.getByTypePeriod);
 //reinitialiser les filtres de recherche
 router.get('/SearchDocs/reinitFilter/:recherche/:page', doc.reinitFilter);
-
 //Telecharger un document
 router.get('/download/:id', doc.download);
 //Supprimer un document
@@ -60,7 +59,6 @@ router.post('/UpdateUser/:id', doc.postUpdateUser)
 router.get('/Roles', user.getRoles);
 //Supprimer un utilisateur
 router.get('/deleteUser/:id', user.deleteUser);
-//Se déconnecter
-router.get('/logout', user.logout);
-
+//partager un document
+router.get('/shareTo/:id',doc.shareDocument)
 module.exports = router;

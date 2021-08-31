@@ -682,3 +682,11 @@ exports.deleteDoc = (req, res, next) => {
   }
 
 };
+
+exports.shareDocument = (req, res, next) =>{
+  if(req.params.id){
+    let statut = req.cookies[process.env.cookie_name].role;
+    let nom = req.cookies[process.env.cookie_name].userName;
+    let autorisation = req.cookies[process.env.cookie_name].autorisation;
+  }
+}

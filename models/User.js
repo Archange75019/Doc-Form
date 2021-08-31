@@ -42,6 +42,7 @@ var userSchema = mongoose.Schema({
         type: String
       }
 });
+userSchema.index({ username: 'text' });
 
 var User = mongoose.model("User", userSchema);
 module.exports = User;

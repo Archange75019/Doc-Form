@@ -26,6 +26,8 @@ const Doc = require('../models/Doc');
 const { Console } = require('console');
 const { fstat } = require('fs');
 var doc = require('../controllers/docs');
+var user = require('../controllers/user')
+const User = require('../models/User');
 const io = new Server(server);
 app.set('socketio', io)
 
@@ -129,9 +131,34 @@ io.on('connection', (socket) => {
    var roles = result.split(',\n')
     socket.emit('roles', roles)
   })
+  socket.on('userShare', (data)=>{
+    //console.log('data :'+data)
+    var str = data.replace('.', ' ')
+    var str2 = eval('/^'+str+'/i')
+    console.log(str)
+  User.find({"username": {$regex: str2}},{"username":1}, (err,users)=>{
+    if(err) throw err;
+    if(users){
+      var usersTab = []
+      for(var i = 0; i<users.length; i++){
+        usersTab.push(users[i].username)
+      }
+      socket.emit('usersForSharing', usersTab)
+    }
+      //console.log(result)
+
+  })
+  })
+  socket.on('register', (data)=>{
+    user.register()
+  })
+  socket.on('unregister', (data)=>{
+    
+  })
 });
 
-/**
+/**rs
+ * 
  * Listen on provided port, on all network interfaces.
  */
 

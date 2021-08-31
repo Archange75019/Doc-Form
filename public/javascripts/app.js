@@ -1,5 +1,26 @@
 
 document.addEventListener('DOMContentLoaded', function() {
+
+    const triggers = document.querySelectorAll('[aria-haspopup="dialog"]');
+    const page = document.getElementById('main');
+  
+    const open = function (dialog) {
+      dialog.setAttribute('aria-hidden', false);
+      page.setAttribute('aria-hidden', true);
+    };
+  
+    triggers.forEach((trigger) => {
+      const dialog = document.getElementById(trigger.getAttribute('aria-controls'));
+  
+      // open dialog
+      trigger.addEventListener('click', (event) => {
+        event.preventDefault();
+
+  
+        open(dialog);
+      });
+    });
+
     var urlcourante = document.location.href; 
     var urlcourante = urlcourante.replace(/\/$/, "");
         // Gardons dans la variable queue_url uniquement la portion derrière le dernier slash de urlcourante
@@ -10,6 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var forgot = document.getElementById('for');
     var oubli = document.getElementById('oubli')
     var form = document.getElementById('add');
+    var ShareTo = document.getElementById('ShareTo')
     var titre = document.getElementById('titre');
     var btnSbmit = document.createElement('input');
     btnSbmit.id='envoiID';
@@ -19,11 +41,16 @@ document.addEventListener('DOMContentLoaded', function() {
     btnSbmit.appendChild(newContent);
     var selectService = document.getElementById('service-select')
     var selectRole = document.getElementById('role-select')
+    var shareWithUser = document.getElementById('shareWithUser');
+    var shareToUser =document.getElementById('shareToUser ')
+    var userList = document.querySelector(' li')
+    
 
     var sub = document.getElementById('sub');
     var valider = document.getElementById('valider');
     var close = document.getElementById('closeModal');
     var modif = document.querySelectorAll('.modification');
+    var share = document.querySelectorAll('.partager');
     var docContainer = document.getElementById('containerDoc');
     var file = document.getElementById('fileUpload');  
     var select = document.getElementById('role-select');
@@ -66,6 +93,13 @@ document.addEventListener('DOMContentLoaded', function() {
             };
         });
         if(queue_url == "AddDocs"){
+        shareWithUser.addEventListener('change', function(){
+            if(shareWithUser.value == "oui"){
+                var users = document.getElementById('users');
+                
+            }
+
+        })
         valider.addEventListener('click', function(){
             var fichier = {
                 'title': titre.value,
@@ -238,6 +272,103 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     
     }
+    if(share){ 
+        for(let i = 0; i<share.length; i++){
+            share[i].addEventListener('click', ()=>{
+                var link = share[i].getAttribute('name');
+                if(docContainer){
+                        //alert('AAA')
+                    //close.style.display = 'none'
+                    docContainer.innerHTML = ""  
+                }
+                //var modale = document.getElementById('dialog');
+                close.style.display = 'block'
+                close.style.color = "white";
+                close.style.backgroundColor = "black";
+                close.style.border = "none";
+                var formShare = document.createElement('form');
+                formShare.id = "ShareTo";
+                formShare.action = "";
+                var titre = document.createElement('h3');
+                titre.style.paddingBottom = "2em";
+                var partage = document.createTextNode("Avec quel(s) utilisateur(s) voulez-vous partager \" "+share[i].getAttribute('alt')+"\" ?");
+                titre.appendChild(partage)
+                var searchUser = document.createElement('input');
+                searchUser.placeholder = "Saisir noms d'utilisateur"
+                searchUser.id = 'shareToUser';
+                var sharingDestination = document.createElement('ul');
+                sharingDestination.id = 'listUser';
+                var buttonSearchUser = document.createElement('input');
+                buttonSearchUser.type = 'submit';
+                buttonSearchUser.value = 'Partager';
+                buttonSearchUser.style.marginLeft = "1.2em"
+                formShare.appendChild(titre)
+                formShare.appendChild(searchUser);
+                formShare.appendChild(buttonSearchUser)
+                formShare.style.width = '100%';
+                formShare.style.height = '100%';
+                formShare.style.margin = '0 auto';
+                docContainer.appendChild(formShare)
+                doc.style.textAlign = "center";
+                //modale.style.display = 'block';
+                if(formShare){
+                   searchUser.addEventListener('input', function(){
+                       //console.log('User valeur :'+searchUser.value)
+                       /*if(searchUser.value == ""){
+                        sharingDestination.style.display = "none";
+                       }*/
+                       
+                       socket.emit('userShare', searchUser.value)
+                   })
+                   socket.on('usersForSharing', (data)=>{
+                    sharingDestination.innerHTML = "";
+                       console.log('Tableau utilisateur')
+                       console.log(data)
+                       /*for(item in data){
+                           console.log(`${item} : ${data[item]}`)
+                       }*/
+                       for( var i=0; i<data.length; i++){
+                           
+                            if(data[i] != "" ){
+                                //console.log('AJOUT')
+                                var opt = document.createElement("li");
+                                opt.setAttribute('value',data[i])
+                                //opt.style.display = "inline";
+                                opt.style.textAlign = "left";
+                                //opt.setAttribute("value", data[i]);
+                                var itmText = document.createTextNode(data[i]);
+                                opt.appendChild(itmText);
+                                sharingDestination.appendChild(opt);
+                            }
+                        }
+                          sharingDestination.style.display = 'block';
+                          
+                          sharingDestination.style.backgroundColor = 'white';
+                       formShare.appendChild(sharingDestination)
+                   })
+                }
+            })
+        }
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+    }
+    if(apercu && close){
+        close.addEventListener('click', function(){
+            close.style.display = 'none'
+            docContainer.innerHTML = "" ;
+            dialog.setAttribute('aria-hidden', true);
+            page.setAttribute('aria-hidden', false);
+        })
+    } 
+   if(userList){
+       alert('AAAA')
+   }
+        
+    
+ 
+    
     if(formUpdate){
         formUpdate.addEventListener('submit', (e)=>{
             e.preventDefault();
@@ -255,14 +386,24 @@ document.addEventListener('DOMContentLoaded', function() {
         })
     }
     if(queue_url == "register"){
+        var registerAuth = document.getElementById('registerUserauth-select')
         if(selectService){
             selectService.addEventListener('change', function (){
                 //alert(selectService.value)
                 socket.emit ('selectService', selectService.value)
             })
         }
+        if(registerAuth){
+            registerAuth.addEventListener('change', function(){
+                if(registerAuth.value == 'oui'){
+                    socket.emit('register')
+                }else{
+                    toastr.error('Merci de remplir tous les champs')
+                }
+            } )
+        }
         socket.on ('roles', (data)=>{
-            console.log(data)
+            console.log(typeof data)
             selectRole.options.length = 0;
             for( var i=0; i<data.length; i++){
                 if(data[i] != ""){
@@ -277,4 +418,5 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         })
     }
+
 })
