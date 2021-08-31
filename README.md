@@ -16,10 +16,14 @@ FONCTIONS ACHEVEES</br>
 -Téléchargement de fichier</br>
 -Rechercher un document en fonction de sa description et de son titre</br>
 -Suppression d'un document</br>
+-Partage de document entre différents membres par service</br>
+-Création de services</br>
+-Création de roles par services</br>
+-Système de log</br>
 
 
-AMELIORATIONS POSSIBLES</br>
 
--gérer les extensions des fichiers envoyés</br>
--Limiter la taille des fichiers en fonctions de l'espace disponible</br>
+
+
+
 
