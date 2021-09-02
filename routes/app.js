@@ -60,5 +60,6 @@ router.get('/Roles', user.getRoles);
 //Supprimer un utilisateur
 router.get('/deleteUser/:id', user.deleteUser);
 //partager un document
-router.get('/shareTo/:id',doc.shareDocument)
+router.post('/shareTo',doc.shareDocument)
+router.get('/logout', user.logout)
 module.exports = router;

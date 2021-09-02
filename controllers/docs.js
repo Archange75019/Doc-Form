@@ -9,6 +9,8 @@ var qs = require('qs');
 var htmlspecialchars = require('htmlspecialchars');
 var data = require('./data');
 const { Console } = require('console');
+const cookies = require('cookie');
+const { request } = require('../app');
 
 
 
@@ -188,7 +190,7 @@ exports.MyDocs = (req, res, next)=>{
   var perPage = 21;
    var page = req.params.page || 1
 
-  Doc.find({'author': req.cookies[process.env.cookie_name].userName})
+  Doc.find({$or:[{'author': req.cookies[process.env.cookie_name].userName},{'shareTo._id':req.cookies[process.env.cookie_name].userId}]})
   .sort({ dateFull: -1 })
   .skip((perPage * page) - perPage)
   .limit(perPage)
@@ -196,6 +198,14 @@ exports.MyDocs = (req, res, next)=>{
     if(err) throw err;
     Doc.countDocuments({}).exec(function (err, count) {
       if (err) return next(err)
+      console.log('liste de documents')
+      console.log(docs)
+      for(var i = 0; i<docs.length; i++){
+        if(docs[i].author == nom){
+          docs[i].author = "Moi"
+        }
+       
+      }
     res.render('MyDocs',{title: process.env.TITLE, autorisation: autorisation, docs: docs,current: page,pages: Math.ceil(count / perPage), statut: statut, nom: nom    })
   })
 })
@@ -684,9 +694,29 @@ exports.deleteDoc = (req, res, next) => {
 };
 
 exports.shareDocument = (req, res, next) =>{
-  if(req.params.id){
-    let statut = req.cookies[process.env.cookie_name].role;
-    let nom = req.cookies[process.env.cookie_name].userName;
-    let autorisation = req.cookies[process.env.cookie_name].autorisation;
-  }
+  
+  console.log('Partage SA mzarcgje')
+  let id = req.cookies[process.env.cookie_name].userName;
+  console.log(req.body.idDocument)
+  
+  /*var filteredArray = req.body.idDocument.filter(function(ele , pos){
+    return req.body.idDocument.indexOf(ele) == pos;
+}) */
+//console.log(req.body.utilisateur)
+//console.log(filteredArray)
+  console.log('utilisateur courant    :'+id)
+  User.find({'username':req.body.utilisateur}, (err, user)=>{
+    console.log('user pour partage')
+    console.log(user)
+    Doc.findByIdAndUpdate({'_id':req.body.idDocument['0']},{$push:{'shareTo':{"_id":user['0']._id} }},{new: true}, (err, doc)=>{
+      if(err) throw err
+      //filteredArray;
+      res.redirect('/app/home/1')
+    })
+
+  })
+  
+  
+
+  
 }

@@ -20,6 +20,26 @@ var userSchema = mongoose.Schema({
         required: true,
         trim: true
       },
+      shareTo:[
+        {
+          document:{
+            type: String
+          },
+          destinaire:{
+            type:String
+          }
+        }
+      ],
+      shareBy:[
+        {
+          document:{
+            type: String
+          },
+          emmetteur:{
+            type:String
+          }
+        }
+      ],
       autorisation:{
         type: String,
         required: true,

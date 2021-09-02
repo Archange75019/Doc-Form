@@ -51,6 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var close = document.getElementById('closeModal');
     var modif = document.querySelectorAll('.modification');
     var share = document.querySelectorAll('.partager');
+    var listing = document.querySelectorAll('.list')
     var docContainer = document.getElementById('containerDoc');
     var file = document.getElementById('fileUpload');  
     var select = document.getElementById('role-select');
@@ -273,22 +274,23 @@ document.addEventListener('DOMContentLoaded', function() {
     
     }
     if(share){ 
+        var dataShare = {};
+        var input;
+        var id;
         for(let i = 0; i<share.length; i++){
             share[i].addEventListener('click', ()=>{
                 var link = share[i].getAttribute('name');
                 if(docContainer){
-                        //alert('AAA')
-                    //close.style.display = 'none'
                     docContainer.innerHTML = ""  
                 }
-                //var modale = document.getElementById('dialog');
                 close.style.display = 'block'
                 close.style.color = "white";
                 close.style.backgroundColor = "black";
                 close.style.border = "none";
                 var formShare = document.createElement('form');
                 formShare.id = "ShareTo";
-                formShare.action = "";
+                formShare.method = "post";
+                formShare.action = "/app/shareTo";
                 var titre = document.createElement('h3');
                 titre.style.paddingBottom = "2em";
                 var partage = document.createTextNode("Avec quel(s) utilisateur(s) voulez-vous partager \" "+share[i].getAttribute('alt')+"\" ?");
@@ -296,7 +298,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 var searchUser = document.createElement('input');
                 searchUser.placeholder = "Saisir noms d'utilisateur"
                 searchUser.id = 'shareToUser';
-                var sharingDestination = document.createElement('ul');
+                var sharingDestination = document.createElement('select');
+                sharingDestination.setAttribute('size', '5');
                 sharingDestination.id = 'listUser';
                 var buttonSearchUser = document.createElement('input');
                 buttonSearchUser.type = 'submit';
@@ -304,47 +307,64 @@ document.addEventListener('DOMContentLoaded', function() {
                 buttonSearchUser.style.marginLeft = "1.2em"
                 formShare.appendChild(titre)
                 formShare.appendChild(searchUser);
-                formShare.appendChild(buttonSearchUser)
                 formShare.style.width = '100%';
                 formShare.style.height = '100%';
                 formShare.style.margin = '0 auto';
                 docContainer.appendChild(formShare)
                 doc.style.textAlign = "center";
-                //modale.style.display = 'block';
                 if(formShare){
+
                    searchUser.addEventListener('input', function(){
-                       //console.log('User valeur :'+searchUser.value)
-                       /*if(searchUser.value == ""){
-                        sharingDestination.style.display = "none";
-                       }*/
-                       
+
                        socket.emit('userShare', searchUser.value)
+                       
                    })
                    socket.on('usersForSharing', (data)=>{
                     sharingDestination.innerHTML = "";
-                       console.log('Tableau utilisateur')
-                       console.log(data)
-                       /*for(item in data){
-                           console.log(`${item} : ${data[item]}`)
-                       }*/
+
                        for( var i=0; i<data.length; i++){
                            
                             if(data[i] != "" ){
-                                //console.log('AJOUT')
-                                var opt = document.createElement("li");
+                                var opt = document.createElement("option");
                                 opt.setAttribute('value',data[i])
-                                //opt.style.display = "inline";
                                 opt.style.textAlign = "left";
-                                //opt.setAttribute("value", data[i]);
                                 var itmText = document.createTextNode(data[i]);
                                 opt.appendChild(itmText);
                                 sharingDestination.appendChild(opt);
                             }
                         }
                           sharingDestination.style.display = 'block';
-                          
                           sharingDestination.style.backgroundColor = 'white';
                        formShare.appendChild(sharingDestination)
+
+                       sharingDestination.addEventListener('change', function(){
+                            searchUser.name = "utilisateur";
+                           searchUser.value =  sharingDestination.value;
+
+                        formShare.appendChild(buttonSearchUser)
+                    })
+                      
+                           var id = document.createElement('input');
+                           id.type = 'hidden';
+                           id.name = "idDocument";
+                           id.value = link;
+                           formShare.appendChild(id)
+
+                           formShare.addEventListener('submit', function(){
+                              // e.preventDefault();
+                              toastr.success('Partage éffectué')
+                              /*var tab = {
+                                  name: searchUser.value,
+                                  id: link
+                              }
+                              console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
+                              console.log(tab)
+                               socket.emit('userShareTo', tab)*/
+                               
+                               dialog.setAttribute('aria-hidden', true);
+                               page.setAttribute('aria-hidden', false);
+                           })
+                       
                    })
                 }
             })
@@ -352,6 +372,32 @@ document.addEventListener('DOMContentLoaded', function() {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+
+    }
+    if(listing){
+        for(let i = 0; i<listing.length; i++){
+            listing[i].addEventListener('click', ()=>{
+                var link = share[i].getAttribute('name');
+                if(docContainer){
+                    docContainer.innerHTML = ""  
+                }
+                alert('AFFICHAGE listing user')
+            close.style.display = 'block'
+            close.style.color = "white";
+            close.style.backgroundColor = "black";
+            close.style.border = "none";
+            var formShare = document.createElement('form');
+                formShare.id = "listingUsers";
+                formShare.method = "post";
+                formShare.action = "/app/listingUsersDocSharing";
+            var titre = document.createElement('h3');
+                titre.style.paddingBottom = "2em";
+            var partage = document.createTextNode("Liste des utilisateurs autorisés à voir \" "+share[i].getAttribute('alt')+"\" ?");
+                titre.appendChild(partage)
+            socket.emit('getUserListSharing', link)
+
+            })
+        }
 
     }
     if(apercu && close){
@@ -362,9 +408,7 @@ document.addEventListener('DOMContentLoaded', function() {
             page.setAttribute('aria-hidden', false);
         })
     } 
-   if(userList){
-       alert('AAAA')
-   }
+
         
     
  

@@ -8,6 +8,7 @@ var app = require('../app');
 var debug = require('debug')('cmsformation:server');
 var http = require('http');
 var fs = require('fs');
+const axios = require('axios');
 
 /**
  * Get port from environment and store in Express.
@@ -28,6 +29,7 @@ const { fstat } = require('fs');
 var doc = require('../controllers/docs');
 var user = require('../controllers/user')
 const User = require('../models/User');
+const { request } = require('../app');
 const io = new Server(server);
 app.set('socketio', io)
 
@@ -148,6 +150,41 @@ io.on('connection', (socket) => {
       //console.log(result)
 
   })
+  })
+  socket.on('userShareTo', (data)=>{
+    console.log(data)
+
+    /*console.log('tab user')
+    console.log('avant boucle '+data)
+    var userShare =[];
+   
+
+        
+          userShare.push(data['0'])
+          userShare.push(data['1'])
+        
+  
+    console.log('Données en provenance du front')
+    console.log(userShare)*/
+    
+    //console.log('données utilisateurs')
+   
+  
+  })
+  socket.on('getUserListSharing', (data)=>{
+    console.log(data)
+    Doc.findById({'_id': data},{'shareTo':1}, (err, doc)=>{
+      if(err) throw err
+      console.log('documentAA');
+      console.log(doc.shareTo)
+      for (var i = 0; i<doc.shareTo.length; i++){
+        var tab = [];
+        User.findById({'_id': doc.shareTo[i].id}, {'username': 1},(err, user)=>{
+          if(err) throw err;
+          
+        })
+      }
+    })
   })
   socket.on('register', (data)=>{
     user.register()

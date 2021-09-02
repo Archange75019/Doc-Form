@@ -33,6 +33,13 @@ var docSchema = mongoose.Schema({
         type: String,
         required: true
       },
+      shareTo:{
+        
+          _id: {
+            type: String
+          }
+        
+      },
       service:{
         type: String,
         required: true
