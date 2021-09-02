@@ -24,15 +24,18 @@
                     <td>{{doc.createdat }}</td>
                 
                 <td>{{doc.author}}</td>
+               
                 <td>
                     <a title="Télécharger" href="/app/download/{{doc._id}}"><i class="fas fa-download"></i></a>
                 {% if doc.author == "Moi"%}
                     <a title="Modifier le document" class="modification" name="{{doc._id}}"><i class="fas fa-pencil-alt"></i></a>
                     <a title="Partager le document" alt="{{doc.titre}}" class="partager" role="button" aria-haspopup="dialog" aria-controls="dialog" name="{{doc._id}}"><i class="fas fa-share-alt-square"></i></a>
                     <a title="Supprimer le document" href="/app/delete/{{doc._id}}"><i class="fas fa-trash"></i></a>
-                    {% if doc.shareTo %}
-                        <a title="Utilisateurs autorisés" class="list" role="button" aria-haspopup="dialog" aria-controls="dialog" name="{{doc._id}}"><i class="fas fa-users"></i></a>
-                    {% endif %}
+                    {% for item in doc.shareTo %}
+                        {% if item is not empty  %}
+                            <a title="Utilisateurs autorisés" class="list" role="button" aria-haspopup="dialog" aria-controls="dialog" name="{{doc._id}}"><i class="fas fa-users"></i></a>
+                        {% endif %}
+                    {%endfor%}
                 {% endif %}
                 </td>
             </tr>

@@ -225,7 +225,7 @@ exports.getRoles = (services)=>{
 
 }
 exports.getLogs = ()=>{
-  const result = fs.readFileSync('access.csv', 'utf-8', function(err, data){
+  const result = fs.readFileSync('controllers/organigramme/access.csv', 'utf-8', function(err, data){
     if(err) throw err;
     
 
