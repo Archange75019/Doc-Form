@@ -1,4 +1,5 @@
 
+
 document.addEventListener('DOMContentLoaded', function() {
 
     const triggers = document.querySelectorAll('[aria-haspopup="dialog"]');
@@ -51,7 +52,8 @@ document.addEventListener('DOMContentLoaded', function() {
     var close = document.getElementById('closeModal');
     var modif = document.querySelectorAll('.modification');
     var share = document.querySelectorAll('.partager');
-    var listing = document.querySelectorAll('.list')
+    var listing = document.querySelectorAll('.list');
+    var trash = document.querySelectorAll('.deleteUserRight');
     var docContainer = document.getElementById('containerDoc');
     var file = document.getElementById('fileUpload');  
     var select = document.getElementById('role-select');
@@ -369,15 +371,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
         }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
     }
     if(listing){
         for(let i = 0; i<listing.length; i++){
             listing[i].addEventListener('click', ()=>{
-                var link = share[i].getAttribute('name');
+                var link = listing[i].getAttribute('name');
+                console.log('id document    :'+link)
+                
                 if(docContainer){
                     docContainer.innerHTML = ""  
                 }
@@ -394,7 +394,50 @@ document.addEventListener('DOMContentLoaded', function() {
                 titre.style.paddingBottom = "2em";
             var partage = document.createTextNode("Liste des utilisateurs autorisés à voir \" "+share[i].getAttribute('alt')+"\" ?");
                 titre.appendChild(partage)
+                formShare.appendChild(titre)
             socket.emit('getUserListSharing', link)
+            socket.on('userRight', (data)=>{
+                console.log(data)
+
+                var user = document.createElement('p');
+                var linkuser = document.createElement('p');
+                    //linkuser.setAttribute('href', '/app/userRight/'+data._id);
+                    linkuser.setAttribute('class', 'deleteUserRight');
+                    linkuser.setAttribute('role', 'button');
+                    linkuser.setAttribute('aria-controls', 'dialog')
+                    linkuser.setAttribute('name', data._id)
+                var iconTrash = document.createElement('i');
+                    iconTrash.setAttribute('class', 'fas fa-trash');
+                    iconTrash.style.marginLeft = '15px';
+                var username = document.createTextNode(data.username)
+                user.appendChild(username)
+                linkuser.appendChild(iconTrash)
+                user.appendChild(linkuser)
+                user.style.color = "white";
+                formShare.appendChild(user)
+                docContainer.appendChild(formShare)
+                if(linkuser){
+                    console.log(linkuser)
+                    alert('AAAAAAAA')
+                    for(var i = 0; i<linkuser.length; i++){
+                        console.log('Utilisateur à supprimé')
+                        console.log(trashRight[i])
+                        trashRight[i].addEventListener('click', ()=>{
+                            alert('AA')
+                            var idUser = trashRight[i].getAttribute('name');
+                            var dataUser = [idUser, link]
+                            console.log('utilisateur / document :'+dataUser)
+                            socket.emit('deleteUserRight', dataUser)
+    
+                        })
+
+                    }
+
+                    
+                }
+
+            })
+            
 
             })
         }
