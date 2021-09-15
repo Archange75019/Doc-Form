@@ -59,10 +59,7 @@ exports.filterDocs = (req, res, next) =>{
         var dateFin = new Date(date2[0], date2[1]-1, date2[2])//.toISOString();
         var dateDeb1 = dateDeb.setDate(dateDeb.getDate()+1)
         var dateFin1 = dateFin.setDate(dateFin.getDate()+1)
-      console.log('req.params')
-      console.log(req.params)
-      console.log('req.body')
-      console.log(req.body)
+      
 
       if(req.body.author != "" && req.body.Domaine != "" && dateD != "" && dateF != ""){
         return res.redirect('/admin/SearchDocs/author/'+req.body.author+'/domaine/'+req.body.Domaine+'/periode/'+dateD+'/'+dateF);

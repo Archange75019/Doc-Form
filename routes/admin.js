@@ -8,7 +8,7 @@ var event = new EventEmitter()
 
 /* GET users listing. */
 router.get('/getUsers', user.getUsers);
-
+// Route pour récupérer les logs
 router.get('/getLogs', user.getLogs);
 
 router.get('/Documents', admin.getAllDocs);

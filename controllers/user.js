@@ -102,9 +102,8 @@ exports.registerShow = (req, res, next) =>{
   let autorisation = req.cookies[process.env.cookie_name].autorisation;
   let role = req.cookies[process.env.cookie_name].role;
   let serv = req.cookies[process.env.cookie_name].service;
- 
-    var Role = role;
-    var services = data.getServices()
+  var Role = role;
+  var services = data.getServices()
   
     if(statut == "DTF"){
       var Role = role.splice(0, 1) 

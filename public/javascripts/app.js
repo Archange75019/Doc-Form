@@ -400,11 +400,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log(data)
 
                 var user = document.createElement('p');
-                var linkuser = document.createElement('p');
+                var linkuser = document.createElement('a');
                     //linkuser.setAttribute('href', '/app/userRight/'+data._id);
                     linkuser.setAttribute('class', 'deleteUserRight');
-                    linkuser.setAttribute('role', 'button');
-                    linkuser.setAttribute('aria-controls', 'dialog')
                     linkuser.setAttribute('name', data._id)
                 var iconTrash = document.createElement('i');
                     iconTrash.setAttribute('class', 'fas fa-trash');
@@ -416,15 +414,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 user.style.color = "white";
                 formShare.appendChild(user)
                 docContainer.appendChild(formShare)
-                if(linkuser){
-                    console.log(linkuser)
-                    alert('AAAAAAAA')
-                    for(var i = 0; i<linkuser.length; i++){
+                if(listing){
+                    console.log(listing)
+                    console.log('AAAAAAAA')
+                    for(var i = 0; i<listing.length; i++){
                         console.log('Utilisateur à supprimé')
-                        console.log(trashRight[i])
-                        trashRight[i].addEventListener('click', ()=>{
+                        console.log(listing[i])
+                        listing[i].addEventListener('click', ()=>{
                             alert('AA')
-                            var idUser = trashRight[i].getAttribute('name');
+                            var idUser = trash[i].getAttribute('name');
                             var dataUser = [idUser, link]
                             console.log('utilisateur / document :'+dataUser)
                             socket.emit('deleteUserRight', dataUser)

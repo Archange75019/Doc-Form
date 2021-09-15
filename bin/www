@@ -94,7 +94,6 @@ io.on('connection', (socket) => {
   })
   socket.on('getApercu', (data)=>{
     Doc.findOne({'_id': data}, {'link':1, 'extension':1}, (err, data)=>{
-      console.log(data)
       var link = data.link;
       var extension = data.extension
       var data = [extension, link];
@@ -134,10 +133,10 @@ io.on('connection', (socket) => {
     socket.emit('roles', roles)
   })
   socket.on('userShare', (data)=>{
-    //console.log('data :'+data)
+    
     var str = data.replace('.', ' ')
     var str2 = eval('/^'+str+'/i')
-    console.log(str)
+    
   User.find({"username": {$regex: str2}},{"username":1}, (err,users)=>{
     if(err) throw err;
     if(users){
@@ -147,36 +146,17 @@ io.on('connection', (socket) => {
       }
       socket.emit('usersForSharing', usersTab)
     }
-      //console.log(result)
+     
 
   })
   })
   socket.on('userShareTo', (data)=>{
-    console.log(data)
-
-    /*console.log('tab user')
-    console.log('avant boucle '+data)
-    var userShare =[];
-   
-
-        
-          userShare.push(data['0'])
-          userShare.push(data['1'])
-        
-  
-    console.log('Données en provenance du front')
-    console.log(userShare)*/
-    
-    //console.log('données utilisateurs')
-   
   
   })
   socket.on('getUserListSharing', (data)=>{
-    console.log(data)
     Doc.findById({'_id': data},{'shareTo':1}, (err, doc)=>{
       if(err) throw err
-      console.log('documentAA');
-      console.log(doc.shareTo._id)
+     
       for(var i = 0; i<doc.shareTo._id.length; i++){
         var element = doc.shareTo._id[i]
         var listUsers = []
@@ -189,8 +169,7 @@ io.on('connection', (socket) => {
       
     })
   })
-  socket.on('deleteUserRight', (data)=>{
-    console.log(data)
+  socket.on('deleteUserRight', (data)=>{ 
   })
   socket.on('register', (data)=>{
     user.register()
