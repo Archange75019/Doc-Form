@@ -15,7 +15,7 @@
     "events": "^3.3.0",
     "express": "~4.17.1",
     "express-session": "^1.17.2",
-    "formidable": "^1.2.2",
+    "formidable": "^1.2.6",
     "htmlspecialchars": "^1.0.5",
     "http-errors": "^1.8.0",
     "jsonwebtoken": "^8.5.1",
